@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CocktailMagician.Data\CocktailMagician.Data.csproj" />
     <ProjectReference Include="..\CocktailMagician.Models\CocktailMagician.Models.csproj" />
+    <ProjectReference Include="..\CocktailMagician.Services\CocktailMagician.Services.csproj" />
   </ItemGroup>
 
 </Project>

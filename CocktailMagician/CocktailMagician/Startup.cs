@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CocktailMagician.Data;
 using CocktailMagician.Models;
+using CocktailMagician.Services.Mappers;
+using CocktailMagician.Services.Mappers.Contracts;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,6 +44,7 @@ namespace CocktailMagician.Web
             services.AddDbContext<CocktailMagicianContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<ICocktailMapper, CocktailMapper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

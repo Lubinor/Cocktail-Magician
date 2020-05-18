@@ -3,7 +3,6 @@ using CocktailMagician.Data.Seeder;
 using CocktailMagician.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace CocktailMagician.Data
 {
