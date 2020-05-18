@@ -60,7 +60,7 @@ namespace CocktailMagician.Services.Mappers
 
             var barCocktails = barDTO.Cocktails
                                     .Select(c => cocktailMapper
-                                    .CocktailDTOtoCocktail(c))
+                                    .MapToCocktail(c))
                                     .ToList();
 
             bar.Cocktails = barCocktails

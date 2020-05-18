@@ -27,7 +27,7 @@ namespace CocktailMagician.Services.Mappers
             {
                 Id = ingredient.Id,
                 Name = ingredient.Name,
-                Coctails = ingredient.Cocktails.Select(c => new CocktailDTO
+                Cocktails = ingredient.Cocktails.Select(c => new CocktailDTO
                 {
                     Name = c.Cocktail.Name,
                     Id = c.Cocktail.Id
