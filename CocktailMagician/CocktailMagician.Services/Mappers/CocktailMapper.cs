@@ -9,12 +9,12 @@ namespace CocktailMagician.Services.Mappers
 {
     public class CocktailMapper : ICocktailMapper
     {
-        public Cocktail MapToCocktail(CocktailDTO coctailDTO)
+        public Cocktail MapToCocktail(CocktailDTO cocktailDTO)
         {
             throw new NotImplementedException();
         }
 
-        public CocktailDTO MapToCocktailDTO(Cocktail coctail)
+        public CocktailDTO MapToCocktailDTO(Cocktail cocktail)
         {
             throw new NotImplementedException();
         }

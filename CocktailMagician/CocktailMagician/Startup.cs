@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.Contracts;
+using CocktailMagician.Services.Mappers;
+using CocktailMagician.Services.Mappers.Contracts;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

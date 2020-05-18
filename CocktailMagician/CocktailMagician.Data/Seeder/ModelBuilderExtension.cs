@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailMagician.Data.Seeder
 {
@@ -126,19 +124,19 @@ namespace CocktailMagician.Data.Seeder
                 new Ingredient
                 {
                     Id = 9,
-                    Name = "Coffee Liqueur",
+                    Name = "Coffee liqueur",
                     CreatedOn = DateTime.UtcNow
                 },                
                 new Ingredient
                 {
                     Id = 10,
-                    Name = "Orange Juice",
+                    Name = "Orange juice",
                     CreatedOn = DateTime.UtcNow
                 },                
                 new Ingredient
                 {
                     Id = 11,
-                    Name = "Tomato Juice",
+                    Name = "Tomato juice",
                     CreatedOn = DateTime.UtcNow
                 },                
                 new Ingredient
@@ -236,7 +234,7 @@ namespace CocktailMagician.Data.Seeder
                     Id = 5,
                     Name = "Barcode",
                     Address = "1 Tsar Peter str.",
-                    Phone = " 0895 509 659",
+                    Phone = "0895 509 659",
                     CreatedOn = DateTime.UtcNow,
                     CityId = 4
                 },
