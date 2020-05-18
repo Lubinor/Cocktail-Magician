@@ -9,7 +9,7 @@ namespace CocktailMagician.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public ICollection<IngredientsCocktails> Cocktails { get; set; } = new HashSet<IngredientsCocktails>();
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedOn { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
