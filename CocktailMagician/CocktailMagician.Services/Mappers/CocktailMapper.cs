@@ -17,6 +17,10 @@ namespace CocktailMagician.Services.Mappers
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));
         }
+        public CocktailMapper()
+        {
+
+        }
         public CocktailDTO MapToCocktailDTO(Cocktail cocktail)
         {
             if (cocktail == null)
@@ -28,15 +32,15 @@ namespace CocktailMagician.Services.Mappers
                 Id = cocktail.Id,
                 Name = cocktail.Name,
                 AverageRating = cocktail.AverageRating,
-                Bars = cocktail.Bars.Select(b => new BarDTO
+                Bars = cocktail.CocktailBars.Select(b => new BarDTO
                 {
                     Name = b.Bar.Name
                 }).ToList(),
-                Ingredients = cocktail.Ingredients.Select(i => new IngredientDTO
+                Ingredients = cocktail.IngredientsCocktails.Select(i => new IngredientDTO
                 {
                     Name = i.Ingredient.Name
                 }).ToList(),
-                IsDeleted = cocktail.IsDeleted
+                //IsDeleted = cocktail.IsDeleted
             };
             return cocktailDTO;
         }
@@ -50,11 +54,11 @@ namespace CocktailMagician.Services.Mappers
             var cocktail = new Cocktail
             {
                 Name = cocktailDTO.Name,
-                Ingredients = cocktailDTO.Ingredients.Select(i => new IngredientsCocktails
+                IngredientsCocktails = cocktailDTO.Ingredients.Select(i => new IngredientsCocktails
                 {
                     IngredientId = i.Id
                 }).ToList(),
-                CreatedOn = cocktailDTO.CreatedOn.HasValue ? cocktailDTO.CreatedOn : datetimeProvider.GetDateTime()
+                //CreatedOn = cocktailDTO.CreatedOn.HasValue ? cocktailDTO.CreatedOn : datetimeProvider.GetDateTime()
             };
 
             return cocktail;

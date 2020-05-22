@@ -13,9 +13,15 @@ namespace CocktailMagician.Services.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public double AverageRating { get; set; }
-        public ICollection<IngredientDTO> Ingredients { get; set; }
-        public ICollection<BarDTO> Bars { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public bool IsDeleted { get; set; }
+        public ICollection<IngredientDTO> Ingredients { get; set; } = new List<IngredientDTO>();
+        public ICollection<BarDTO> Bars { get; set; } = new List<BarDTO>();
+        //public DateTime? CreatedOn { get; set; }
+        //public bool IsDeleted { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var other = (CocktailDTO)obj;
+            return this.Name == other.Name; // more props with &&
+        }
     }
 }

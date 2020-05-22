@@ -109,7 +109,7 @@ namespace CocktailMagician.Services
                 bar.IsDeleted = true;
                 this.context.Bars.Update(bar);
 
-                foreach (var review in bar.Reviews)
+                foreach (var review in bar.BarReviews)
                 {
                     review.IsDeleted = true;
                     this.context.BarsUsersReviews.Update(review);

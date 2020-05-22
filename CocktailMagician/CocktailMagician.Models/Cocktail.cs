@@ -8,8 +8,8 @@ namespace CocktailMagician.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public double AverageRating { get; set; }
-        public ICollection<IngredientsCocktails> Ingredients { get; set; } = new HashSet<IngredientsCocktails>();
-        public ICollection<BarsCocktails> Bars { get; set; } = new HashSet<BarsCocktails>();
+        public ICollection<IngredientsCocktails> IngredientsCocktails { get; set; } = new HashSet<IngredientsCocktails>();
+        public ICollection<BarsCocktails> CocktailBars { get; set; } = new HashSet<BarsCocktails>();
         public ICollection<CocktailsUsersReviews> Reviews { get; set; } = new HashSet<CocktailsUsersReviews>();
         public DateTime? CreatedOn { get; set; }
         public bool IsDeleted { get; set; }
