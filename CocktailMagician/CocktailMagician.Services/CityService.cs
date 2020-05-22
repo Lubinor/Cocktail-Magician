@@ -96,7 +96,7 @@ namespace CocktailMagician.Services
         {
             var city = await this.context.Cities
                 .Include(c => c.Bars)
-                .ThenInclude(b => b.Reviews)
+                .ThenInclude(b => b.BarReviews)
                 .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
 
             if (city == null)

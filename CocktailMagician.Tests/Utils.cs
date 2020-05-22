@@ -63,7 +63,7 @@ namespace CocktailMagician.Tests
                 AverageRating = 3.5,
             };
 
-            bar.Cocktails.Add(new BarsCocktails { BarId = bar.Id, CocktailId = cocktail.Id, Cocktail = cocktail });
+            bar.BarCocktails.Add(new BarsCocktails { BarId = bar.Id, CocktailId = cocktail.Id, Cocktail = cocktail });
 
             return bar;
         }

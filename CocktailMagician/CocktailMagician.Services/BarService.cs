@@ -27,7 +27,7 @@ namespace CocktailMagician.Services
         public async Task<ICollection<BarDTO>> GetAllBarsAsync()
         {
             var bars = this.context.Bars
-                .Include(b => b.Cocktails)
+                .Include(b => b.BarCocktails)
                 .Where(b => !b.IsDeleted);
 
             var barDTOs = await bars
@@ -40,7 +40,7 @@ namespace CocktailMagician.Services
         public async Task<BarDTO> GetBarAsync(int id)
         {
             var bar = await this.context.Bars
-                .Include(b => b.Cocktails)
+                .Include(b => b.BarCocktails)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
             if (bar == null)
@@ -72,7 +72,7 @@ namespace CocktailMagician.Services
         public async Task<BarDTO> UpdateBarAsync(int id, BarDTO barDTO)
         {
             var bar = await this.context.Bars
-                .Include(b => b.Cocktails)
+                .Include(b => b.BarCocktails)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
             if (bar == null)
@@ -93,7 +93,7 @@ namespace CocktailMagician.Services
         public async Task<bool> DeletBarAsync(int id)
         {
             var bar = await this.context.Bars
-                .Include(b => b.Cocktails)
+                .Include(b => b.BarCocktails)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
             if (bar == null)
@@ -103,12 +103,12 @@ namespace CocktailMagician.Services
 
             bar.IsDeleted = true;
 
-            foreach (var cocktail in bar.Cocktails)
+            foreach (var cocktail in bar.BarCocktails)
             {
                 cocktail.Cocktail.IsDeleted = true;
             }
 
-            foreach (var review in bar.Reviews)
+            foreach (var review in bar.BarReviews)
             {
                 review.IsDeleted = true;
             }

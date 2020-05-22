@@ -52,7 +52,7 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
             Assert.AreEqual(bar.City.Name, result.CityName);
             Assert.AreEqual(bar.Phone, result.Phone);
             Assert.AreEqual(bar.AverageRating, result.AverageRating);
-            Assert.AreEqual(bar.Cocktails.Count, result.Cocktails.Count);
+            Assert.AreEqual(bar.BarCocktails.Count, result.Cocktails.Count);
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
             Assert.AreEqual(barDTO.AverageRating, result.AverageRating);
             Assert.AreEqual(barDTO.Address, result.Address);
             Assert.AreEqual(barDTO.Phone, result.Phone);
-            Assert.AreEqual(barDTO.Cocktails.Count, result.Cocktails.Count);
+            Assert.AreEqual(barDTO.Cocktails.Count, result.BarCocktails.Count);
         }
     }
 }
