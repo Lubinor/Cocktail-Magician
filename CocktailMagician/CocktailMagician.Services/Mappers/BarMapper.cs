@@ -25,8 +25,10 @@ namespace CocktailMagician.Services.Mappers
             barDTO.Address = bar.Address;
             barDTO.Phone = bar.Phone;
             barDTO.AverageRating = bar.AverageRating;
+            //barDTO.CreatedOn = bar.CreatedOn;
+            //barDTO.IsDeleted = bar.IsDeleted;
 
-            var barCocktails = bar.Cocktails
+            var barCocktails = bar.BarCocktails
                                     .Select(b => b.Cocktail)
                                     .ToList();
 
@@ -49,13 +51,15 @@ namespace CocktailMagician.Services.Mappers
             bar.Address = barDTO.Address;
             bar.Phone = barDTO.Phone;
             bar.AverageRating = barDTO.AverageRating;
+            //bar.CreatedOn = barDTO.CreatedOn;
+            //bar.IsDeleted = barDTO.IsDeleted;
 
             var barCocktails = barDTO.Cocktails
                                     .Select(c => cocktailMapper
                                     .MapToCocktail(c))
                                     .ToList();
 
-            bar.Cocktails = barCocktails
+            bar.BarCocktails = barCocktails
                                     .Select(x => new BarsCocktails { BarId = barDTO.Id, CocktailId = x.Id })
                                     .ToList();
 
