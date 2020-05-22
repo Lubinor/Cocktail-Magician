@@ -135,5 +135,16 @@ namespace CocktailMagician.Services
 
             return true;
         }
+        public async Task<ICollection<CocktailDTO>> FilteredCocktailsAsync(string filter)
+        {
+            var cocktails = this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false
+                && cocktail.Name.Contains(filter) || cocktail.IngredientsCocktails.Any(ing=>ing.Ingredient.Name==filter))
+                .Include(ic=>ic.IngredientsCocktails)
+                    .ThenInclude(i=>i.Ingredient);
+
+            var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
+
+            return cocktailDTOs;
+        }
     }
 }
