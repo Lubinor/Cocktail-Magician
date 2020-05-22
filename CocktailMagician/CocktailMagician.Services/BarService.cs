@@ -3,9 +3,12 @@ using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace CocktailMagician.Services
 {
@@ -21,28 +24,99 @@ namespace CocktailMagician.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context)); ;
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper)); ;
         }
-        public Task<ICollection<BarDTO>> GetAllBarsAsync()
+        public async Task<ICollection<BarDTO>> GetAllBarsAsync()
         {
-            throw new NotImplementedException();
+            var bars = this.context.Bars
+                .Include(b => b.Cocktails)
+                .Where(b => !b.IsDeleted);
+
+            var barDTOs = await bars
+                .Select(b => this.barMapper.MapToBarDTO(b))
+                .ToListAsync();
+
+            return barDTOs;
         }
 
-        public Task<BarDTO> GetBarAsync(int id)
+        public async Task<BarDTO> GetBarAsync(int id)
         {
-            throw new NotImplementedException();
+            var bar = await this.context.Bars
+                .Include(b => b.Cocktails)
+                .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
+
+            if (bar == null)
+            {
+                return null;
+            }
+
+            var barDTO = this.barMapper.MapToBarDTO(bar);
+
+            return barDTO;
         }
-        public Task<BarDTO> CreateBarAsync(BarDTO barDTO)
+        public async Task<BarDTO> CreateBarAsync(BarDTO barDTO)
         {
-            throw new NotImplementedException();
+            if (barDTO == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var bar = this.barMapper.MapToBar(barDTO);
+
+            this.context.Bars.Add(bar);
+            await this.context.SaveChangesAsync();
+
+            var newBarDTO = this.barMapper.MapToBarDTO(bar);
+
+            return newBarDTO;
         }
 
-        public Task<BarDTO> UpdateBarAsync(int id, BarDTO barDTO)
+        public async Task<BarDTO> UpdateBarAsync(int id, BarDTO barDTO)
         {
-            throw new NotImplementedException();
+            var bar = await this.context.Bars
+                .Include(b => b.Cocktails)
+                .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
+
+            if (bar == null)
+            {
+                return null;
+            }
+
+            bar = this.barMapper.MapToBar(barDTO);
+
+            this.context.Bars.Update(bar);
+            await this.context.SaveChangesAsync();
+
+            var updatedBarDTO = this.barMapper.MapToBarDTO(bar);
+
+            return updatedBarDTO;
         }
 
-        public Task<bool> DeletBarAsync(int id)
+        public async Task<bool> DeletBarAsync(int id)
         {
-            throw new NotImplementedException();
+            var bar = await this.context.Bars
+                .Include(b => b.Cocktails)
+                .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
+
+            if (bar == null)
+            {
+                return false;
+            }
+
+            bar.IsDeleted = true;
+
+            foreach (var cocktail in bar.Cocktails)
+            {
+                cocktail.Cocktail.IsDeleted = true;
+            }
+
+            foreach (var review in bar.Reviews)
+            {
+                review.IsDeleted = true;
+            }
+
+            this.context.Bars.Update(bar);
+            await this.context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

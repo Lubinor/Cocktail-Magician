@@ -7,5 +7,7 @@
 
         public Ingredient Ingredient { get; set; }
         public Cocktail Cocktail { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

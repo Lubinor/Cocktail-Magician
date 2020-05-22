@@ -8,15 +8,13 @@ namespace CocktailMagician.Services.Mappers
     public class BarMapper : IBarMapper
     {
         private readonly ICocktailMapper cocktailMapper;
-        private readonly IBarReviewMapper reviewMapper;
 
-        public BarMapper(ICocktailMapper cocktailMapper, IBarReviewMapper reviewMapper)
+        public BarMapper(ICocktailMapper cocktailMapper)
         {
             this.cocktailMapper = cocktailMapper;
-            this.reviewMapper = reviewMapper;
         }
 
-        public BarDTO BarToBarDTO(Bar bar)
+        public BarDTO MapToBarDTO(Bar bar)
         {
             BarDTO barDTO = new BarDTO();
 
@@ -27,36 +25,30 @@ namespace CocktailMagician.Services.Mappers
             barDTO.Address = bar.Address;
             barDTO.Phone = bar.Phone;
             barDTO.AverageRating = bar.AverageRating;
-            barDTO.CreatedOn = bar.CreatedOn;
-            barDTO.IsDeleted = bar.IsDeleted;
 
             var barCocktails = bar.Cocktails
                                     .Select(b => b.Cocktail)
                                     .ToList();
-            //TODO samo name i ID s new DTO
-            barDTO.Cocktails = barCocktails
-                                    .Select(c => new CocktailDTO())
-                                    .ToList();
 
-            //TODO new, authorID, authorname, comment, rating
-            barDTO.Reviews = bar.Reviews
-                                    .Select(b => reviewMapper.BarReviewToBarReviewDTO(b))
+            barDTO.Cocktails = barCocktails
+                                    .Select(c => new CocktailDTO 
+                                    {
+                                        Id = c.Id,
+                                        Name = c.Name,
+                                        AverageRating = c.AverageRating
+                                    })
                                     .ToList();
 
             return barDTO;
         }
-        public Bar BarDTOtoBar(BarDTO barDTO)
+        public Bar MapToBar(BarDTO barDTO)
         {
             Bar bar = new Bar();
-
             bar.Name = barDTO.Name;
             bar.CityId = barDTO.CityId;
-            bar.City.Name = barDTO.CityName;
             bar.Address = barDTO.Address;
             bar.Phone = barDTO.Phone;
             bar.AverageRating = barDTO.AverageRating;
-            bar.CreatedOn = barDTO.CreatedOn;
-            bar.IsDeleted = barDTO.IsDeleted;
 
             var barCocktails = barDTO.Cocktails
                                     .Select(c => cocktailMapper
@@ -65,14 +57,6 @@ namespace CocktailMagician.Services.Mappers
 
             bar.Cocktails = barCocktails
                                     .Select(x => new BarsCocktails { BarId = barDTO.Id, CocktailId = x.Id })
-                                    .ToList();
-
-            var barReviews = barDTO.Reviews
-                                    .Select(r => reviewMapper.BarReviewDTOtoBarReview(r))
-                                    .ToList();
-
-            bar.Reviews = barReviews
-                                    .Select(r => new BarsUsersReviews { BarId = barDTO.Id, UserId = r.UserId })
                                     .ToList();
 
             return bar;

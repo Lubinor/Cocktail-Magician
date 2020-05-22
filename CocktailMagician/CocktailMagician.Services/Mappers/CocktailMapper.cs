@@ -35,8 +35,7 @@ namespace CocktailMagician.Services.Mappers
                 Ingredients = cocktail.Ingredients.Select(i => new IngredientDTO
                 {
                     Name = i.Ingredient.Name
-                }).ToList(),
-                IsDeleted = cocktail.IsDeleted
+                }).ToList()
             };
             return cocktailDTO;
         }
@@ -53,8 +52,7 @@ namespace CocktailMagician.Services.Mappers
                 Ingredients = cocktailDTO.Ingredients.Select(i => new IngredientsCocktails
                 {
                     IngredientId = i.Id
-                }).ToList(),
-                CreatedOn = cocktailDTO.CreatedOn.HasValue ? cocktailDTO.CreatedOn : datetimeProvider.GetDateTime()
+                }).ToList()
             };
 
             return cocktail;

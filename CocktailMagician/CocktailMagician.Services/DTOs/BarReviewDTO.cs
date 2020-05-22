@@ -11,8 +11,6 @@ namespace CocktailMagician.Services.DTOs
 
         public int Rating { get; set; }
         public string Comment { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public bool IsDeleted { get; set; }
         public int BarId { get; set; }
         public string BarName { get; set; }
         public int AuthorId { get; set; }

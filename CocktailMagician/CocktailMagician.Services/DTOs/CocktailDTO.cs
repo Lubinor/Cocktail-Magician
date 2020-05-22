@@ -15,7 +15,5 @@ namespace CocktailMagician.Services.DTOs
         public double AverageRating { get; set; }
         public ICollection<IngredientDTO> Ingredients { get; set; }
         public ICollection<BarDTO> Bars { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }

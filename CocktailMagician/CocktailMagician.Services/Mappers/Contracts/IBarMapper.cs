@@ -5,7 +5,7 @@ namespace CocktailMagician.Services.Mappers.Contracts
 {
     public interface IBarMapper
     {
-        public BarDTO BarToBarDTO(Bar bar);
-        public Bar BarDTOtoBar(BarDTO barDTO);
+        public BarDTO MapToBarDTO(Bar bar);
+        public Bar MapToBar(BarDTO barDTO);
     }
 }

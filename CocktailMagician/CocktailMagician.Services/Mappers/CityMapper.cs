@@ -12,8 +12,10 @@ namespace CocktailMagician.Services.Mappers
         {
         }
 
-        public CityDTO CityToCityDTO(City city)
+        public CityDTO MapToCityDTO(City city)
         {
+
+
             CityDTO cityDTO = new CityDTO
             {
                 Id = city.Id,
@@ -21,19 +23,15 @@ namespace CocktailMagician.Services.Mappers
                 Bars = city.Bars
                             .Select(bar => new BarDTO { Id = bar.Id, Name = bar.Name })
                             .ToList(),
-                CreatedOn = city.CreatedOn,
-                IsDeleted = city.IsDeleted
             };
 
             return cityDTO;
         }
-        public City CityDTOtoCity(CityDTO cityDTO)
+        public City MapToCity(CityDTO cityDTO)
         {
             City city = new City
             {
                 Name = cityDTO.Name,
-                CreatedOn = cityDTO.CreatedOn,
-                IsDeleted = cityDTO.IsDeleted
             };
 
             return city;

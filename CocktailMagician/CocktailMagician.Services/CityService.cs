@@ -31,7 +31,7 @@ namespace CocktailMagician.Services
                 .Where(c => !c.IsDeleted);
 
             var cityDTOs = await cities
-                .Select(c => this.cityMapper.CityToCityDTO(c))
+                .Select(c => this.cityMapper.MapToCityDTO(c))
                 .ToListAsync();
 
             return cityDTOs;
@@ -49,7 +49,7 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            var cityDTO = this.cityMapper.CityToCityDTO(city);
+            var cityDTO = this.cityMapper.MapToCityDTO(city);
 
             return cityDTO;
         }
@@ -61,12 +61,13 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            var city = cityMapper.CityDTOtoCity(cityDTO);
+            var city = cityMapper.MapToCity(cityDTO);
+            city.CreatedOn = dateTimeProvider.GetDateTime();
 
             this.context.Cities.Add(city);
             await this.context.SaveChangesAsync();
 
-            var newCityDTO = cityMapper.CityToCityDTO(city);
+            var newCityDTO = cityMapper.MapToCityDTO(city);
 
             return newCityDTO;
         }
@@ -81,12 +82,12 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            city = cityMapper.CityDTOtoCity(cityDTO);
+            city.Name = cityDTO.Name;
 
             this.context.Cities.Update(city);
             await this.context.SaveChangesAsync();
 
-            var updatedCityDTO = cityMapper.CityToCityDTO(city);
+            var updatedCityDTO = cityMapper.MapToCityDTO(city);
 
             return updatedCityDTO;
         }
@@ -95,6 +96,7 @@ namespace CocktailMagician.Services
         {
             var city = await this.context.Cities
                 .Include(c => c.Bars)
+                .ThenInclude(b => b.Reviews)
                 .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
 
             if (city == null)
@@ -114,6 +116,11 @@ namespace CocktailMagician.Services
                     review.IsDeleted = true;
                     this.context.BarsUsersReviews.Update(review);
                 }
+                //foreach (var cocktail in bar.Cocktails)
+                //{
+                //    cocktail.IsDeleted = true;
+                //    this.context.BarsCocktails.Update(cocktail);
+                //}
             }
             this.context.Cities.Update(city);
             await this.context.SaveChangesAsync();

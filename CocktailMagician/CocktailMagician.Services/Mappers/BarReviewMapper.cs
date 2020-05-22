@@ -12,8 +12,6 @@ namespace CocktailMagician.Services.Mappers
             {
                 Rating = review.Rating,
                 Comment = review.Comment,
-                CreatedOn = review.CreatedOn,
-                IsDeleted = review.IsDeleted,
                 BarId = review.BarId,
                 AuthorId = review.UserId,
                 BarName = review.Bar.Name,
@@ -28,8 +26,6 @@ namespace CocktailMagician.Services.Mappers
             {
                 Rating = reviewDTO.Rating,
                 Comment = reviewDTO.Comment,
-                CreatedOn = reviewDTO.CreatedOn,
-                IsDeleted = reviewDTO.IsDeleted,
                 BarId = reviewDTO.BarId,
                 UserId = reviewDTO.AuthorId
             };

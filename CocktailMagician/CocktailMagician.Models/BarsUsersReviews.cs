@@ -14,7 +14,7 @@ namespace CocktailMagician.Models
         [Range(1, 5)]
         public int Rating { get; set; }
         public string Comment { get; set; } = string.Empty;
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedOn { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

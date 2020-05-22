@@ -1,4 +1,6 @@
-﻿using CocktailMagician.Services.Mappers;
+﻿using CocktailMagician.Models;
+using CocktailMagician.Services.DTOs;
+using CocktailMagician.Services.Mappers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
@@ -7,19 +9,68 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
     public class CityMapper_Should
     {
         [TestMethod]
-        public void CorrectMapping_ToDTO()
+        public void CorrectReturnInstanceType_ToCityDTO()
         {
+            //Arrange
             var sut = new CityMapper();
 
-            var options = Utils.GetOptions(nameof(CorrectMapping_ToDTO));
+            var options = Utils.GetOptions(nameof(CorrectReturnInstanceType_ToCityDTO));
             var city = Utils.ReturnOneCity(options);
 
-            var result = sut.CityToCityDTO(city);
+            //Act
+            var result = sut.MapToCityDTO(city);
 
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(CityDTO));
+        }
+
+        [TestMethod]
+        public void CorrectMapping_ToCityDTO()
+        {
+            //Arrange
+            var sut = new CityMapper();
+
+            var options = Utils.GetOptions(nameof(CorrectMapping_ToCityDTO));
+            var city = Utils.ReturnOneCity(options);
+
+            //Act
+            var result = sut.MapToCityDTO(city);
+
+            //Assert
             Assert.AreEqual(city.Id, result.Id);
             Assert.AreEqual(city.Name, result.Name);
-            Assert.AreEqual(city.CreatedOn, result.CreatedOn);
-            Assert.AreEqual(city.IsDeleted, result.IsDeleted);
+        }
+
+        [TestMethod]
+        public void CorrectReturnInstanceType_ToCity()
+        {
+            //Arrange
+            var sut = new CityMapper();
+
+            var options = Utils.GetOptions(nameof(CorrectMapping_ToCity));
+            var cityDTO = Utils.ReturnOneCityDTO(options);
+
+            //Act
+            var result = sut.MapToCity(cityDTO);
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(City));
+        }
+
+        [TestMethod]
+        public void CorrectMapping_ToCity()
+        {
+            //Arrange
+            var sut = new CityMapper();
+
+            var options = Utils.GetOptions(nameof(CorrectMapping_ToCity));
+            var cityDTO = Utils.ReturnOneCityDTO(options);
+
+            //Act
+            var result = sut.MapToCity(cityDTO);
+
+            //Assert
+            Assert.AreEqual(cityDTO.Name, result.Name);
         }
     }
 }
