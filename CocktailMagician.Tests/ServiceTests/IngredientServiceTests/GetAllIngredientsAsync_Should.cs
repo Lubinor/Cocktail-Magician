@@ -2,15 +2,11 @@
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
-using CocktailMagician.Services.Mappers.Contracts;
-using CocktailMagician.Services.Provider;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
@@ -22,7 +18,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         public async Task ReturnCorrectIngredientsAsync()
         {
             //Arrange
-            var mockDatetimeProvider = new Mock<IDatetimeProvider>();
+            var mockDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockMapper = new Mock<IngredientMapper>();
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnCorrectIngredientsAsync));
@@ -49,7 +45,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
             // Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new IngredientService(mockDatetimeProvider.Object,mockMapper.Object,
+                var sut = new IngredientService(mockDateTimeProvider.Object,mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
                 var result = (await sut.GetAllIngredientsAsync()).ToList();
                 Assert.AreEqual(expected.Count, result.Count);

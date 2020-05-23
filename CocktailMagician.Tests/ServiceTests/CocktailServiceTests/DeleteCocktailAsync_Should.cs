@@ -1,12 +1,9 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services;
 using CocktailMagician.Services.Mappers;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
@@ -18,7 +15,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
         public async Task DeleteCocktail_Should()
         {
             //Arrange
-            var mockDateTimeprovider = new Mock<IDatetimeProvider>();
+            var mockDateTimeprovider = new Mock<IDateTimeProvider>();
             var mockMapper = new Mock<CocktailMapper>();
             var mockIngMapper = new Mock<IngredientMapper>();
             var options = Utils.GetOptions(nameof(DeleteCocktail_Should));

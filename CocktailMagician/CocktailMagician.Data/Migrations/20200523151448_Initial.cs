@@ -43,8 +43,7 @@ namespace CocktailMagician.Data.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsBanned = table.Column<bool>(nullable: false)
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,7 +57,7 @@ namespace CocktailMagician.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 30, nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -74,7 +73,7 @@ namespace CocktailMagician.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 30, nullable: false),
                     AverageRating = table.Column<double>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -89,7 +88,7 @@ namespace CocktailMagician.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -214,7 +213,7 @@ namespace CocktailMagician.Data.Migrations
                     Address = table.Column<string>(nullable: false),
                     Phone = table.Column<string>(nullable: false),
                     AverageRating = table.Column<double>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -261,7 +260,8 @@ namespace CocktailMagician.Data.Migrations
                 columns: table => new
                 {
                     IngredientId = table.Column<int>(nullable: false),
-                    CocktailId = table.Column<int>(nullable: false)
+                    CocktailId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,7 +285,8 @@ namespace CocktailMagician.Data.Migrations
                 columns: table => new
                 {
                     BarId = table.Column<int>(nullable: false),
-                    CocktailId = table.Column<int>(nullable: false)
+                    CocktailId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -312,7 +313,7 @@ namespace CocktailMagician.Data.Migrations
                     UserId = table.Column<int>(nullable: false),
                     Rating = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -337,24 +338,24 @@ namespace CocktailMagician.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "f8176da6-41c2-41b5-916b-ff3cb2ad65a6", "member", "MEMBER" },
-                    { 2, "dab55eb0-d3c5-4538-89a1-ebb2dd54654a", "admin", "ADMIN" }
+                    { 1, "ddadcf30-7c71-410c-a360-f05b1aaefd7a", "member", "MEMBER" },
+                    { 2, "7a93e1e2-8816-4edb-a90e-b261c1619209", "admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "Email", "EmailConfirmed", "IsBanned", "IsDeleted", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, "cfa5ad19-aad2-4986-88a5-0084cbd6f879", new DateTime(2020, 5, 11, 21, 42, 8, 816, DateTimeKind.Utc).AddTicks(2959), "admin@admin.com", false, false, false, false, null, "ADMIN@ADMIN.COM", "ADMIN@ADMIN.COM", "AQAAAAEAACcQAAAAEK15LbB4vvVj198X2kR0MVCkh9Ua/x/kWijkhczmcaUiHwFKxQtoVIXw7fKP2k44/A==", null, false, "10fcb72a-76ee-4b2e-96c9-e74050e33285", false, "admin@admin.com" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedOn", "Email", "EmailConfirmed", "IsDeleted", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { 1, 0, "3e48b09e-1456-45c7-916b-6754611b9d1c", new DateTime(2020, 5, 23, 15, 14, 47, 830, DateTimeKind.Utc).AddTicks(2359), "admin@admin.com", false, false, false, null, "ADMIN@ADMIN.COM", "ADMIN@ADMIN.COM", "AQAAAAEAACcQAAAAEBIFLMzz6RHEeVE658tcVwFth6QdKaJNPAQp6tbt7tfci5fIZnX0XkSxaYrOsCcdfg==", null, false, "7ef4551e-7082-4df3-afa1-c77bee26bada", false, "admin@admin.com" });
 
             migrationBuilder.InsertData(
                 table: "Cities",
                 columns: new[] { "Id", "CreatedOn", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(2783), false, "Sofia" },
-                    { 2, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(3253), false, "Plovdiv" },
-                    { 3, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(3261), false, "Varna" },
-                    { 4, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(3263), false, "Burgas" }
+                    { 1, new DateTime(2020, 5, 23, 15, 14, 47, 843, DateTimeKind.Utc).AddTicks(6982), false, "Sofia" },
+                    { 2, new DateTime(2020, 5, 23, 15, 14, 47, 843, DateTimeKind.Utc).AddTicks(7604), false, "Plovdiv" },
+                    { 3, new DateTime(2020, 5, 23, 15, 14, 47, 843, DateTimeKind.Utc).AddTicks(7617), false, "Varna" },
+                    { 4, new DateTime(2020, 5, 23, 15, 14, 47, 843, DateTimeKind.Utc).AddTicks(7619), false, "Burgas" }
                 });
 
             migrationBuilder.InsertData(
@@ -362,12 +363,12 @@ namespace CocktailMagician.Data.Migrations
                 columns: new[] { "Id", "AverageRating", "CreatedOn", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, 0.0, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(8382), false, "Mojito" },
-                    { 2, 0.0, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(8833), false, "Cuba Libre" },
-                    { 3, 0.0, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(8858), false, "Sex on the Beach" },
-                    { 4, 0.0, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(8860), false, "Mai Tai" },
-                    { 5, 0.0, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(8863), false, "Gin Fizz" },
-                    { 6, 0.0, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(8866), false, "Bloody Mary" }
+                    { 1, 0.0, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(2624), false, "Mojito" },
+                    { 2, 0.0, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(3257), false, "Cuba Libre" },
+                    { 3, 0.0, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(3292), false, "Sex on the Beach" },
+                    { 4, 0.0, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(3299), false, "Mai Tai" },
+                    { 5, 0.0, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(3305), false, "Gin Fizz" },
+                    { 6, 0.0, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(3311), false, "Bloody Mary" }
                 });
 
             migrationBuilder.InsertData(
@@ -375,19 +376,19 @@ namespace CocktailMagician.Data.Migrations
                 columns: new[] { "Id", "CreatedOn", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 13, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6017), false, "Lime" },
-                    { 12, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6015), false, "Tabasco" },
-                    { 11, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6013), false, "Tomato Juice" },
-                    { 10, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6011), false, "Orange Juice" },
-                    { 9, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6009), false, "Coffee Liqueur" },
-                    { 5, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6000), false, "Coke" },
-                    { 7, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6005), false, "Sugar" },
-                    { 6, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6002), false, "Lemon juice" },
-                    { 4, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(5998), false, "Soda" },
-                    { 2, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(5980), false, "Gin" },
-                    { 1, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(5534), false, "Vodka" },
-                    { 8, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(6007), false, "Milk" },
-                    { 3, new DateTime(2020, 5, 11, 21, 42, 8, 829, DateTimeKind.Utc).AddTicks(5996), false, "Rum" }
+                    { 13, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(249), false, "Lime" },
+                    { 12, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(247), false, "Tabasco" },
+                    { 11, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(246), false, "Tomato juice" },
+                    { 10, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(244), false, "Orange juice" },
+                    { 9, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(243), false, "Coffee liqueur" },
+                    { 5, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(236), false, "Coke" },
+                    { 7, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(240), false, "Sugar" },
+                    { 6, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(238), false, "Lemon juice" },
+                    { 4, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(235), false, "Soda" },
+                    { 2, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(212), false, "Gin" },
+                    { 1, new DateTime(2020, 5, 23, 15, 14, 47, 843, DateTimeKind.Utc).AddTicks(9712), false, "Vodka" },
+                    { 8, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(241), false, "Milk" },
+                    { 3, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(233), false, "Rum" }
                 });
 
             migrationBuilder.InsertData(
@@ -400,45 +401,45 @@ namespace CocktailMagician.Data.Migrations
                 columns: new[] { "Id", "Address", "AverageRating", "CityId", "CreatedOn", "IsDeleted", "Name", "Phone" },
                 values: new object[,]
                 {
-                    { 1, "104 Vitosha blvd.", 0.0, 1, new DateTime(2020, 5, 11, 21, 42, 8, 830, DateTimeKind.Utc).AddTicks(1343), false, "Memento", "0889 555 682" },
-                    { 2, "22 Tsar Ivan Shishman str.", 0.0, 1, new DateTime(2020, 5, 11, 21, 42, 8, 830, DateTimeKind.Utc).AddTicks(2139), false, "Bilkova", "0898 639 068" },
-                    { 3, "36 Yoakim Gruev str.", 0.0, 2, new DateTime(2020, 5, 11, 21, 42, 8, 830, DateTimeKind.Utc).AddTicks(2155), false, "Petnoto", "0878 509 703" },
-                    { 4, "Central Beach", 0.0, 3, new DateTime(2020, 5, 11, 21, 42, 8, 830, DateTimeKind.Utc).AddTicks(2158), false, "Cubo", "0898 425 232" },
-                    { 5, "1 Tsar Peter str.", 0.0, 4, new DateTime(2020, 5, 11, 21, 42, 8, 830, DateTimeKind.Utc).AddTicks(2198), false, "Barcode", " 0895 509 659" },
-                    { 6, "53 Stefan Stambolov blvd.", 0.0, 4, new DateTime(2020, 5, 11, 21, 42, 8, 830, DateTimeKind.Utc).AddTicks(2201), false, "Fabric Club", "0887 909 019" }
+                    { 1, "104 Vitosha blvd.", 0.0, 1, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(6520), false, "Memento", "0889 555 682" },
+                    { 2, "22 Tsar Ivan Shishman str.", 0.0, 1, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(7454), false, "Bilkova", "0898 639 068" },
+                    { 3, "36 Yoakim Gruev str.", 0.0, 2, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(7472), false, "Petnoto", "0878 509 703" },
+                    { 4, "Central Beach", 0.0, 3, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(7475), false, "Cubo", "0898 425 232" },
+                    { 5, "1 Tsar Peter str.", 0.0, 4, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(7477), false, "Barcode", "0895 509 659" },
+                    { 6, "53 Stefan Stambolov blvd.", 0.0, 4, new DateTime(2020, 5, 23, 15, 14, 47, 844, DateTimeKind.Utc).AddTicks(7479), false, "Fabric Club", "0887 909 019" }
                 });
 
             migrationBuilder.InsertData(
                 table: "IngredientsCocktails",
-                columns: new[] { "IngredientId", "CocktailId" },
+                columns: new[] { "IngredientId", "CocktailId", "IsDeleted" },
                 values: new object[,]
                 {
-                    { 1, 6 },
-                    { 3, 1 },
-                    { 4, 1 },
-                    { 7, 1 },
-                    { 11, 6 },
-                    { 12, 6 },
-                    { 13, 1 }
+                    { 1, 6, false },
+                    { 3, 1, false },
+                    { 4, 1, false },
+                    { 7, 1, false },
+                    { 11, 6, false },
+                    { 12, 6, false },
+                    { 13, 1, false }
                 });
 
             migrationBuilder.InsertData(
                 table: "BarsCocktails",
-                columns: new[] { "BarId", "CocktailId" },
+                columns: new[] { "BarId", "CocktailId", "IsDeleted" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 1, 6 },
-                    { 2, 1 },
-                    { 2, 6 },
-                    { 3, 1 },
-                    { 3, 6 },
-                    { 4, 1 },
-                    { 4, 6 },
-                    { 5, 1 },
-                    { 5, 6 },
-                    { 6, 1 },
-                    { 6, 6 }
+                    { 1, 1, false },
+                    { 1, 6, false },
+                    { 2, 1, false },
+                    { 2, 6, false },
+                    { 3, 1, false },
+                    { 3, 6, false },
+                    { 4, 1, false },
+                    { 4, 6, false },
+                    { 5, 1, false },
+                    { 5, 6, false },
+                    { 6, 1, false },
+                    { 6, 6, false }
                 });
 
             migrationBuilder.CreateIndex(

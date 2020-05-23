@@ -1,9 +1,8 @@
 ﻿using CocktailMagician.Data;
-using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,12 +13,12 @@ namespace CocktailMagician.Services
 {
     public class IngredientService : IIngredientService
     {
-        private readonly IDatetimeProvider datetimeProvider;
+        private readonly IDateTimeProvider datetimeProvider;
         private readonly IIngredientMapper mapper;
         private readonly ICocktailMapper cocktailMapper;
         private readonly CocktailMagicianContext context;
 
-        public IngredientService(IDatetimeProvider datetimeProvider, IIngredientMapper mapper, 
+        public IngredientService(IDateTimeProvider datetimeProvider, IIngredientMapper mapper, 
             ICocktailMapper cocktailMapper,  CocktailMagicianContext context)
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));

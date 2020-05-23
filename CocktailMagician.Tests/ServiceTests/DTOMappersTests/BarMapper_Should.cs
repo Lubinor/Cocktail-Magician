@@ -4,9 +4,6 @@ using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
 {

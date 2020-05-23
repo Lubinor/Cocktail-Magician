@@ -1,26 +1,24 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
-using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
 {
     public class CocktailService : ICocktailService
     {
-        private readonly IDatetimeProvider datetimeProvider;
+        private readonly IDateTimeProvider datetimeProvider;
         private readonly ICocktailMapper mapper;
         private readonly IIngredientMapper ingredientMapper;
         private readonly CocktailMagicianContext context;
 
-        public CocktailService(IDatetimeProvider datetimeProvider, ICocktailMapper mapper, IIngredientMapper ingredientMapper, CocktailMagicianContext context)
+        public CocktailService(IDateTimeProvider datetimeProvider, ICocktailMapper mapper, IIngredientMapper ingredientMapper, CocktailMagicianContext context)
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
