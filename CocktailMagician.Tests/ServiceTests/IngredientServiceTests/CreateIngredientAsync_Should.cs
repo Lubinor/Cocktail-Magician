@@ -29,7 +29,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
+                var sut = new IngredientService(mockDateTimeProvider.Object, mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
                 var result = await sut.CreateIngredientAsync(ingredientDTO);
 
@@ -51,7 +51,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
+                var sut = new IngredientService(mockDateTimeProvider.Object, mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
                 var result = await sut.CreateIngredientAsync(ingredientDTO);
 

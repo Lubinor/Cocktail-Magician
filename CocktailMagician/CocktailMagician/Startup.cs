@@ -2,6 +2,10 @@ using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.Contracts;
+using CocktailMagician.Services.Mappers;
+using CocktailMagician.Services.Mappers.Contracts;
+using CocktailMagician.Services.Providers;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,8 +48,11 @@ namespace CocktailMagician.Web
             });
             services.AddControllersWithViews();
 
+            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ICocktailService, CocktailService>();
+            services.AddScoped<IIngredientMapper, IngredientMapper>();
+            services.AddScoped<ICocktailMapper, CocktailMapper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
