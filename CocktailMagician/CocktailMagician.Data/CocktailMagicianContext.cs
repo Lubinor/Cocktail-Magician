@@ -11,6 +11,7 @@ namespace CocktailMagician.Data
         public CocktailMagicianContext(DbContextOptions<CocktailMagicianContext> options)
             : base(options)
         {
+
         }
 
         public DbSet<Ingredient> Ingredients { get; set; }

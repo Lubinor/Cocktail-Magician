@@ -2,8 +2,6 @@ using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.Contracts;
-using CocktailMagician.Services.Mappers;
-using CocktailMagician.Services.Mappers.Contracts;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +24,9 @@ namespace CocktailMagician.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddDbContext<CocktailMagicianContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<CocktailMagicianContext>()
                 .AddDefaultUI()
@@ -42,10 +42,7 @@ namespace CocktailMagician.Web
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             });
-
-            services.AddDbContext<CocktailMagicianContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddControllersWithViews();
 
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ICocktailService, CocktailService>();

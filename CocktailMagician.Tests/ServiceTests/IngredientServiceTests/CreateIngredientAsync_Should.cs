@@ -2,14 +2,9 @@
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
-using CocktailMagician.Services.Mappers.Contracts;
-using CocktailMagician.Services.Provider;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
@@ -21,7 +16,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         public async Task CreateIngredient_WhenParamsAreValid()
         {
             //Arrange
-            var mockDatetimeProvider = new Mock<IDatetimeProvider>();
+            var mockDatetimeProvider = new Mock<IDateTimeProvider>();
             var mockMapper = new Mock<IngredientMapper>();
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(CreateIngredient_WhenParamsAreValid));
@@ -45,7 +40,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         public async Task ReturnNull_WhenParamsAreInvalid()
         {
             //Arrange
-            var mockDatetimeProvider = new Mock<IDatetimeProvider>();
+            var mockDatetimeProvider = new Mock<IDateTimeProvider>();
             var mockMapper = new Mock<IngredientMapper>();
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnNull_WhenParamsAreInvalid));

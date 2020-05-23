@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CocktailMagician.Services.DTOs
+﻿namespace CocktailMagician.Services.DTOs
 {
     public class BarReviewDTO
     {

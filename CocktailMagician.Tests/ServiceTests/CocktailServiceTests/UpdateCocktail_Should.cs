@@ -2,14 +2,11 @@
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
@@ -21,7 +18,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
         public async Task UpdateCocktail_WhenParamsAreValid()
         {
             //Arrange
-            var mockDateTimeprovider = new Mock<IDatetimeProvider>();
+            var mockDateTimeprovider = new Mock<IDateTimeProvider>();
             var mockIngMapper = new Mock<IngredientMapper>();
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(UpdateCocktail_WhenParamsAreValid));

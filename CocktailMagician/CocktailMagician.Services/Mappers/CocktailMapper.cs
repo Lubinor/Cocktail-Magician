@@ -1,19 +1,17 @@
 ﻿using CocktailMagician.Models;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
-using CocktailMagician.Services.Provider.Contracts;
+using CocktailMagician.Services.Providers.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CocktailMagician.Services.Mappers
 {
     public class CocktailMapper : ICocktailMapper
     {
-        private readonly IDatetimeProvider datetimeProvider;
+        private readonly IDateTimeProvider datetimeProvider;
 
-        public CocktailMapper(IDatetimeProvider datetimeProvider)
+        public CocktailMapper(IDateTimeProvider datetimeProvider)
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));
         }
