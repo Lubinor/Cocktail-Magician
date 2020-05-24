@@ -24,7 +24,7 @@ namespace CocktailMagician.Services
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
         }
 
-        public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = "default")
+        public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = null)
         {
             var bars = this.context.Bars
                 .Include(b => b.BarCocktails)
