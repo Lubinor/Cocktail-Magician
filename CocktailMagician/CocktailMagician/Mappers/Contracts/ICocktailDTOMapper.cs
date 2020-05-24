@@ -3,9 +3,9 @@ using CocktailMagician.Web.Models;
 
 namespace CocktailMagician.Web.Mappers.Contracts
 {
-    interface ICocktailDTOMapper
+    public interface ICocktailDTOMapper
     {
+        public CocktailViewModel MapToVMFromDTO(CocktailDTO coctailDTO);
         public CocktailDTO MapToDTOFromVM(CocktailViewModel coctailVM);
-        public CocktailViewModel MapToCocktail(CocktailDTO coctailDTO);
     }
 }

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CocktailMagician.Web.Models.CocktailViewModel>
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Cocktails</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AverageRating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bars)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredients)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AverageRating)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bars)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ingredients)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-name="@item.Name">Edit</a> |
+                    <a asp-action="Details" asp-route-name="@item.Name">Details</a> |
+                    <a asp-action="Delete" asp-route-name="@item.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

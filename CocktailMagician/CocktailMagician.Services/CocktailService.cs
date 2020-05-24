@@ -176,7 +176,7 @@ namespace CocktailMagician.Services
         public async Task<List<CocktailDTO>> FilteredCocktailsAsync(string filter)
         {
             var cocktails = this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false
-                && cocktail.Name.ToLower().Contains(filter.ToLower()) && cocktail.IngredientsCocktails.Any(ing => ing.Ingredient.Name.ToLower() == filter.ToLower()))
+                && cocktail.Name.ToLower().Contains(filter.ToLower()) || cocktail.IngredientsCocktails.Any(ing => ing.Ingredient.Name.ToLower() == filter.ToLower()))
                 .Include(ic => ic.IngredientsCocktails)
                     .ThenInclude(i => i.Ingredient);
 
