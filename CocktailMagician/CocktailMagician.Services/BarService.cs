@@ -23,25 +23,19 @@ namespace CocktailMagician.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context)); ;
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
         }
-
+        //TODO make a separate method that accepts collection - but it will not be Async. Which is better?
         public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = null)
         {
             var bars = this.context.Bars
                 .Include(b => b.BarCocktails)
                 .Where(b => !b.IsDeleted);
 
-            switch (sortMethod)
+            bars = sortMethod switch
             {
-                case "name":
-                    bars = bars.OrderBy(b => b.Name);
-                    break;
-                case "name_desc":
-                    bars = bars.OrderByDescending(b => b.Name);
-                    break;
-                default:
-                    bars = bars.OrderBy(b => b.Id);
-                    break;
-            }
+                "name" => bars.OrderBy(b => b.Name),
+                "name_desc" => bars.OrderByDescending(b => b.Name),
+                _ => bars.OrderBy(b => b.Id),
+            };
 
             var barDTOs = await bars
                 .Select(b => this.barMapper.MapToBarDTO(b))
@@ -70,7 +64,7 @@ namespace CocktailMagician.Services
         {
             if (barDTO == null)
             {
-                throw new ArgumentNullException();
+                return null;
             }
 
             //TODO check with Ivo for unique 
@@ -96,8 +90,10 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            //TODO check if collection is deleted
-            bar = this.barMapper.MapToBar(barDTO);
+            bar.Name = barDTO.Name;
+            bar.CityId = barDTO.CityId;
+            bar.Address = barDTO.Address;
+            bar.Phone = barDTO.Phone;
 
             this.context.Bars.Update(bar);
             await this.context.SaveChangesAsync();
@@ -133,8 +129,13 @@ namespace CocktailMagician.Services
             return true;
         }
 
-        public async Task<ICollection<BarDTO>> FilteredBarsAsync(string filter)
+        public async Task<ICollection<BarDTO>> FilterBarsAsync(string filter)
         {
+            if (filter == null)
+            {
+                return null;
+            }
+
             var bars = this.context.Bars
                 .Include(b => b.BarCocktails)
                 .Where(b => !b.IsDeleted);

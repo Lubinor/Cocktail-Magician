@@ -4,89 +4,83 @@ using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
 
-namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
+namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 {
     [TestClass]
-    public class GetCityAsync_Should
+    public class DeleteBarAsync_Should
     {
         [TestMethod]
-        public async Task ReturnNull_CityDoesNotExist()
+        public async Task ReturnFalse_IfBarDoesNotExistOrIsDeleted()
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockICityMapper = new Mock<ICityMapper>();
             var mockIBarMapper = new Mock<IBarMapper>();
 
-            var options = Utils.GetOptions(nameof(ReturnNull_CityDoesNotExist));
+            var options = Utils.GetOptions(nameof(ReturnFalse_IfBarDoesNotExistOrIsDeleted));
 
-            var city = Utils.ReturnOneCity(options);
+            var bars = Utils.ReturnTwoBars(options);
 
             using (var arrangeContext = new CocktailMagicianContext(options))
             {
-                arrangeContext.Cities.Add(city);
+                arrangeContext.Bars.AddRange(bars);
                 await arrangeContext.SaveChangesAsync();
             }
+
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.GetCityAsync(2);
+                var result = await sut.DeletBarAsync(4);
 
-                Assert.IsNull(result);
+                Assert.IsFalse(result);
             }
         }
 
         [TestMethod]
-        public async Task Return_WhenParamsAreValid()
+        public async Task DeleteBar_IfParamsAreValid()
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
                 .Returns<Bar>(b => new BarDTO
                 {
                     Id = b.Id,
-                    Phone = b.Phone,
                     Name = b.Name,
+                    CityId = b.CityId,
                     Address = b.Address,
-                    AverageRating = b.AverageRating,
+                    Phone = b.Phone,
+                    AverageRating = b.AverageRating
                 });
 
-            var mockICityMapper = new Mock<ICityMapper>();
-            mockICityMapper
-                .Setup(x => x.MapToCityDTO(It.IsAny<City>()))
-                .Returns<City>(c => new CityDTO
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                });
+            var options = Utils.GetOptions(nameof(DeleteBar_IfParamsAreValid));
 
-            var options = Utils.GetOptions(nameof(Return_WhenParamsAreValid));
-
-            var city = Utils.ReturnOneCity(options);
+            var bar = Utils.ReturnOneBar(options);
 
             using (var arrangeContext = new CocktailMagicianContext(options))
             {
-                arrangeContext.Cities.Add(city);
+                arrangeContext.Bars.Add(bar);
                 await arrangeContext.SaveChangesAsync();
             }
+
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.GetCityAsync(1);
+                var result = await sut.DeletBarAsync(1);
 
-                Assert.AreEqual(city.Id, result.Id);
-                Assert.AreEqual(city.Name, result.Name);
-                Assert.AreEqual(city.Bars.Count, result.Bars.Count);
+                var expectedBar = await assertContext.Bars.FirstOrDefaultAsync(b => b.Id == 1);
+
+                Assert.IsTrue(result);
+                Assert.AreEqual(true, expectedBar.IsDeleted);
             }
         }
     }

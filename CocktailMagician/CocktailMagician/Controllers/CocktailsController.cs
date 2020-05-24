@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CocktailMagician.Data;
-using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using CocktailMagician.Services.DTOs;
 
 namespace CocktailMagician.Web.Controllers
@@ -49,7 +43,7 @@ namespace CocktailMagician.Web.Controllers
                 cocktail.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
                     .Where(ingredient => ingredient.Name == cocktail.Name)
                     .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
-                cocktail.Bars = (await this.barService.GetAllBarsAsync(null))
+                cocktail.Bars = (await this.barService.GetAllBarsAsync())
                     .Where(bar => bar.Name == cocktail.Name)
                     .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
             }
@@ -77,7 +71,7 @@ namespace CocktailMagician.Web.Controllers
             cocktailVM.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
                 .Where(ingredient => ingredient.Name == cocktailVM.Name)
                 .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
-            cocktailVM.Bars = (await this.barService.GetAllBarsAsync(null))
+            cocktailVM.Bars = (await this.barService.GetAllBarsAsync())
                 .Where(bar => bar.Name == cocktailVM.Name)
                 .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
 

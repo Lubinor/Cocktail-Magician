@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CocktailMagician.Data;
-using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
-using Microsoft.CodeAnalysis.CSharp;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Models;
 

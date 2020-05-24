@@ -12,58 +12,72 @@ using System.Threading.Tasks;
 namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 {
     [TestClass]
-    public class GetAllBarsAsync_Should
+    public class FilterBarsAsync_Should
     {
         [TestMethod]
-        public async Task Return_IfNoBars()
+        public async Task ReturnNull_IfFilterIsNull()
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockIBarMapper = new Mock<IBarMapper>();
+            mockIBarMapper
+                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
+                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
 
-            var options = Utils.GetOptions(nameof(Return_IfNoBars));
+            var options = Utils.GetOptions(nameof(ReturnNull_IfFilterIsNull));
+
+            var bars = Utils.ReturnTwoBars(options);
+
+            using (var arrangeContext = new CocktailMagicianContext(options))
+            {
+                arrangeContext.Bars.AddRange(bars);
+                await arrangeContext.SaveChangesAsync();
+            }
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.GetAllBarsAsync();
+                var result = await sut.FilterBarsAsync(null);
+
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
+        public async Task ReturnEmpty_IfNoMatchesFound()
+        {
+            //Arrange
+            var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarMapper = new Mock<IBarMapper>();
+            mockIBarMapper
+                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
+                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
+
+            var options = Utils.GetOptions(nameof(ReturnEmpty_IfNoMatchesFound));
+
+            var bars = Utils.ReturnTwoBars(options);
+
+            using (var arrangeContext = new CocktailMagicianContext(options))
+            {
+                arrangeContext.Bars.AddRange(bars);
+                await arrangeContext.SaveChangesAsync();
+            }
+
+            //Act & Assert
+            using (var assertContext = new CocktailMagicianContext(options))
+            {
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+
+                var result = await sut.FilterBarsAsync("Zzzz");
 
                 Assert.AreEqual(0, result.Count);
             }
         }
 
         [TestMethod]
-        public async Task Return_ProperBarCount()
-        {
-            //Arrange
-            var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockIBarMapper = new Mock<IBarMapper>();
-
-            var options = Utils.GetOptions(nameof(Return_ProperBarCount));
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
-
-                var result = await sut.GetAllBarsAsync();
-                int barsCount = assertContext.Bars.Count();
-
-                Assert.AreEqual(barsCount, result.Count);
-            }
-        }
-
-        [TestMethod]
-        public async Task Return_DefaultSortingById()
+        public async Task ReturnValid_StringFilter()
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
@@ -72,7 +86,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
                 .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
 
-            var options = Utils.GetOptions(nameof(Return_DefaultSortingById));
+            var options = Utils.GetOptions(nameof(ReturnValid_StringFilter));
 
             var bars = Utils.ReturnTwoBars(options);
 
@@ -87,58 +101,30 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             {
                 var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.GetAllBarsAsync();
-                var resultList = result.ToList();
+                var result = await sut.FilterBarsAsync("Lor");
+                var expectedBar = result.FirstOrDefault(x => x.Name == "Lorka");
 
-                Assert.AreEqual(1, resultList[0].Id); //Id 1 -> Lorka
-                Assert.AreEqual(2, resultList[1].Id); //Id 2 -> Bilkova
+                Assert.AreEqual(1, result.Count);
+                Assert.AreEqual("Lorka", expectedBar.Name);
             }
         }
 
         [TestMethod]
-        public async Task Return_CitiesNameAsc()
+        public async Task ReturnValid_DoubleFilter()
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
-                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
+                .Returns<Bar>(b => new BarDTO 
+                { 
+                    Id = b.Id, 
+                    Name = b.Name,
+                    AverageRating = b.AverageRating
+                });
 
-            var options = Utils.GetOptions(nameof(Return_CitiesNameAsc));
-
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
-
-                var result = await sut.GetAllBarsAsync("name");
-                var resultList = result.ToList();
-
-                Assert.AreEqual(2, resultList[0].Id); //Id 2 -> Bilkova
-                Assert.AreEqual(1, resultList[1].Id); //Id 1 -> Lorka
-            }
-        }
-
-        [TestMethod]
-        public async Task Return_CitiesNameDesc()
-        {
-            //Arrange
-            var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockIBarMapper = new Mock<IBarMapper>();
-            mockIBarMapper
-                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
-                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
-
-            var options = Utils.GetOptions(nameof(Return_CitiesNameDesc));
+            var options = Utils.GetOptions(nameof(ReturnValid_DoubleFilter));
 
             var bars = Utils.ReturnTwoBars(options);
 
@@ -153,11 +139,11 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             {
                 var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.GetAllBarsAsync("name_desc");
-                var resultList = result.ToList();
+                var result = await sut.FilterBarsAsync("3.7");
+                var expectedBar = result.FirstOrDefault(x => x.AverageRating >= 3.7);
 
-                Assert.AreEqual(1, resultList[0].Id); //Id 1 -> Lorka
-                Assert.AreEqual(2, resultList[1].Id); //Id 2 -> Bilkova
+                Assert.AreEqual(1, result.Count);
+                Assert.AreEqual("Bilkova", expectedBar.Name);
             }
         }
     }
