@@ -18,6 +18,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+            var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(ReturnFalse_CityDoesNotExistOrDeleted));
 
@@ -31,7 +32,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.DeleteCityAsync(2);
 
@@ -45,6 +46,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+            var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(ReturnTrue_WhenDeletedSuccessfully));
 
@@ -58,7 +60,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.DeleteCityAsync(1);
                 var deletedCity = await assertContext.Cities.FirstOrDefaultAsync(c => c.Id == 1);

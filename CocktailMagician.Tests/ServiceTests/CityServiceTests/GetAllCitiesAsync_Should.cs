@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,18 +14,19 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
     public class GetAllCitiesAsync_Should
     {
         [TestMethod]
-        public async Task Return_IfEmptyCollection()
+        public async Task Return_IfNoCities()
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+            var mockIBarMapper = new Mock<IBarMapper>();
 
-            var options = Utils.GetOptions(nameof(Return_IfEmptyCollection));
+            var options = Utils.GetOptions(nameof(Return_IfNoCities));
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.GetAllCitiesAsync();
 
@@ -38,6 +40,8 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+
+            var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(Return_ProperCityCount));
 
@@ -53,7 +57,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.GetAllCitiesAsync();
 

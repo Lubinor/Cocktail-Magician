@@ -21,13 +21,27 @@ namespace CocktailMagician.Services
         {
             this.dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             this.context = context ?? throw new ArgumentNullException(nameof(context)); ;
-            this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper)); ;
+            this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
         }
-        public async Task<ICollection<BarDTO>> GetAllBarsAsync()
+
+        public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = "default")
         {
             var bars = this.context.Bars
                 .Include(b => b.BarCocktails)
                 .Where(b => !b.IsDeleted);
+
+            switch (sortMethod)
+            {
+                case "name":
+                    bars = bars.OrderBy(b => b.Name);
+                    break;
+                case "name_desc":
+                    bars = bars.OrderByDescending(b => b.Name);
+                    break;
+                default:
+                    bars = bars.OrderBy(b => b.Id);
+                    break;
+            }
 
             var barDTOs = await bars
                 .Select(b => this.barMapper.MapToBarDTO(b))
@@ -51,6 +65,7 @@ namespace CocktailMagician.Services
 
             return barDTO;
         }
+
         public async Task<BarDTO> CreateBarAsync(BarDTO barDTO)
         {
             if (barDTO == null)
@@ -58,7 +73,9 @@ namespace CocktailMagician.Services
                 throw new ArgumentNullException();
             }
 
+            //TODO check with Ivo for unique 
             var bar = this.barMapper.MapToBar(barDTO);
+            bar.CreatedOn = dateTimeProvider.GetDateTime();
 
             this.context.Bars.Add(bar);
             await this.context.SaveChangesAsync();
@@ -79,11 +96,13 @@ namespace CocktailMagician.Services
                 return null;
             }
 
+            //TODO check if collection is deleted
             bar = this.barMapper.MapToBar(barDTO);
 
             this.context.Bars.Update(bar);
             await this.context.SaveChangesAsync();
 
+            //Does it make sense? Or should I dig into the context again?
             var updatedBarDTO = this.barMapper.MapToBarDTO(bar);
 
             return updatedBarDTO;
@@ -92,7 +111,7 @@ namespace CocktailMagician.Services
         public async Task<bool> DeletBarAsync(int id)
         {
             var bar = await this.context.Bars
-                .Include(b => b.BarCocktails)
+                .Include(b => b.BarReviews)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
             if (bar == null)
@@ -102,20 +121,38 @@ namespace CocktailMagician.Services
 
             bar.IsDeleted = true;
 
-            foreach (var cocktail in bar.BarCocktails)
-            {
-                cocktail.Cocktail.IsDeleted = true;
-            }
-
             foreach (var review in bar.BarReviews)
             {
                 review.IsDeleted = true;
+                this.context.BarsUsersReviews.Update(review);
             }
 
             this.context.Bars.Update(bar);
             await this.context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<ICollection<BarDTO>> FilteredBarsAsync(string filter)
+        {
+            var bars = this.context.Bars
+                .Include(b => b.BarCocktails)
+                .Where(b => !b.IsDeleted);
+
+            if (double.TryParse(filter, out double result))
+            {
+                bars = bars.Where(b => b.AverageRating >= result);
+            }
+            else
+            {
+                bars = bars.Where(b => b.Name.ToLower().Contains(filter.ToLower()));
+            }
+
+            var barDTOs = await bars
+                .Select(b => this.barMapper.MapToBarDTO(b))
+                .ToListAsync();
+
+            return barDTOs;
         }
     }
 }

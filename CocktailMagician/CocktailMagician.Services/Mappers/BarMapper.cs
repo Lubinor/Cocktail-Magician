@@ -30,6 +30,7 @@ namespace CocktailMagician.Services.Mappers
 
             var barCocktails = bar.BarCocktails
                                     .Select(b => b.Cocktail)
+                                    .Where(c => !c.IsDeleted)
                                     .ToList();
 
             barDTO.Cocktails = barCocktails
@@ -45,23 +46,22 @@ namespace CocktailMagician.Services.Mappers
         }
         public Bar MapToBar(BarDTO barDTO)
         {
-            Bar bar = new Bar();
-            bar.Name = barDTO.Name;
-            bar.CityId = barDTO.CityId;
-            bar.Address = barDTO.Address;
-            bar.Phone = barDTO.Phone;
-            bar.AverageRating = barDTO.AverageRating;
-            //bar.CreatedOn = barDTO.CreatedOn;
-            //bar.IsDeleted = barDTO.IsDeleted;
+            Bar bar = new Bar
+            {
+                Name = barDTO.Name,
+                CityId = barDTO.CityId,
+                Address = barDTO.Address,
+                Phone = barDTO.Phone,
+                AverageRating = barDTO.AverageRating
+            };
 
-            var barCocktails = barDTO.Cocktails
-                                    .Select(c => cocktailMapper
-                                    .MapToCocktail(c))
-                                    .ToList();
+            //var barCocktails = barDTO.Cocktails
+            //                        .Select(c => cocktailMapper.MapToCocktail(c))
+            //                        .ToList();
 
-            bar.BarCocktails = barCocktails
-                                    .Select(x => new BarsCocktails { BarId = barDTO.Id, CocktailId = x.Id })
-                                    .ToList();
+            //bar.BarCocktails = barCocktails
+            //                        .Select(x => new BarsCocktails { BarId = barDTO.Id, CocktailId = x.Id })
+            //                        .ToList();
 
             return bar;
         }

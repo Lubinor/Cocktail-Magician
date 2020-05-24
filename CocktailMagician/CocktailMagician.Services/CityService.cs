@@ -16,12 +16,14 @@ namespace CocktailMagician.Services
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly CocktailMagicianContext context;
         private readonly ICityMapper cityMapper;
+        private readonly IBarMapper barMapper;
 
-        public CityService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, ICityMapper cityMapper)
+        public CityService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, ICityMapper cityMapper, IBarMapper barMapper)
         {
             this.dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.cityMapper = cityMapper ?? throw new ArgumentNullException(nameof(cityMapper));
+            this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
         }
 
         public async Task<ICollection<CityDTO>> GetAllCitiesAsync()
@@ -41,7 +43,7 @@ namespace CocktailMagician.Services
         {
             var city = await this.context.Cities
                 .Include(c => c.Bars)
-                .Where(c => !c.IsDeleted)
+                .Where(c => !c.IsDeleted && c.Id == id)
                 .FirstOrDefaultAsync();
 
             if (city == null)
@@ -50,6 +52,11 @@ namespace CocktailMagician.Services
             }
 
             var cityDTO = this.cityMapper.MapToCityDTO(city);
+
+            cityDTO.Bars = city.Bars
+                .Where(bar => !bar.IsDeleted)
+                .Select(bar => barMapper.MapToBarDTO(bar))
+                .ToList();
 
             return cityDTO;
         }
@@ -82,7 +89,7 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            city.Name = cityDTO.Name;
+            city.Name = cityDTO.Name; //update manually, instead of replacing the whole object, to avoid overwriting collections?
 
             this.context.Cities.Update(city);
             await this.context.SaveChangesAsync();
@@ -96,7 +103,7 @@ namespace CocktailMagician.Services
         {
             var city = await this.context.Cities
                 .Include(c => c.Bars)
-                .ThenInclude(b => b.BarReviews)
+                    .ThenInclude(b => b.BarReviews)
                 .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
 
             if (city == null)
@@ -116,11 +123,6 @@ namespace CocktailMagician.Services
                     review.IsDeleted = true;
                     this.context.BarsUsersReviews.Update(review);
                 }
-                //foreach (var cocktail in bar.Cocktails)
-                //{
-                //    cocktail.IsDeleted = true;
-                //    this.context.BarsCocktails.Update(cocktail);
-                //}
             }
             this.context.Cities.Update(city);
             await this.context.SaveChangesAsync();

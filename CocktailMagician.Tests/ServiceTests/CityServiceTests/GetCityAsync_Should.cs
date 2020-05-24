@@ -7,6 +7,7 @@ using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
@@ -20,6 +21,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+            var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(ReturnNull_CityDoesNotExist));
 
@@ -33,7 +35,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.GetCityAsync(2);
 
@@ -46,22 +48,26 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+
+            var mockIBarMapper = new Mock<IBarMapper>();
+            mockIBarMapper
+                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
+                .Returns<Bar>(b => new BarDTO
+                {
+                    Id = b.Id,
+                    Phone = b.Phone,
+                    Name = b.Name,
+                    Address = b.Address,
+                    AverageRating = b.AverageRating,
+                });
+
             var mockICityMapper = new Mock<ICityMapper>();
             mockICityMapper
                 .Setup(x => x.MapToCityDTO(It.IsAny<City>()))
-                .Returns(new CityDTO
+                .Returns<City>(c => new CityDTO
                 {
-                    Id = 1,
-                    Name = "Sofia",
-                    Bars = new List<BarDTO>
-                    {
-                        new BarDTO
-                        {
-                        Id = 1,
-                        Name = "Lorka",
-                        CityId = 1
-                        }
-                    }
+                    Id = c.Id,
+                    Name = c.Name
                 });
 
             var options = Utils.GetOptions(nameof(Return_WhenParamsAreValid));
@@ -76,14 +82,13 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.GetCityAsync(1);
 
                 Assert.AreEqual(city.Id, result.Id);
                 Assert.AreEqual(city.Name, result.Name);
                 Assert.AreEqual(city.Bars.Count, result.Bars.Count);
-                //collection?
             }
         }
     }

@@ -19,6 +19,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+            var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfCityDoesNotExist));
 
@@ -39,7 +40,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.UpdateCityAsync(4, updatedCityDTO);
 
@@ -53,6 +54,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockICityMapper = new Mock<ICityMapper>();
+            var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(ReturnUpdatedCityDTO_WhenParamsAreValid));
 
@@ -73,7 +75,7 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object);
+                var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
                 var result = await sut.UpdateCityAsync(1, updatedCityDTO);
 

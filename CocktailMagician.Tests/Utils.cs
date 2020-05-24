@@ -49,14 +49,14 @@ namespace CocktailMagician.Tests
             //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 2, CocktailId = 1 });
             //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 3, CocktailId = 1 });
 
-            var bar = new Bar 
-            { 
-                Id = 1, 
-                Name = "Lorka", 
-                CityId = 1, 
-                City = city, 
-                Address = "Shishman str.", 
-                Phone = "0888 888 888",  
+            var bar = new Bar
+            {
+                Id = 1,
+                Name = "Lorka",
+                CityId = 1,
+                City = city,
+                Address = "Shishman str.",
+                Phone = "0888 888 888",
                 AverageRating = 3.5,
             };
 
@@ -64,6 +64,50 @@ namespace CocktailMagician.Tests
 
             return bar;
         }
+
+        public static List<Bar> ReturnTwoBars(DbContextOptions<CocktailMagicianContext> options)
+        {
+            var city = new City { Id = 1, Name = "Sofia" };
+
+            var cocktail = new Cocktail { Id = 1, Name = "Bloody Mary" };
+            //var ingredient1 = new Ingredient { Id = 1, Name = "Vodka" };
+            //var ingredient2 = new Ingredient { Id = 2, Name = "Tomato juice" };
+            //var ingredient3 = new Ingredient { Id = 3, Name = "Tabasco" };
+
+            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 1, CocktailId = 1 });
+            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 2, CocktailId = 1 });
+            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 3, CocktailId = 1 });
+
+            var bars = new List<Bar>
+            {
+                new Bar
+                {
+                    Id = 1,
+                    Name = "Lorka",
+                    CityId = 1,
+                    City = city,
+                    Address = "Shishman str.",
+                    Phone = "0888 888 888",
+                    AverageRating = 3.5,
+                },
+                new Bar
+                {
+                    Id = 2,
+                    Name = "Bilkova",
+                    CityId = 1,
+                    City = city,
+                    Address = "Shishman str.",
+                    Phone = "0888 888 444",
+                    AverageRating = 4,
+                }
+            };
+
+            bars[0].BarCocktails.Add(new BarsCocktails { BarId = 1, CocktailId = cocktail.Id, Cocktail = cocktail });
+            bars[1].BarCocktails.Add(new BarsCocktails { BarId = 2, CocktailId = cocktail.Id, Cocktail = cocktail });
+
+            return bars;
+        }
+
 
         public static BarDTO ReturnOneBarDTO(DbContextOptions<CocktailMagicianContext> options)
         {
