@@ -11,6 +11,25 @@ namespace CocktailMagician.Web.Mappers
         {
 
         }
+        public IngredientViewModel MapToVMFromDTO(IngredientDTO ingredientDTO)
+        {
+            if (ingredientDTO == null)
+            {
+                return null;
+            }
+            var ingredientVM = new IngredientViewModel
+            {
+                Id = ingredientDTO.Id,
+                Name = ingredientDTO.Name,
+                Cocktails = ingredientDTO.CocktailDTOs.Select(c => new CocktailViewModel
+                {
+                    Name = c.Name,
+                    AverageRating = c.AverageRating
+                }).ToList()
+            };
+
+            return ingredientVM;
+        }
         public IngredientDTO MapToDTOFromVM(IngredientViewModel ingredientVM)
         {
             if (ingredientVM == null)
@@ -21,26 +40,8 @@ namespace CocktailMagician.Web.Mappers
             {
                 Name = ingredientVM.Name
             };
+            
             return ingredientDTO;
-        }
-
-        public IngredientViewModel MapToVMFromDTO(IngredientDTO ingredientDTO)
-        {
-            if (ingredientDTO == null)
-            {
-                return null;
-            }
-            var ingredientVM = new IngredientViewModel
-            {
-                Name = ingredientDTO.Name,
-                Cocktails = ingredientDTO.CocktailDTOs.Select(c => new CocktailViewModel
-                {
-                    Name = c.Name,
-                    AverageRating = c.AverageRating
-                }).ToList()
-            };
-
-            return ingredientVM;
         }
     }
 }

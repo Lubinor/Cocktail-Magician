@@ -6,6 +6,8 @@ using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers;
 using CocktailMagician.Services.Providers.Contracts;
+using CocktailMagician.Web.Mappers;
+using CocktailMagician.Web.Mappers.Contracts;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +55,9 @@ namespace CocktailMagician.Web
             services.AddScoped<ICocktailService, CocktailService>();
             services.AddScoped<IIngredientMapper, IngredientMapper>();
             services.AddScoped<ICocktailMapper, CocktailMapper>();
+            services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
+            services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

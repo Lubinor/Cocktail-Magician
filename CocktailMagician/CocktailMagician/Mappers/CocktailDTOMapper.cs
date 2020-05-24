@@ -11,7 +11,7 @@ namespace CocktailMagician.Web.Mappers
         {
 
         }
-        public CocktailViewModel MapToCocktail(CocktailDTO cocktailDTO)
+        public CocktailViewModel MapToVMFromDTO(CocktailDTO cocktailDTO)
         {
             if (cocktailDTO == null)
             {
@@ -24,9 +24,9 @@ namespace CocktailMagician.Web.Mappers
                 Bars = cocktailDTO.Bars.Select(b => new BarViewModel
                 {
                     Name = b.Name,
-                    Address = b.Address,
+                    //Address = b.Address,
                     CityName = b.CityName,
-                    Phone = b.Phone,
+                    //Phone = b.Phone,
                     AverageRating = b.AverageRating
                 }).ToList(),
                 Ingredients = cocktailDTO.Ingredients.Select(i => new IngredientViewModel
