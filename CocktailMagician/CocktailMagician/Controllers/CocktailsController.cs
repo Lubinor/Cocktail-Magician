@@ -49,7 +49,7 @@ namespace CocktailMagician.Web.Controllers
                 cocktail.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
                     .Where(ingredient => ingredient.Name == cocktail.Name)
                     .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
-                cocktail.Bars = (await this.barService.GetAllBarsAsync(null))
+                cocktail.Bars = (await this.barService.GetAllBarsAsync())
                     .Where(bar => bar.Name == cocktail.Name)
                     .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
             }
@@ -77,7 +77,7 @@ namespace CocktailMagician.Web.Controllers
             cocktailVM.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
                 .Where(ingredient => ingredient.Name == cocktailVM.Name)
                 .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
-            cocktailVM.Bars = (await this.barService.GetAllBarsAsync(null))
+            cocktailVM.Bars = (await this.barService.GetAllBarsAsync())
                 .Where(bar => bar.Name == cocktailVM.Name)
                 .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
 

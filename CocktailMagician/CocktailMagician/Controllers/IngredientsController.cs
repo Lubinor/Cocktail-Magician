@@ -35,16 +35,17 @@ namespace CocktailMagician.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var ingrdientDTOs = await this.ingredientService.GetAllIngredientsAsync();
-            var ingredientVMs = ingrdientDTOs.Select(ingredientDTO => 
+            var ingredientDTOs = await this.ingredientService.GetAllIngredientsAsync();
+            var ingredientVMs = ingredientDTOs.Select(ingredientDTO =>
                 ingredientDTOMapper.MapToVMFromDTO(ingredientDTO)).ToList();
 
             foreach (var ingredient in ingredientVMs)
             {
                 ingredient.Cocktails = (await this.cocktailService.GetAllCocktailssAsync())
-                    .Where(cocktail => cocktail.Name == ingredient.Name)
+                    .Where(cocktail => cocktail.Ingredients.Any(x => x.Name == ingredient.Name))
                     .Select(cdto => cocktailDTOMapper.MapToVMFromDTO(cdto)).ToList();
             }
+
             return View(ingredientVMs);
         }
 
@@ -66,7 +67,7 @@ namespace CocktailMagician.Web.Controllers
 
             var ingredientVM = this.ingredientDTOMapper.MapToVMFromDTO(ingredientDTO);
             ingredientVM.Cocktails = (await this.cocktailService.GetAllCocktailssAsync())
-                .Where(cocktail => cocktail.Name == ingredientVM.Name)
+                .Where(cocktail => cocktail.Ingredients.Any(x => x.Name == ingredientVM.Name))
                 .Select(cdto => cocktailDTOMapper.MapToVMFromDTO(cdto)).ToList();
 
             return View(ingredientVM);
@@ -88,7 +89,7 @@ namespace CocktailMagician.Web.Controllers
             if (ModelState.IsValid)
             {
                 await this.ingredientService.CreateIngredientAsync(ingredientDTO);
-                
+
                 return RedirectToAction(nameof(Index));
             }
             return View(); //TODO: here must returns something - middleware maybe
@@ -99,7 +100,7 @@ namespace CocktailMagician.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var ingredientDTO = await this.ingredientService.GetIngredientAsync(id);
-            
+
             if (ingredientDTO == null)
             {
                 return NotFound();
@@ -151,7 +152,7 @@ namespace CocktailMagician.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var ingredientDTO = await this.ingredientService.GetIngredientAsync(id);
-            
+
             if (ingredientDTO == null)
             {
                 return NotFound();
@@ -168,10 +169,30 @@ namespace CocktailMagician.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.ingredientService.DeleteIngredientAsync(id);
-            
+
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+        public async Task<IActionResult> ListAllIngredients()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            int totalIngredients = this.ingredientService.GetAllCocktailsCount();
+            var ingredients = await this.ingredientService.ListAllIngredientsAsync(skip, pageSize, searchValue);
+
+            var model = ingredients.Select(ingredient => this.ingredientDTOMapper.MapToVMFromDTO(ingredient));
+
+            var json = Json(new { draw = draw, recordsFiltered = totalIngredients, recordsTotal = totalIngredients, data = model });
+
+            return json;
+            //return Json(new {draw = draw, recordsFiltered = totalIngredients, recordsTotal = totalIngredients, data = model });
+        }
         private bool IngredientExists(int id)
         {
             return this.ingredientService.GetAllIngredientsAsync().Result.Any(e => e.Id == id);

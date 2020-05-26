@@ -1,4 +1,5 @@
 ﻿using CocktailMagician.Data;
+using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
@@ -18,8 +19,8 @@ namespace CocktailMagician.Services
         private readonly ICocktailMapper cocktailMapper;
         private readonly CocktailMagicianContext context;
 
-        public IngredientService(IDateTimeProvider datetimeProvider, IIngredientMapper mapper, 
-            ICocktailMapper cocktailMapper,  CocktailMagicianContext context)
+        public IngredientService(IDateTimeProvider datetimeProvider, IIngredientMapper mapper,
+            ICocktailMapper cocktailMapper, CocktailMagicianContext context)
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -61,7 +62,7 @@ namespace CocktailMagician.Services
 
             var ingredientDTO = mapper.MapToIngredientDTO(ingredient);
             var ingredientCocktails = ingredient.IngredientsCocktails.Select(x => x.Cocktail);
-            ingredientDTO.CocktailDTOs = ingredientCocktails.Where(c=>c.IsDeleted==false)
+            ingredientDTO.CocktailDTOs = ingredientCocktails.Where(c => c.IsDeleted == false)
                 .Select(x => cocktailMapper.MapToCocktailDTO(x)).ToList();
 
             return ingredientDTO;
@@ -138,6 +139,42 @@ namespace CocktailMagician.Services
                 await this.context.SaveChangesAsync();
                 return true;
             }
+        }
+        public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue)
+        {
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                var ingredients = await this.context.Ingredients
+                     .Where(ingredient => ingredient.Name.ToLower()
+                     .Any(x => x.Equals(searchValue)))
+                     //.StartsWith(searchValue))
+                     .OrderBy(ingredient => ingredient.Name)
+                     .Skip(skip)
+                     .Take(pageSize)
+                     .ToListAsync();
+
+                var ingredientDTOs = ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToList();
+
+                return ingredientDTOs;
+            }
+            else
+            {
+                var ingredients = await this.context.Ingredients
+                    .OrderBy(a => a.Id)
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var ingredientDTOs = ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToList();
+
+                return ingredientDTOs;
+            }
+        }
+        public int GetAllCocktailsCount()
+        {
+            return this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false).Count();
         }
     }
 }

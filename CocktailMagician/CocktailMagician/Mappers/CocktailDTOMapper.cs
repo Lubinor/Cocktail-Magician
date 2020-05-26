@@ -19,6 +19,7 @@ namespace CocktailMagician.Web.Mappers
             }
             var cocktailVM = new CocktailViewModel
             {
+                Id = cocktailDTO.Id,
                 Name = cocktailDTO.Name,
                 AverageRating = cocktailDTO.AverageRating,
                 Bars = cocktailDTO.Bars.Select(b => new BarViewModel

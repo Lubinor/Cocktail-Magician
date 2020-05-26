@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
@@ -175,26 +176,19 @@ namespace CocktailMagician.Services
         /// <returns>Collection of cocktails or empty collection</returns>
         public async Task<List<CocktailDTO>> FilteredCocktailsAsync(string filter)
         {
-            var cocktails = this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false
-                && cocktail.Name.ToLower().Contains(filter.ToLower()) || cocktail.IngredientsCocktails.Any(ing => ing.Ingredient.Name.ToLower() == filter.ToLower()))
+            var cocktails = this.context.Cocktails
                 .Include(ic => ic.IngredientsCocktails)
-                    .ThenInclude(i => i.Ingredient);
+                    .ThenInclude(i => i.Ingredient)
+                 .Where(cocktail => cocktail.IsDeleted == false);
 
-            var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
-
-            return cocktailDTOs;
-        }
-        /// <summary>
-        /// Shows all cocktails which average rating is equal or grater than "rating".
-        /// </summary>
-        /// <param name="rating">The rating of searched cocktails</param>
-        /// <returns>Collection of cocktails or empty collection</returns>
-        public async Task<List<CocktailDTO>> FilteredCocktailsAsync(double rating)
-        {
-            var cocktails = this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false
-                && cocktail.AverageRating >= rating)
-                .Include(ic => ic.IngredientsCocktails)
-                    .ThenInclude(i => i.Ingredient);
+            if (double.TryParse(filter, out double result))
+            {
+                cocktails = cocktails.Where(cocktail => cocktail.AverageRating >= result);
+            }
+            else
+            {
+                cocktails = cocktails.Where(b => b.Name.ToLower().Contains(filter.ToLower()));
+            }
 
             var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
 

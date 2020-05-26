@@ -123,7 +123,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
                     mockIngMapper.Object, assertContext);
-                var result = await sut.FilteredCocktailsAsync(5);
+                var result = await sut.FilteredCocktailsAsync("5");
 
                 Assert.AreEqual(expected.Count, result.Count);
 

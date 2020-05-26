@@ -53,10 +53,13 @@ namespace CocktailMagician.Web
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ICocktailService, CocktailService>();
+            services.AddScoped<IBarService, BarService>();
             services.AddScoped<IIngredientMapper, IngredientMapper>();
             services.AddScoped<ICocktailMapper, CocktailMapper>();
+            services.AddScoped<IBarMapper, BarMapper>();
             services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
             services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
+            services.AddScoped<IBarDTOMApper, BarDTOMapper>();
 
         }
 
