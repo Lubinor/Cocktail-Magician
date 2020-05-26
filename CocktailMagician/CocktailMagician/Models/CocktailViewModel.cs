@@ -8,6 +8,7 @@ namespace CocktailMagician.Web.Models
         {
 
         }
+        public int Id { get; set; }
         public string Name { get; set; }
         public double AverageRating { get; set; }
         public ICollection<IngredientViewModel> Ingredients { get; set; } = new List<IngredientViewModel>();

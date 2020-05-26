@@ -54,12 +54,15 @@ namespace CocktailMagician.Web
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBarService, BarService>();
             services.AddScoped<ICocktailService, CocktailService>();
+            services.AddScoped<IBarService, BarService>();
             services.AddScoped<IIngredientMapper, IngredientMapper>();
             services.AddScoped<ICocktailMapper, CocktailMapper>();
             services.AddScoped<IBarMapper, BarMapper>();
             services.AddScoped<IBarReviewMapper, BarReviewMapper>();
             services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
             services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
+            services.AddScoped<IBarDTOMApper, BarDTOMapper>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

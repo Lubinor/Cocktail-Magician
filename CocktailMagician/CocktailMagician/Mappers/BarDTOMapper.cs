@@ -1,4 +1,5 @@
-﻿using CocktailMagician.Services.DTOs;
+﻿using CocktailMagician.Models;
+using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Web.Models;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace CocktailMagician.Web.Mappers
 
             var barVM = new BarViewModel
             {
+                Id = barDTO.Id,
                 Name = barDTO.Name,
                 AverageRating = barDTO.AverageRating,
                 CityName = barDTO.CityName,

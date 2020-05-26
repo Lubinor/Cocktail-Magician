@@ -10,34 +10,41 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
+<table id="Ingredients" class="table table-bordered table-dark">
+    <thead class="alert-warning">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cocktails)
-            </th>
-            <th></th>
+            <th>Name</th>
+            <th>Cocktails</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.Cocktails)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |              @*item.Id by default*@
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+            <td></td>
+            <td></td>
         </tr>
-}
     </tbody>
 </table>
+
+@section Scripts
+    {
+    <link rel="stylesheet" type="text/css" href="~/DataTables/datatables.css" />
+    <script type="text/javascript" language="javascript" src="~/DataTables/datatables.js"></script>
+    <script type="text/javascript" class="init"></script>
+    <script>
+        $('#Ingredients').DataTable
+            ({
+            "ordering" : true,
+            "processing" : true,
+            "serverSide": true,
+            "filter":true,
+            "ajax" : {
+            "url" : "@Url.Action("ListAllIngredients", "Ingredients")" ,
+            "type" : "POST" ,
+            "dataType" : "json" ,
+                },
+            "columns" : [
+            { "data" : "Name" },
+            { "data" : "Cocktails" }
+            ]});
+    </script>
+}
