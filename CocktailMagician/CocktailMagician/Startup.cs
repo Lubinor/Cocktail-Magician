@@ -52,12 +52,14 @@ namespace CocktailMagician.Web
 
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IBarService, BarService>();
             services.AddScoped<ICocktailService, CocktailService>();
             services.AddScoped<IIngredientMapper, IngredientMapper>();
             services.AddScoped<ICocktailMapper, CocktailMapper>();
+            services.AddScoped<IBarMapper, BarMapper>();
+            services.AddScoped<IBarReviewMapper, BarReviewMapper>();
             services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
             services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

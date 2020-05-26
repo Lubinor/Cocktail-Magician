@@ -12,6 +12,5 @@ namespace CocktailMagician.Services.Contracts
         Task<BarDTO> UpdateBarAsync(int id, BarDTO barDTO);
         Task<bool> DeletBarAsync(int id);
         Task<ICollection<BarDTO>> FilterBarsAsync(string filter);
-
     }
 }

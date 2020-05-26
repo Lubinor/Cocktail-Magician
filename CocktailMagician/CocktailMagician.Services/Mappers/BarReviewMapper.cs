@@ -6,7 +6,7 @@ namespace CocktailMagician.Services.Mappers
 {
     public class BarReviewMapper : IBarReviewMapper
     {
-        public BarReviewDTO BarReviewToBarReviewDTO(BarsUsersReviews review)
+        public BarReviewDTO MapToBarReviewDTO(BarsUsersReviews review)
         {
             BarReviewDTO reviewDTO = new BarReviewDTO
             {
@@ -20,7 +20,7 @@ namespace CocktailMagician.Services.Mappers
 
             return reviewDTO;
         }
-        public BarsUsersReviews BarReviewDTOtoBarReview(BarReviewDTO reviewDTO)
+        public BarsUsersReviews MapToBarReview(BarReviewDTO reviewDTO)
         {
             BarsUsersReviews review = new BarsUsersReviews
             {
