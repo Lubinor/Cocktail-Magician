@@ -35,6 +35,7 @@ namespace CocktailMagician.Services
             var cocktails = this.context.Cocktails
                 .Include(cocktail => cocktail.CocktailBars)
                     .ThenInclude(cb => cb.Bar)
+                    .ThenInclude(c=>c.City)
                 .Include(cocktail => cocktail.IngredientsCocktails)
                     .ThenInclude(ic => ic.Ingredient)
                 .Where(cocktail => cocktail.IsDeleted == false);
@@ -54,6 +55,7 @@ namespace CocktailMagician.Services
             var cocktail = await this.context.Cocktails
                 .Include(cocktail => cocktail.CocktailBars)
                     .ThenInclude(cb => cb.Bar)
+                    .ThenInclude(c => c.City)
                 .Include(ingredient => ingredient.IngredientsCocktails)
                     .ThenInclude(ic => ic.Ingredient)
                 .FirstOrDefaultAsync(cocktail => cocktail.Id == id & cocktail.IsDeleted == false);
@@ -156,10 +158,10 @@ namespace CocktailMagician.Services
             switch (sort)
             {
                 case "name":
-                    cocktailDTOs = cocktailDTOs.OrderBy(beer => beer.Name).ToList();
+                    cocktailDTOs = cocktailDTOs.OrderBy(cocktail => cocktail.Name).ToList();
                     break;
                 case "name_desc":
-                    cocktailDTOs = cocktailDTOs.OrderByDescending(beer => beer.Name).ToList();
+                    cocktailDTOs = cocktailDTOs.OrderByDescending(cocktail => cocktail.Name).ToList();
                     break;
                 default:
                     cocktailDTOs = cocktailDTOs.OrderBy(cocktail => cocktail.Id).ToList();
@@ -170,9 +172,10 @@ namespace CocktailMagician.Services
         }
         /// <summary>
         /// Shows all cocktails which names matches "filter", or all cocktails which contains
-        /// ingredients with names that matches  "filter".
+        /// ingredients with names that matches  "filter". Or if filter is number, shows all cocktails
+        /// with rating above and equal to that number
         /// </summary>
-        /// <param name="filter">Searched name of cocktail or ingredient</param>
+        /// <param name="filter">Searched name of cocktail or ingredient. Or searched rating</param>
         /// <returns>Collection of cocktails or empty collection</returns>
         public async Task<List<CocktailDTO>> FilteredCocktailsAsync(string filter)
         {
@@ -187,12 +190,51 @@ namespace CocktailMagician.Services
             }
             else
             {
-                cocktails = cocktails.Where(b => b.Name.ToLower().Contains(filter.ToLower()));
+                cocktails = cocktails.Where(cocktail => cocktail.Name.ToLower().Contains(filter.ToLower()) 
+                || cocktail.IngredientsCocktails.Any(ing => ing.Ingredient.Name.ToLower() == filter.ToLower()));
             }
 
             var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
 
             return cocktailDTOs;
+        }
+
+        public async Task<IList<CocktailDTO>> ListAllCocktailsAsync(int skip, int pageSize, string searchValue)
+        {
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                var cocktails = await this.context.Cocktails
+                    .Include(ingredient => ingredient.IngredientsCocktails)
+                        .ThenInclude(i => i.Ingredient)
+                     .Where(cocktail => cocktail.Name.ToLower()
+                     .StartsWith(searchValue))
+                     .OrderBy(cocktail => cocktail.Name)
+                     .Skip(skip)
+                     .Take(pageSize)
+                     .ToListAsync();
+
+                var cocktailDTOs = cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToList();
+
+                return cocktailDTOs;
+            }
+            else
+            {
+                var cocktails = await this.context.Cocktails
+                    .OrderBy(a => a.Id)
+                    .Skip(skip)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                var cocktailDTOs = cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToList();
+
+                return cocktailDTOs;
+            }
+        }
+        public int GetAllCocktailsCount()
+        {
+            return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using CocktailMagician.Data;
+using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
+using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -19,8 +21,10 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         {
             //Arrange
             var mockDatetimeProvider = new Mock<IDateTimeProvider>();
-            var mockMapper = new Mock<IngredientMapper>();
-            var mockCocktailMapper = new Mock<CocktailMapper>();
+            var mockMapper = new Mock<IIngredientMapper>();
+            mockMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
+                .Returns<Ingredient>(i => new IngredientDTO { Id = i.Id, Name = i.Name });
+            var mockCocktailMapper = new Mock<ICocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnCorrectIngredientsAsync));
             var expected = new List<IngredientDTO>
             {
@@ -28,6 +32,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 {
                     Id = 1,
                     Name = "Vodka"
+                    
                 },
                 new IngredientDTO
                 {
@@ -55,7 +60,6 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                     Assert.AreEqual(expected[i].Name, result[i].Name);
                 }
             }
-
         }
     }
 }

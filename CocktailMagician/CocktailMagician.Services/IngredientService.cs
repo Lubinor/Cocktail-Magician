@@ -51,7 +51,7 @@ namespace CocktailMagician.Services
         public async Task<IngredientDTO> GetIngredientAsync(int id)
         {
             var ingredient = await this.context.Ingredients
-                .Include(ingredient => ingredient.IngredientsCocktails)// rename table
+                .Include(ingredient => ingredient.IngredientsCocktails)
                 .ThenInclude(ic => ic.Cocktail)
                 .FirstOrDefaultAsync(ingredient => ingredient.Id == id & ingredient.IsDeleted == false);
 
@@ -140,6 +140,34 @@ namespace CocktailMagician.Services
                 return true;
             }
         }
+        public async Task<List<IngredientDTO>> SortIngredientsAsync(string sort)
+        {
+            var ingredients = this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false)
+                .Include(ic => ic.IngredientsCocktails)
+                    .ThenInclude(c => c.Cocktail);
+
+            var ingredientDTOs = await ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToListAsync();
+
+            if (sort == null)
+            {
+                ingredientDTOs = ingredientDTOs.OrderBy(cocktail => cocktail.Id).ToList();
+            }
+
+            switch (sort)
+            {
+                case "name":
+                    ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Name).ToList();
+                    break;
+                case "name_desc":
+                    ingredientDTOs = ingredientDTOs.OrderByDescending(ingredient => ingredient.Name).ToList();
+                    break;
+                default:
+                    ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Id).ToList();
+                    break;
+            }
+
+            return ingredientDTOs;
+        }
         public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue)
         {
             if (!string.IsNullOrEmpty(searchValue))
@@ -147,9 +175,10 @@ namespace CocktailMagician.Services
                 searchValue = searchValue.ToLower();
 
                 var ingredients = await this.context.Ingredients
+                    .Include(ingredient => ingredient.IngredientsCocktails)
+                        .ThenInclude(ic=>ic.Cocktail)
                      .Where(ingredient => ingredient.Name.ToLower()
-                     .Any(x => x.Equals(searchValue)))
-                     //.StartsWith(searchValue))
+                     .StartsWith(searchValue))
                      .OrderBy(ingredient => ingredient.Name)
                      .Skip(skip)
                      .Take(pageSize)
@@ -162,7 +191,7 @@ namespace CocktailMagician.Services
             else
             {
                 var ingredients = await this.context.Ingredients
-                    .OrderBy(a => a.Id)
+                    .OrderBy(i => i.Id)
                     .Skip(skip)
                     .Take(pageSize)
                     .ToListAsync();
@@ -172,7 +201,7 @@ namespace CocktailMagician.Services
                 return ingredientDTOs;
             }
         }
-        public int GetAllCocktailsCount()
+        public int GetAllIngredientsCount()
         {
             return this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false).Count();
         }

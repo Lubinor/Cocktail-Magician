@@ -10,24 +10,19 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table id="Ingredients" class="table table-bordered table-dark">
+<table id="Ingredients" class="table table-bordered table-condensed">
     <thead class="alert-warning">
         <tr>
             <th>Name</th>
             <th>Cocktails</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
-    </tbody>
 </table>
+
+<link rel="stylesheet" type="text/css" href="~/DataTables/datatables.css" />
 
 @section Scripts
     {
-    <link rel="stylesheet" type="text/css" href="~/DataTables/datatables.css" />
     <script type="text/javascript" language="javascript" src="~/DataTables/datatables.js"></script>
     <script type="text/javascript" class="init"></script>
     <script>
@@ -36,15 +31,16 @@
             "ordering" : true,
             "processing" : true,
             "serverSide": true,
-            "filter":true,
+            "paging":true,
             "ajax" : {
             "url" : "@Url.Action("ListAllIngredients", "Ingredients")" ,
             "type" : "POST" ,
             "dataType" : "json" ,
                 },
             "columns" : [
-            { "data" : "Name" },
-            { "data" : "Cocktails" }
+                { "data": "name", "name": "Name", "autoWidth": true } ,
+                { "data": "cocktailNames", "name": "CocktailNames", "autoWidth": true },
+
             ]});
     </script>
 }

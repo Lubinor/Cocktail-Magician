@@ -12,6 +12,6 @@ namespace CocktailMagician.Services.Contracts
         Task<IngredientDTO> UpdateIngredientAsync(int id, IngredientDTO ingredientDTO);
         Task<bool> DeleteIngredientAsync(int id);
         Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue);
-        int GetAllCocktailsCount();
+        int GetAllIngredientsCount();
     }
 }
