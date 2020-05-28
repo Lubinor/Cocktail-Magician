@@ -124,6 +124,86 @@ namespace CocktailMagician.Tests
 
             return barDTO;
         }
+
+        public static List<User> ReturnTwoUsers(DbContextOptions<CocktailMagicianContext> options)
+        {
+            var users = new List<User>
+            {
+                new User
+                {
+                    Id = 1,
+                    UserName = "George",
+                },
+                new User
+                {
+                    Id = 2,
+                    UserName = "Jim"
+                }
+            };
+
+            return users;
+        }
+
+        public static List<BarsUsersReviews> ReturnFourBarReviews(DbContextOptions<CocktailMagicianContext> options)
+        {
+            var reviews = new List<BarsUsersReviews>
+            {
+                new BarsUsersReviews
+                {
+                    BarId = 1,
+                    UserId = 1,
+                    Comment = "George says Lorka is amazing!",
+                    Rating = 5
+                },
+                new BarsUsersReviews
+                {
+                    BarId = 1,
+                    UserId = 2,
+                    Comment = "Jim doesn't like Lorka",
+                    Rating = 1
+                },
+                new BarsUsersReviews
+                {
+                    BarId = 2,
+                    UserId = 1,
+                    Comment = "Jim is a fan of Bilkova",
+                    Rating = 5
+                },
+                new BarsUsersReviews
+                {
+                    BarId = 2,
+                    UserId = 2,
+                    Comment = "George finds Bilkova just average",
+                    Rating = 3
+                }
+            };
+
+            return reviews;
+        }
+
+        public static List<CocktailsUsersReviews> ReturnTwoCocktailReviews(DbContextOptions<CocktailMagicianContext> options)
+        {
+            var reviews = new List<CocktailsUsersReviews>
+            {
+                new CocktailsUsersReviews
+                {
+                    CocktailId = 1,
+                    UserId = 1,
+                    Comment = "George says Mojito is amazing!",
+                    Rating = 5
+                },
+                new CocktailsUsersReviews
+                {
+                    CocktailId = 1,
+                    UserId = 2,
+                    Comment = "Jim doesn't like Mojito",
+                    Rating = 1
+                }
+            };
+
+            return reviews;
+        }
+
         public static void GetInMemoryThreeIngredients(DbContextOptions<CocktailMagicianContext> options)
         {
             var cocktail = new Cocktail { Id = 1, Name = "Bloody Mary" };

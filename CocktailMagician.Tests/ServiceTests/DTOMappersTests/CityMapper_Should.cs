@@ -47,7 +47,7 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
             //Arrange
             var sut = new CityMapper();
 
-            var options = Utils.GetOptions(nameof(CorrectMapping_ToCity));
+            var options = Utils.GetOptions(nameof(CorrectReturnInstanceType_ToCity));
             var cityDTO = Utils.ReturnOneCityDTO(options);
 
             //Act

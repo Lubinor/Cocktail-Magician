@@ -25,8 +25,6 @@ namespace CocktailMagician.Services.Mappers
             barDTO.Address = bar.Address;
             barDTO.Phone = bar.Phone;
             barDTO.AverageRating = bar.AverageRating;
-            //barDTO.CreatedOn = bar.CreatedOn;
-            //barDTO.IsDeleted = bar.IsDeleted;
 
             var barCocktails = bar.BarCocktails
                                     .Select(b => b.Cocktail)

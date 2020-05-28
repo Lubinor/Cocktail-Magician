@@ -76,10 +76,6 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
             //Arrange
             var mockICocktailMapper = new Mock<ICocktailMapper>();
 
-            //mockICocktailMapper
-            //    .Setup(x => x.MapToCocktailDTO(It.IsAny<Cocktail>()))
-            //    .Returns(new CocktailDTO { Id = 1, Name = "Bloody Mary" });
-
             var sut = new BarMapper(mockICocktailMapper.Object);
 
             var options = Utils.GetOptions(nameof(CorrectMapping_ToBar));

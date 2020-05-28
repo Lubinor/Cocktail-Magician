@@ -115,7 +115,7 @@ namespace CocktailMagician.Services
             return newBarReviewDTO;
         }
 
-        public async Task<bool> DeletBarReviewAsync(int barId, int userId)
+        public async Task<bool> DeleteBarReviewAsync(int barId, int userId)
         {
             var barReview = await this.context.BarsUsersReviews
                 .Include(r => r.Bar)

@@ -55,10 +55,15 @@ namespace CocktailMagician.Web
             services.AddScoped<IBarService, BarService>();
             services.AddScoped<ICocktailService, CocktailService>();
             services.AddScoped<IBarService, BarService>();
+            services.AddScoped<ICocktailReviewService, CocktailReviewService>();
+            services.AddScoped<IBarReviewService, BarReviewService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IIngredientMapper, IngredientMapper>();
             services.AddScoped<ICocktailMapper, CocktailMapper>();
             services.AddScoped<IBarMapper, BarMapper>();
             services.AddScoped<IBarReviewMapper, BarReviewMapper>();
+            services.AddScoped<ICocktailReviewMapper, CocktailReviewMapper>();
+            services.AddScoped<IUserMapper, UserMapper>();
             services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
             services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
             services.AddScoped<IBarDTOMApper, BarDTOMapper>();
