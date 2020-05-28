@@ -1,7 +1,9 @@
 ﻿using CocktailMagician.Data;
+using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
+using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -17,8 +19,10 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         {
             //Arrange
             var mockDatetimeProvider = new Mock<IDateTimeProvider>();
-            var mockMapper = new Mock<IngredientMapper>();
-            var mockCocktailMapper = new Mock<CocktailMapper>();
+            var mockMapper = new Mock<IIngredientMapper>();
+            mockMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
+                .Returns<Ingredient>(i => new IngredientDTO { Id = i.Id, Name = i.Name });
+            var mockCocktailMapper = new Mock<ICocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnIngredient_WhenFound));
             var expected = new IngredientDTO
             {
@@ -43,7 +47,9 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         {
             //Arrange
             var mockDatetimeProvider = new Mock<IDateTimeProvider>();
-            var mockMapper = new Mock<IngredientMapper>();
+            var mockMapper = new Mock<IIngredientMapper>();
+            mockMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
+                .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnNull_WhenNotFound));
             Utils.GetInMemoryThreeIngredients(options);

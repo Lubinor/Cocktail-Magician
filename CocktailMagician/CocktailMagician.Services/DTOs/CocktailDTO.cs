@@ -14,7 +14,7 @@ namespace CocktailMagician.Services.DTOs
         public ICollection<IngredientDTO> Ingredients { get; set; } = new List<IngredientDTO>();
         public ICollection<BarDTO> Bars { get; set; } = new List<BarDTO>();
         //public DateTime? CreatedOn { get; set; }
-        //public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         public override bool Equals(object obj)
         {

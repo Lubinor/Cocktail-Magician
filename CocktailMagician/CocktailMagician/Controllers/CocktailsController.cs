@@ -41,10 +41,10 @@ namespace CocktailMagician.Web.Controllers
             foreach (var cocktail in cocktailVMs)
             {
                 cocktail.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
-                    .Where(ingredient => ingredient.Name == cocktail.Name)
+                    .Where(ingredient => ingredient.CocktailDTOs.Any(c => c.Name == cocktail.Name))
                     .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
                 cocktail.Bars = (await this.barService.GetAllBarsAsync())
-                    .Where(bar => bar.Name == cocktail.Name)
+                    .Where(bar => bar.Cocktails.Any(c => c.Name == cocktail.Name))
                     .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
             }
 
@@ -158,6 +158,7 @@ namespace CocktailMagician.Web.Controllers
         }
 
         // GET: Cocktails/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             //if (id == null)
@@ -186,7 +187,24 @@ namespace CocktailMagician.Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+        public async Task<IActionResult> ListAllCocktails()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            int totalCocktails = this.cocktailService.GetAllCocktailsCount();
+            var cocktails = await this.cocktailService.ListAllCocktailsAsync(skip, pageSize, searchValue);
+
+            var cocktailVMs = cocktails.Select(cocktail => this.cocktailDTOMapper.MapToVMFromDTO(cocktail)).ToList();
+
+            return Json(new { draw = draw, recordsFiltered = cocktails.Count, recordsTotal = totalCocktails, data = cocktailVMs });
+        }
         private bool CocktailExists(int id)
         {
             return this.cocktailService.GetAllCocktailssAsync().Result.Any(e => e.Id == id);

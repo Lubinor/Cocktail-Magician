@@ -41,5 +41,28 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 Assert.AreEqual(expected.Name, result.Name);
             }
         }
+        [TestMethod]
+        public async Task ReturnNull_WhenIdNotFound()
+        {
+            //Arrange
+            var mockDateTiemProvider = new Mock<IDateTimeProvider>();
+            var mockMapper = new Mock<IngredientMapper>();
+            var mockCocktailMapper = new Mock<CocktailMapper>();
+            var options = Utils.GetOptions(nameof(ReturnNull_WhenIdNotFound));
+            var newDTO = new IngredientDTO();
+            Utils.GetInMemoryThreeIngredients(options);
+
+            //Act & Assert
+
+            using (var assertContext = new CocktailMagicianContext(options))
+            {
+                var sut = new IngredientService(mockDateTiemProvider.Object, mockMapper.Object,
+                    mockCocktailMapper.Object, assertContext);
+                var result = await sut.UpdateIngredientAsync(4, newDTO);
+
+                Assert.IsNull(result);
+            }
+        }
+
     }
 }

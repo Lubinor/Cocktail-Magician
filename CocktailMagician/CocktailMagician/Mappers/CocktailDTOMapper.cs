@@ -46,7 +46,9 @@ namespace CocktailMagician.Web.Mappers
             }
             var cocktailDTO = new CocktailDTO
             {
+                Id = coctailVM.Id,
                 Name = coctailVM.Name,
+                AverageRating = coctailVM.AverageRating,
                 Ingredients = coctailVM.Ingredients.Select(i => new IngredientDTO
                 {
                     Name = i.Name

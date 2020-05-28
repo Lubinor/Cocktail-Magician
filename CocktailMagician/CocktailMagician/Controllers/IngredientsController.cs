@@ -7,6 +7,7 @@ using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Models;
+using System.Linq.Dynamic;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -174,19 +175,29 @@ namespace CocktailMagician.Web.Controllers
             var start = Request.Form["start"].FirstOrDefault();
             var length = Request.Form["length"].FirstOrDefault();
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            //var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            //var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
-            int totalIngredients = this.ingredientService.GetAllCocktailsCount();
+            int totalIngredients = this.ingredientService.GetAllIngredientsCount();
             var ingredients = await this.ingredientService.ListAllIngredientsAsync(skip, pageSize, searchValue);
 
-            var model = ingredients.Select(ingredient => this.ingredientDTOMapper.MapToVMFromDTO(ingredient));
+            var ingredientsVMs = ingredients.Select(ing => this.ingredientDTOMapper.MapToVMFromDTO(ing)).ToList();
+            //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+            //{
+            //    ingredientsVMs = ingredientsVMs.OrderBy(sortColumn + " " + sortColumnDirection).ToList();
+            //}
+            foreach (var item in ingredientsVMs)
+            {
+                item.Cocktails = (await this.cocktailService.GetAllCocktailssAsync())
+                    .Where(cocktail => cocktail.Ingredients.Any(x => x.Name == item.Name))
+                    .Select(cdto => cocktailDTOMapper.MapToVMFromDTO(cdto)).ToList();
+                item.CocktailNames = string.Join(", ",item.Cocktails.Select(c => c.Name));
+            }
 
-            var json = Json(new { draw = draw, recordsFiltered = totalIngredients, recordsTotal = totalIngredients, data = model });
-
-            return json;
-            //return Json(new {draw = draw, recordsFiltered = totalIngredients, recordsTotal = totalIngredients, data = model });
+            return Json(new {draw = draw, recordsFiltered = ingredients.Count, recordsTotal = totalIngredients, data = ingredientsVMs }); //data = model
         }
         private bool IngredientExists(int id)
         {

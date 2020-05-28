@@ -1,10 +1,13 @@
 ﻿using CocktailMagician.Data;
+using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
@@ -18,6 +21,8 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
             //Arrange
             var mockDatetimeProvider = new Mock<IDateTimeProvider>();
             var mockMapper = new Mock<IIngredientMapper>();
+            mockMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
+                .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(DeleteIngredient_WhenConditionsAreMet));
             Utils.GetInMemoryThreeIngredients(options);
@@ -32,5 +37,50 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 Assert.IsTrue(result);
             }
         }
+        [TestMethod]
+        public async Task ReturnFalse_WhenIdNotFound()
+        {
+            //Arrange
+            var mockDatetimeProvider = new Mock<IDateTimeProvider>();
+            var mockMapper = new Mock<IIngredientMapper>();
+            mockMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
+                .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
+            var mockCocktailMapper = new Mock<ICocktailMapper>();
+            var options = Utils.GetOptions(nameof(ReturnFalse_WhenIdNotFound));
+            Utils.GetInMemoryThreeIngredients(options);
+
+            //Act & Assert
+            using (var assertContext = new CocktailMagicianContext(options))
+            {
+                var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
+                    mockCocktailMapper.Object, assertContext);
+                var result = await sut.DeleteIngredientAsync(4);
+
+                Assert.IsFalse(result);
+            }
+        }
+        //[TestMethod]
+        //public async Task Throw_WhenIngredientStillInUse()
+        //{
+        //    var mockDatetimeProvider = new Mock<IDateTimeProvider>();
+        //    var mockMapper = new Mock<IIngredientMapper>();
+        //    mockMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
+        //        .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
+        //    var mockCocktailMapper = new Mock<ICocktailMapper>();
+        //    mockCocktailMapper.Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
+        //        .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name });
+        //    var options = Utils.GetOptions(nameof(Throw_WhenIngredientStillInUse));
+        //    Utils.GetInMemoryTwoCocktails(options);
+
+        //    //Act & Assert
+        //    using (var assertContext = new CocktailMagicianContext(options))
+        //    {
+        //        var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
+        //            mockCocktailMapper.Object, assertContext);
+        //        var result = await sut.DeleteIngredientAsync(2);
+
+        //        Assert.ThrowsException<Exception>(() => throw new Exception("Ingredient still in use"));
+        //    }
+        //}
     }
 }
