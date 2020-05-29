@@ -2,12 +2,15 @@
 using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
+using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
@@ -155,10 +158,10 @@ namespace CocktailMagician.Services
 
             switch (sort)
             {
-                case "name":
+                case "asc":
                     ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Name).ToList();
                     break;
-                case "name_desc":
+                case "desc":
                     ingredientDTOs = ingredientDTOs.OrderByDescending(ingredient => ingredient.Name).ToList();
                     break;
                 default:
@@ -168,38 +171,42 @@ namespace CocktailMagician.Services
 
             return ingredientDTOs;
         }
-        public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue)
+        public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue,
+            string orderBy, string orderDirection)
         {
+            var ingredients =  this.context.Ingredients
+                .Include(ingredient => ingredient.IngredientsCocktails)
+                .ThenInclude(ic => ic.Cocktail)
+                .Where(ingredient => ingredient.IsDeleted == false);
+
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    ingredients = ingredients.OrderBy(orderBy);
+                }
+                else
+                {
+                    ingredients = ingredients.OrderByDescending(orderBy);
+                }
+            }
+
             if (!string.IsNullOrEmpty(searchValue))
             {
                 searchValue = searchValue.ToLower();
 
-                var ingredients = await this.context.Ingredients
-                    .Include(ingredient => ingredient.IngredientsCocktails)
-                        .ThenInclude(ic=>ic.Cocktail)
+                ingredients = ingredients
                      .Where(ingredient => ingredient.Name.ToLower()
-                     .StartsWith(searchValue))
-                     .OrderBy(ingredient => ingredient.Name)
-                     .Skip(skip)
-                     .Take(pageSize)
-                     .ToListAsync();
-
-                var ingredientDTOs = ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToList();
-
-                return ingredientDTOs;
+                     .StartsWith(searchValue));
             }
-            else
-            {
-                var ingredients = await this.context.Ingredients
-                    .OrderBy(i => i.Id)
+            
+                ingredients = ingredients
                     .Skip(skip)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                var ingredientDTOs = ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToList();
+                    .Take(pageSize);
+               
+                var ingredientDTOs = await ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToListAsync();
 
                 return ingredientDTOs;
-            }
         }
         public int GetAllIngredientsCount()
         {

@@ -1,7 +1,9 @@
 ﻿using CocktailMagician.Data;
+using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
+using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -19,28 +21,18 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
         {
             //Arrange
             var mockDateTimeprovider = new Mock<IDateTimeProvider>();
-            var mockIngMapper = new Mock<IngredientMapper>();
-            var mockCocktailMapper = new Mock<CocktailMapper>();
+            var mockCocktailMapper = new Mock<ICocktailMapper>();
+            mockCocktailMapper.Setup(c => c.MapToCocktail(It.IsAny<CocktailDTO>()))
+                .Returns<CocktailDTO>(c => new Cocktail { Id = c.Id, Name = c.Name, IsDeleted = c.IsDeleted});
+            var mockIngMapper = new Mock<IIngredientMapper>();
+            mockIngMapper.Setup(i => i.MapToIngredient(It.IsAny<IngredientDTO>()))
+                .Returns<IngredientDTO>(i => new Ingredient { Id = i.Id, Name = i.Name });
             var options = Utils.GetOptions(nameof(UpdateCocktail_WhenParamsAreValid));
             Utils.GetInMemoryTwoCocktails(options);
-            var expected = new CocktailDTO
+            
+            var newDTO = new CocktailDTO
             {
-                Id = 2,
-                Name = "Gin sTonik",
-                Ingredients = new List<IngredientDTO>
-                {
-                    new IngredientDTO
-                    {
-                        Name = "Dry Gin"
-                    },
-                    new IngredientDTO
-                    {
-                        Name = "Tonic"
-                    }
-                }
-            }; var newDTO = new CocktailDTO
-            {
-                Id = 2,
+                
                 Name = "Gin sTonik",
                 Ingredients = new List<IngredientDTO>
                 {
@@ -63,10 +55,11 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
                    mockIngMapper.Object, assertContext);
                 var result = await sut.UpdateCocktailAsync(2, newDTO);
 
-                Assert.AreEqual(expected.Id, result.Id);
-                Assert.AreEqual(expected.Name, result.Name);
-                Assert.AreEqual(expected.Ingredients.ToList().Count, result.Ingredients.ToList().Count);
-                CollectionAssert.AreEqual(expected.Ingredients.ToList(), result.Ingredients.ToList());
+                Assert.AreEqual(newDTO.Id, result.Id);
+                Assert.AreEqual(newDTO.Name, result.Name);
+                Assert.AreEqual(newDTO.IsDeleted, result.IsDeleted);
+                Assert.AreEqual(newDTO.Ingredients.ToList().Count, result.Ingredients.ToList().Count);
+                CollectionAssert.AreEqual(newDTO.Ingredients.ToList(), result.Ingredients.ToList());
             }
         }
     }
