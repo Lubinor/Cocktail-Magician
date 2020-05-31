@@ -182,6 +182,7 @@ namespace CocktailMagician.Web.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
             int totalIngredients = this.ingredientService.GetAllIngredientsCount();
+            int filteredIngredients = this.ingredientService.GetAllFilteredIngredientsCount(searchValue);
             var ingredients = await this.ingredientService.ListAllIngredientsAsync(skip, pageSize, searchValue,
                 sortColumn, sortColumnDirection);
 
@@ -195,7 +196,7 @@ namespace CocktailMagician.Web.Controllers
                 item.CocktailNames = string.Join(", ",item.Cocktails.Select(c => c.Name));
             }
 
-            return Json(new {draw = draw, recordsFiltered = ingredients.Count, recordsTotal = totalIngredients, data = ingredientsVMs }); //data = model
+            return Json(new {draw = draw, recordsFiltered = filteredIngredients, recordsTotal = totalIngredients, data = ingredientsVMs }); //data = model
         }
         private bool IngredientExists(int id)
         {
