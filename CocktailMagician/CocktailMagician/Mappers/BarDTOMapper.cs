@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CocktailMagician.Web.Mappers
 {
-    public class BarDTOMapper : IBarDTOMApper
+    public class BarDTOMapper : IBarDTOMapper
     {
         public BarDTOMapper()
         {
@@ -24,6 +24,8 @@ namespace CocktailMagician.Web.Mappers
                 Id = barDTO.Id,
                 Name = barDTO.Name,
                 AverageRating = barDTO.AverageRating,
+                Address = barDTO.Address,
+                Phone = barDTO.Phone,
                 CityName = barDTO.CityName,
                 Cocktails = barDTO.Cocktails.Select(c => new CocktailViewModel
                 {
@@ -43,7 +45,8 @@ namespace CocktailMagician.Web.Mappers
             var barDTO = new BarDTO
             {
                 Name = barVM.Name,
-                CityName = barVM.CityName,
+                //CityName = barVM.CityName,
+                CityId = barVM.CityId,
                 Address = barVM.Address,
                 Phone = barVM.Phone
             };

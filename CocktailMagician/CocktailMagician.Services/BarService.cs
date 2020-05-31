@@ -28,6 +28,8 @@ namespace CocktailMagician.Services
         {
             var bars = this.context.Bars
                 .Include(b => b.BarCocktails)
+                    .ThenInclude(b => b.Cocktail)
+                .Include(b => b.City)
                 .Where(b => !b.IsDeleted);
 
             bars = sortMethod switch
@@ -48,6 +50,8 @@ namespace CocktailMagician.Services
         {
             var bar = await this.context.Bars
                 .Include(b => b.BarCocktails)
+                    .ThenInclude(b => b.Cocktail)
+                .Include(b => b.City)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
             if (bar == null)
@@ -74,7 +78,7 @@ namespace CocktailMagician.Services
             this.context.Bars.Add(bar);
             await this.context.SaveChangesAsync();
 
-            var newBarDTO = this.barMapper.MapToBarDTO(bar);
+            var newBarDTO = await this.GetBarAsync(bar.Id);
 
             return newBarDTO;
         }
@@ -83,6 +87,7 @@ namespace CocktailMagician.Services
         {
             var bar = await this.context.Bars
                 .Include(b => b.BarCocktails)
+                .Include(b => b.City)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
             if (bar == null)
@@ -98,13 +103,12 @@ namespace CocktailMagician.Services
             this.context.Bars.Update(bar);
             await this.context.SaveChangesAsync();
 
-            //Does it make sense? Or should I dig into the context again?
-            var updatedBarDTO = this.barMapper.MapToBarDTO(bar);
+            var updatedBarDTO = await this.GetBarAsync(bar.Id);
 
             return updatedBarDTO;
         }
 
-        public async Task<bool> DeletBarAsync(int id)
+        public async Task<bool> DeleteBarAsync(int id)
         {
             var bar = await this.context.Bars
                 .Include(b => b.BarReviews)

@@ -36,7 +36,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             {
                 var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.DeletBarAsync(4);
+                var result = await sut.DeleteBarAsync(4);
 
                 Assert.IsFalse(result);
             }
@@ -75,7 +75,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             {
                 var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
 
-                var result = await sut.DeletBarAsync(1);
+                var result = await sut.DeleteBarAsync(1);
 
                 var expectedBar = await assertContext.Bars.FirstOrDefaultAsync(b => b.Id == 1);
 

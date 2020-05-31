@@ -1,0 +1,82 @@
+﻿@model IEnumerable<CityViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Cities</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-borderless table-hover", id="city_index">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bars)
+            </th>
+            <th style="text-align: right">
+                @Html.DisplayName("Actions")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var city in Model)
+        {
+            <tr>
+                <td>
+                    <a class="btn btn-outline-success font-weight-bold" asp-action="Details" asp-route-id="@city.Id">@city.Name</a>
+                </td>
+                <td>
+                    @if (city.Bars.Count != 0)
+                    {
+                        foreach (var bar in city.Bars)
+                        {
+                            <a class="btn btn-outline-danger font-weight-bold" asp-controller="Bars" asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
+                        }
+                        @*@string.Join(", ", city.Bars.Select(b => b.Name));*@
+                    }
+                    else
+                    {
+                        @Html.DisplayName("N/A");
+                    }
+                </td>
+                <td style="text-align: right">
+                    <a asp-action="Edit" asp-route-id="@city.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@city.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@city.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<link rel="stylesheet" type="text/css" href="~/DataTables/datatables.css" />
+
+@section Scripts
+    {
+    <script type="text/javascript" language="javascript" src="~/DataTables/datatables.js"></script>
+    <script type="text/javascript" class="init"></script>
+    <script>
+        $('#city_index').DataTable
+            ({
+            "ordering" : true,
+            "processing" : true,
+            "serverSide": true,
+            "paging":true,
+            "ajax" : {
+            "url" : "@Url.Action("Index", "Cities")" ,
+            "type" : "POST" ,
+            "dataType" : "json" ,
+                },
+            "columns" : [
+                { "data": "name", "name": "Name", "autoWidth": true } ,
+                { "data": "oldName", "name": "oldName", "autoWidth": true },
+
+            ]});
+    </script>
+}

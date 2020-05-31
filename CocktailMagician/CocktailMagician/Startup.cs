@@ -55,6 +55,7 @@ namespace CocktailMagician.Web
             services.AddScoped<IBarService, BarService>();
             services.AddScoped<ICocktailService, CocktailService>();
             services.AddScoped<IBarService, BarService>();
+            services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICocktailReviewService, CocktailReviewService>();
             services.AddScoped<IBarReviewService, BarReviewService>();
             services.AddScoped<IUserService, UserService>();
@@ -64,10 +65,11 @@ namespace CocktailMagician.Web
             services.AddScoped<IBarReviewMapper, BarReviewMapper>();
             services.AddScoped<ICocktailReviewMapper, CocktailReviewMapper>();
             services.AddScoped<IUserMapper, UserMapper>();
+            services.AddScoped<ICityMapper, CityMapper>();
             services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
             services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
-            services.AddScoped<IBarDTOMApper, BarDTOMapper>();
-
+            services.AddScoped<IBarDTOMapper, BarDTOMapper>();
+            services.AddScoped<ICityDTOMapper, CityDTOMapper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

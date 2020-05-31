@@ -16,11 +16,11 @@ namespace CocktailMagician.Web.Controllers
         private readonly IBarService barService;
         private readonly ICocktailDTOMapper cocktailDTOMapper;
         private readonly IIngredientDTOMapper ingredientDTOMapper;
-        private readonly IBarDTOMApper barDTOMApper;
+        private readonly IBarDTOMapper barDTOMApper;
 
         public CocktailsController(ICocktailService cocktailService, IIngredientService ingredientService,
             IBarService barService, ICocktailDTOMapper cocktailDTOMapper, IIngredientDTOMapper ingredientDTOMapper,
-            IBarDTOMApper barDTOMApper)
+            IBarDTOMapper barDTOMApper)
         {
             this.cocktailService = cocktailService ?? throw new ArgumentNullException(nameof(cocktailService));
             this.ingredientService = ingredientService ?? throw new ArgumentNullException(nameof(ingredientService));
