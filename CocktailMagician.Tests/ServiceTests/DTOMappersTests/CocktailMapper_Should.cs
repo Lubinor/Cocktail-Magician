@@ -29,9 +29,9 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
             {
                 var cocktail = assertCocntext.Cocktails
                     .Include(bar => bar.CocktailBars)
-                        .ThenInclude(b=>b.Bar)
+                        .ThenInclude(b => b.Bar)
                     .Include(ingr => ingr.IngredientsCocktails)
-                        .ThenInclude(i=>i.Ingredient)
+                        .ThenInclude(i => i.Ingredient)
                     .FirstOrDefault(x => x.Id == 1);
 
                 var sut = new CocktailMapper();
@@ -50,24 +50,28 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
         public void CorrectMapping_ToEntityModel()
         {
             //Arrange
-
-            var cocktailDTO = new CocktailDTO
-            {
-                Id = 5,
-                Name = "Cuba Libre",
-                AverageRating = 3.5,
-                IsDeleted = false
-            };
+            var options = Utils.GetOptions(nameof(CorrectMapping_ToEntityModel));
 
             //Act & Assert
-            var sut = new CocktailMapper();
-            var result = sut.MapToCocktail(cocktailDTO);
+            using (var assertContext = new CocktailMagicianContext(options))
+            {
+                var cocktailDTO = new CocktailDTO
+                {
+                    Id = 5,
+                    Name = "Cuba Libre",
+                    AverageRating = 3.5,
+                    IsDeleted = false
+                };
 
-            Assert.IsInstanceOfType(result, typeof(Cocktail));
-            Assert.AreEqual(cocktailDTO.Id, result.Id);
-            Assert.AreEqual(cocktailDTO.Name, result.Name);
-            Assert.AreEqual(cocktailDTO.AverageRating, result.AverageRating);
-            Assert.AreEqual(cocktailDTO.IsDeleted, result.IsDeleted);
+                var sut = new CocktailMapper();
+                var result = sut.MapToCocktail(cocktailDTO);
+
+                Assert.IsInstanceOfType(result, typeof(Cocktail));
+                Assert.AreEqual(cocktailDTO.Id, result.Id);
+                Assert.AreEqual(cocktailDTO.Name, result.Name);
+                Assert.AreEqual(cocktailDTO.AverageRating, result.AverageRating);
+                Assert.AreEqual(cocktailDTO.IsDeleted, result.IsDeleted);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table" style="grid-template-columns : initial">
     <thead>
         <tr>
             <th>
@@ -30,47 +30,46 @@
         </tr>
     </thead>
     <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AverageRating)
-                    </td>
-                    <td>
-                        @foreach (var bar in item.Bars)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AverageRating)
+                </td>
+                <td>
+                    @foreach (var bar in item.Bars)
+                    {
+                        @Html.DisplayFor(modelItem => bar.Name)
+                    }
+                </td>
+                <td>
+                    @foreach (var ingredient in item.Ingredients)
                         {
-                            @Html.DisplayFor(modelItem => bar.Name)
+                        <span>@Html.DisplayFor(modelItem => ingredient.Name)</span><span>, </span>
                         }
-                    </td>
-                    <td>
-                        @foreach (var ingredient in item.Ingredients)
-                        {
-
-                            @Html.DisplayFor(modelItem => ingredient.Name)
-                        }
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 @*@section Styles{
-    <link rel="stylesheet" href="~Datatables/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
-}
+        <link rel="stylesheet" href="~Datatables/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
+    }
 
-@section Scripts{
-    <script src="~/lib/momentjs/moment.min.js" asp-append-version="true"></script>
-    <script src="~/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js" asp-append-version="true"></script>
-    <script src="~/lib/datetime-moment/datetime-moment.js" asp-append-version="true"></script>
-    <script src="~/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js" asp-append-version="true"></script>
+    @section Scripts{
+        <script src="~/lib/momentjs/moment.min.js" asp-append-version="true"></script>
+        <script src="~/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+        <script src="~/lib/datetime-moment/datetime-moment.js" asp-append-version="true"></script>
+        <script src="~/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js" asp-append-version="true"></script>
 
-    //<script src="~/js/app.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-}*@
+        //<script src="~/js/app.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }*@

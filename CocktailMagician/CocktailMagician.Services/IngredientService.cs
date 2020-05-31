@@ -2,12 +2,15 @@
 using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
+using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
@@ -129,7 +132,7 @@ namespace CocktailMagician.Services
                 return false;
             }
 
-            if (ingredient.IngredientsCocktails.Any(c => c.IngredientId == id))
+            if (ingredient.IngredientsCocktails.Any(c => c.IngredientId == id)) // no test for this if
             {
                 throw new Exception($"Ingredient still in use");
             }
@@ -140,69 +143,96 @@ namespace CocktailMagician.Services
                 return true;
             }
         }
-        public async Task<List<IngredientDTO>> SortIngredientsAsync(string sort)
+        //public async Task<List<IngredientDTO>> SortIngredientsAsync(string sort)
+        //{
+        //    var ingredients = this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false)
+        //        .Include(ic => ic.IngredientsCocktails)
+        //            .ThenInclude(c => c.Cocktail);
+
+        //    var ingredientDTOs = await ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToListAsync();
+
+        //    if (sort == null)
+        //    {
+        //        ingredientDTOs = ingredientDTOs.OrderBy(cocktail => cocktail.Id).ToList();
+        //    }
+
+        //    switch (sort)
+        //    {
+        //        case "asc":
+        //            ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Name).ToList();
+        //            break;
+        //        case "desc":
+        //            ingredientDTOs = ingredientDTOs.OrderByDescending(ingredient => ingredient.Name).ToList();
+        //            break;
+        //        default:
+        //            ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Id).ToList();
+        //            break;
+        //    }
+
+        //    return ingredientDTOs;
+        //}
+        public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue,
+            string orderBy, string orderDirection)
         {
-            var ingredients = this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false)
-                .Include(ic => ic.IngredientsCocktails)
-                    .ThenInclude(c => c.Cocktail);
+            var ingredients = this.context.Ingredients
+                .Include(ingredient => ingredient.IngredientsCocktails)
+                .ThenInclude(ic => ic.Cocktail)
+                .Where(ingredient => ingredient.IsDeleted == false);
 
-            var ingredientDTOs = await ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToListAsync();
-
-            if (sort == null)
+            if (!String.IsNullOrEmpty(orderBy))
             {
-                ingredientDTOs = ingredientDTOs.OrderBy(cocktail => cocktail.Id).ToList();
+                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    ingredients = ingredients.OrderBy(orderBy);
+                }
+                else
+                {
+                    ingredients = ingredients.OrderByDescending(orderBy);
+                }
             }
 
-            switch (sort)
-            {
-                case "name":
-                    ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Name).ToList();
-                    break;
-                case "name_desc":
-                    ingredientDTOs = ingredientDTOs.OrderByDescending(ingredient => ingredient.Name).ToList();
-                    break;
-                default:
-                    ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Id).ToList();
-                    break;
-            }
-
-            return ingredientDTOs;
-        }
-        public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue)
-        {
             if (!string.IsNullOrEmpty(searchValue))
             {
                 searchValue = searchValue.ToLower();
 
-                var ingredients = await this.context.Ingredients
-                    .Include(ingredient => ingredient.IngredientsCocktails)
-                        .ThenInclude(ic=>ic.Cocktail)
+                ingredients = ingredients
                      .Where(ingredient => ingredient.Name.ToLower()
-                     .StartsWith(searchValue))
-                     .OrderBy(ingredient => ingredient.Name)
-                     .Skip(skip)
-                     .Take(pageSize)
-                     .ToListAsync();
-
-                var ingredientDTOs = ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToList();
-
-                return ingredientDTOs;
+                     .StartsWith(searchValue));
             }
-            else
-            {
-                var ingredients = await this.context.Ingredients
-                    .OrderBy(i => i.Id)
-                    .Skip(skip)
-                    .Take(pageSize)
-                    .ToListAsync();
 
-                var ingredientDTOs = ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToList();
+            ingredients = ingredients
+                .Skip(skip)
+                .Take(pageSize);
 
-                return ingredientDTOs;
-            }
+            var ingredientDTOs = await ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToListAsync();
+
+            return ingredientDTOs;
         }
+        /// <summary>
+        /// Returns the count of all not deleted ingredients
+        /// </summary>
+        /// <returns></returns>
         public int GetAllIngredientsCount()
         {
+            return this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false).Count();
+        }
+        /// <summary>
+        /// Returns the count of all ingredients which names contains searchValue. If searchValue is null or
+        /// empty string - returns the count of all not deleted ingredients
+        /// </summary>
+        /// <param name="searchValue">char or string that is contained by ingredient name</param>
+        /// <returns></returns>
+        public int GetAllFilteredIngredientsCount(string searchValue)
+        {
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                var ingredients = this.context.Ingredients
+                     .Where(ingredient => ingredient.Name.ToLower().Contains(searchValue));
+                return ingredients.Count();
+            }
             return this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false).Count();
         }
     }

@@ -10,36 +10,54 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table id="Ingredients" class="table table-bordered table-condensed">
-    <thead class="alert-warning">
+<table id="Ingredients" class="cell-border compact stripe">
+    <thead class="dt-body-center">
         <tr>
             <th>Name</th>
             <th>Cocktails</th>
+            <th></th>
         </tr>
     </thead>
 </table>
 
-<link rel="stylesheet" type="text/css" href="~/DataTables/datatables.css" />
+<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 
 @section Scripts
     {
-    <script type="text/javascript" language="javascript" src="~/DataTables/datatables.js"></script>
+    <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/jquery.dataTables.min.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/dataTables.bootstrap4.js"></script>
     <script type="text/javascript" class="init"></script>
     <script>
         $('#Ingredients').DataTable
             ({
+            "serverSide": true,
             "ordering" : true,
             "processing" : true,
-            "serverSide": true,
-            "paging":true,
+            "paging": true,
+            //"pageLength": 5,
+            //"lengthMenu": [5,10,25,50,100],
+            "pagingType": "simple_numbers",
             "ajax" : {
             "url" : "@Url.Action("ListAllIngredients", "Ingredients")" ,
             "type" : "POST" ,
             "dataType" : "json" ,
                 },
             "columns" : [
-                { "data": "name", "name": "Name", "autoWidth": true } ,
-                { "data": "cocktailNames", "name": "CocktailNames", "autoWidth": true },
+                //{ "data": "name", "name": "Name", "autoWidth": true,},
+                {
+                    render: function (data, type, full, meta) {
+                        return '<a href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
+                    },
+                    "name":"Name"
+                },
+                { "data": "cocktailNames", "name": "CocktailNames", "autoWidth": true, "orderable": false, },
+                {
+                    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
+                        return '<a class="btn btn-danger" href="/Ingredients/Delete/' + row.id + '">Delete</a>';
+                    }
+                },
 
             ]});
     </script>
