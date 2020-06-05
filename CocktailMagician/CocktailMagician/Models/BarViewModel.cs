@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CocktailMagician.Web.Models
 {
+    [Serializable]
     public class BarViewModel
     {
         public BarViewModel()

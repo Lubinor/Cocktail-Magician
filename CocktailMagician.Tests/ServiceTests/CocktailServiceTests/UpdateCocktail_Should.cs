@@ -27,6 +27,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var mockIngMapper = new Mock<IIngredientMapper>();
             mockIngMapper.Setup(i => i.MapToIngredient(It.IsAny<IngredientDTO>()))
                 .Returns<IngredientDTO>(i => new Ingredient { Id = i.Id, Name = i.Name });
+            var mockBarMapper = new Mock<IBarMapper>();
             var options = Utils.GetOptions(nameof(UpdateCocktail_WhenParamsAreValid));
             Utils.GetInMemoryTwoCocktails(options);
             
@@ -52,7 +53,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeprovider.Object, mockCocktailMapper.Object,
-                   mockIngMapper.Object, assertContext);
+                   mockIngMapper.Object, mockBarMapper.Object, assertContext);
                 var result = await sut.UpdateCocktailAsync(2, newDTO);
 
                 Assert.AreEqual(newDTO.Id, result.Id);

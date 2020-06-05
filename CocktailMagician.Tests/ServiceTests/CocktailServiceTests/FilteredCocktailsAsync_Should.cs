@@ -24,6 +24,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
                 .Setup(c=>c.MapToCocktailDTO(It.IsAny<Cocktail>()))
                 .Returns<Cocktail>(c=> new CocktailDTO { Name = c.Name});
             var mockIngMapper = new Mock<IIngredientMapper>();
+            var mockBarMapper = new Mock<IBarMapper>();
             var options = Utils.GetOptions(nameof(FilterCocktailsByCocktailName));
             var filter = "mAry";
             var expected = new List<CocktailDTO>
@@ -39,7 +40,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, assertContext);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext);
                 var result = await sut.FilteredCocktailsAsync(filter);
 
                 Assert.AreEqual(expected.Count, result.Count);
@@ -63,6 +64,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             mockIngMapper
                 .Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
                 .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
+            var mockBarMapper = new Mock<IBarMapper>();
             var options = Utils.GetOptions(nameof(FilterCocktailsByIngredientName));
             var filter = "toNic";
             var expected = new List<CocktailDTO>
@@ -78,7 +80,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, assertContext);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext);
                 var result = await sut.FilteredCocktailsAsync(filter);
 
                 Assert.AreEqual(expected.Count, result.Count);
@@ -102,6 +104,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             mockIngMapper
                 .Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
                 .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
+            var mockBarMapper = new Mock<IBarMapper>();
             var options = Utils.GetOptions(nameof(FilterCocktailsByRating));
             var expected = new List<CocktailDTO>
             {
@@ -122,7 +125,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, assertContext);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext);
                 var result = await sut.FilteredCocktailsAsync("5");
 
                 Assert.AreEqual(expected.Count, result.Count);

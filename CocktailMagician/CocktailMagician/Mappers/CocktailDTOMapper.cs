@@ -24,6 +24,7 @@ namespace CocktailMagician.Web.Mappers
                 AverageRating = cocktailDTO.AverageRating,
                 Bars = cocktailDTO.Bars.Select(b => new BarViewModel
                 {
+                    Id = b.Id,
                     Name = b.Name,
                     //Address = b.Address,
                     CityName = b.CityName,
@@ -32,26 +33,66 @@ namespace CocktailMagician.Web.Mappers
                 }).ToList(),
                 Ingredients = cocktailDTO.Ingredients.Select(i => new IngredientViewModel
                 {
+                    Id = i.Id,
                     Name = i.Name
                 }).ToList()
             };
             return cocktailVM;
         }
-
-        public CocktailDTO MapToDTOFromVM(CocktailViewModel coctailVM)
+        public CocktailDTO MapToDTOFromVM(CocktailViewModel cocktailVM)
         {
-            if (coctailVM == null)
+            if (cocktailVM == null)
             {
                 return null;
             }
             var cocktailDTO = new CocktailDTO
             {
-                Id = coctailVM.Id,
-                Name = coctailVM.Name,
-                AverageRating = coctailVM.AverageRating,
-                Ingredients = coctailVM.Ingredients.Select(i => new IngredientDTO
+                Id = cocktailVM.Id,
+                Name = cocktailVM.Name,
+                AverageRating = cocktailVM.AverageRating,
+                Ingredients = cocktailVM.Ingredients.Select(i => new IngredientDTO
                 {
+                    Id = i.Id,
                     Name = i.Name
+                }).ToList()
+            };
+
+            return cocktailDTO;
+        }
+        public CocktailDTO MapToDTOFromVM(CreateCocktailViewModel createCocktailVM)
+        {
+            if (createCocktailVM == null)
+            {
+                return null;
+            }
+            var cocktailDTO = new CocktailDTO
+            {
+                Name = createCocktailVM.Name,
+                Ingredients = createCocktailVM.ContainedIngredients.Select(i => new IngredientDTO
+                {
+                    Id = i
+                }).ToList()
+            };
+
+            return cocktailDTO;
+        }
+        public CocktailDTO MapToDTOFromVM(EditCocktailViewModel editCocktailVM)
+        {
+            if (editCocktailVM == null)
+            {
+                return null;
+            }
+            var cocktailDTO = new CocktailDTO
+            {
+                Id = editCocktailVM.Id,
+                Name = editCocktailVM.Name,
+                Ingredients = editCocktailVM.ContainedIngredients.Select(i => new IngredientDTO
+                {
+                    Id = i
+                }).ToList(),
+                Bars = editCocktailVM.ContainedBars.Select(b => new BarDTO
+                {
+                    Id = b
                 }).ToList()
             };
 

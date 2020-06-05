@@ -1,0 +1,35 @@
+﻿@model CocktailMagician.Web.Models.CocktailViewModel
+@{
+    ViewData["Title"] = "Comments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+<link href="~/StarRating/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+
+<h3>@Html.DisplayFor(model => model.Name)</h3>
+
+<form>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Leave a comment</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+    <div>
+
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div>
+    <hr />
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+    <script src="~/StarRating/js/star-rating.js" type="text/javascript"></script>
+    <script>$("#input-id").rating({ min: 0, max: 5, step: 0.5, size: 'lg' });</script> @*// kude da matchna input-id*@
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

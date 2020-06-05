@@ -62,9 +62,6 @@ namespace CocktailMagician.Web.Controllers
             }
 
             var ingredientVM = this.ingredientDTOMapper.MapToVMFromDTO(ingredientDTO);
-            ingredientVM.Cocktails = (await this.cocktailService.GetAllCocktailssAsync())
-                .Where(cocktail => cocktail.Ingredients.Any(x => x.Name == ingredientVM.Name))
-                .Select(cdto => cocktailDTOMapper.MapToVMFromDTO(cdto)).ToList();
 
             return View(ingredientVM);
         }
@@ -80,13 +77,32 @@ namespace CocktailMagician.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] IngredientDTO ingredientDTO)
+        public async Task<IActionResult> Create(IngredientDTO ingredientDTO)
         {
+            //if (this.ingredientService.IsValid(ingredientDTO))
+            //{
+            //    return View(Error);
+            //}
             if (ModelState.IsValid)
             {
-                await this.ingredientService.CreateIngredientAsync(ingredientDTO);
+                try
+                {
+                    await this.ingredientService.CreateIngredientAsync(ingredientDTO);
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                //catch (ArgumentNullException)
+                //{
+                //    return NotFound(); //status 404
+                //}
+                //catch (ArgumentException)
+                //{
+                //    return NotFound(); //status 404
+                //}
+                catch (Exception)
+                {
+                    return BadRequest(); //status 400
+                }
             }
             return View(); //TODO: here must returns something - middleware maybe
         }
@@ -102,18 +118,22 @@ namespace CocktailMagician.Web.Controllers
                 return NotFound();
             }
 
-            var ingredientVM = this.ingredientDTOMapper.MapToVMFromDTO(ingredientDTO);
+            var editIngredientVM = new EditIngredientViewModel
+            {
+                Id = ingredientDTO.Id,
+                Name = ingredientDTO.Name
+            };
 
-            return View(ingredientVM);
+            return View(editIngredientVM);
         }
 
         // POST: Ingredients/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] IngredientViewModel ingredientVM)
+        public async Task<IActionResult> Edit(int id, EditIngredientViewModel editIngredientVM)
         {
-            var ingredientDTO = this.ingredientDTOMapper.MapToDTOFromVM(ingredientVM);
+            var ingredientDTO = this.ingredientDTOMapper.MapToDTOFromVM(editIngredientVM);
 
             if (id != ingredientDTO.Id)
             {
@@ -126,16 +146,17 @@ namespace CocktailMagician.Web.Controllers
                 {
                     await this.ingredientService.UpdateIngredientAsync(id, ingredientDTO);
                 }
-                catch (DbUpdateConcurrencyException) // Catch to be improved
+                catch (ArgumentNullException)
                 {
-                    if (!IngredientExists(ingredientDTO.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound(); //status 404
+                }
+                catch (ArgumentException)
+                {
+                    return NotFound(); //status 404
+                }
+                catch (Exception)
+                {
+                    return BadRequest(); //status 400
                 }
                 return RedirectToAction(nameof(Index));
             }

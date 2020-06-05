@@ -23,6 +23,7 @@ namespace CocktailMagician.Web.Mappers
                 Name = ingredientDTO.Name,
                 Cocktails = ingredientDTO.CocktailDTOs.Select(c => new CocktailViewModel
                 {
+                    Id = c.Id,
                     Name = c.Name,
                     AverageRating = c.AverageRating
                 }).ToList()
@@ -41,6 +42,20 @@ namespace CocktailMagician.Web.Mappers
                 Name = ingredientVM.Name
             };
             
+            return ingredientDTO;
+        }
+        public IngredientDTO MapToDTOFromVM(EditIngredientViewModel editIngredientVM)
+        {
+            if (editIngredientVM == null)
+            {
+                return null;
+            }
+            var ingredientDTO = new IngredientDTO
+            {
+                Id = editIngredientVM.Id,
+                Name = editIngredientVM.Name
+            };
+
             return ingredientDTO;
         }
     }

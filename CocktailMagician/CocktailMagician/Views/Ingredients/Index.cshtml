@@ -36,8 +36,6 @@
             "ordering" : true,
             "processing" : true,
             "paging": true,
-            //"pageLength": 5,
-            //"lengthMenu": [5,10,25,50,100],
             "pagingType": "simple_numbers",
             "ajax" : {
             "url" : "@Url.Action("ListAllIngredients", "Ingredients")" ,
@@ -45,14 +43,13 @@
             "dataType" : "json" ,
                 },
             "columns" : [
-                //{ "data": "name", "name": "Name", "autoWidth": true,},
                 {
                     render: function (data, type, full, meta) {
                         return '<a href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
                     },
                     "name":"Name"
                 },
-                { "data": "cocktailNames", "name": "CocktailNames", "autoWidth": true, "orderable": false, },
+                { "data": "cocktailNames", "name": "Cocktails", "autoWidth": true, "orderable": false, },
                 {
                     data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
                         return '<a class="btn btn-danger" href="/Ingredients/Delete/' + row.id + '">Delete</a>';

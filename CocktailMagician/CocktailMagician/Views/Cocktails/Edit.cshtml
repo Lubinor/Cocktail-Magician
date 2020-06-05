@@ -1,23 +1,36 @@
-﻿@model CocktailMagician.Web.Models.CocktailViewModel
+﻿@model CocktailMagician.Web.Models.EditCocktailViewModel
 
 @{
     ViewData["Title"] = "Edit";
 }
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="~/css/mdb.min.css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 
-<h1>Edit</h1>
-
-<h4>Cocktail</h4>
+<h4>Edit Cocktail @Model.Name</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" asp-controller="Cocktails" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Name" />
+            @*<input type="hidden" asp-for="Name" value="@Model.Name"/>*@
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Change Name</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <select class="selectpicker" asp-for="@Model.ContainedIngredients" asp-items="@ViewBag.Ingredients"
+                        multiple data-live-search="true">
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="selectpicker" asp-for="@Model.ContainedBars" asp-items="@ViewBag.Bars"
+                         data-live-search="true">
+                </select>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -30,5 +43,8 @@
 </div>
 
 @section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Services.DTOs;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using CocktailMagician.Web.Models;
+using Newtonsoft.Json.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -55,11 +60,6 @@ namespace CocktailMagician.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
             var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
 
             if (cocktailDTO == null)
@@ -68,20 +68,18 @@ namespace CocktailMagician.Web.Controllers
             }
 
             var cocktailVM = this.cocktailDTOMapper.MapToVMFromDTO(cocktailDTO);
-            cocktailVM.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
-                .Where(ingredient => ingredient.Name == cocktailVM.Name)
-                .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
-            cocktailVM.Bars = (await this.barService.GetAllBarsAsync())
-                .Where(bar => bar.Name == cocktailVM.Name)
-                .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
 
             return View(cocktailVM);
         }
 
         // GET: Cocktails/Create
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var ingredients = await this.ingredientService.GetAllIngredientsAsync();
+            var ingredientVMs = ingredients.Select(ingredient => ingredientDTOMapper.MapToVMFromDTO(ingredient));
+
+            ViewData["Ingredients"] = new MultiSelectList(ingredientVMs,"Id","Name");
             return View();
         }
 
@@ -89,13 +87,30 @@ namespace CocktailMagician.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] CocktailDTO cocktailDTO)
+        //public async Task<IActionResult> Create([Bind("Name,Ingredients")] CocktailDTO cocktailDTO)
+        public async Task<IActionResult> Create(CreateCocktailViewModel createCocktailViewModel )
         {
             if (ModelState.IsValid)
             {
-                await this.cocktailService.CreateCocktailAsync(cocktailDTO);
-                
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var cocktailDTO = this.cocktailDTOMapper.MapToDTOFromVM(createCocktailViewModel);
+                    await this.cocktailService.CreateCocktailAsync(cocktailDTO);
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (ArgumentNullException)
+                {
+                    return NotFound();
+                }
+                catch (ArgumentException)
+                {
+                    return BadRequest();
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
             }
             return View();
         }
@@ -104,10 +119,10 @@ namespace CocktailMagician.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            var ingredients = await this.ingredientService.GetAllIngredientsAsync();
+            var ingredientVMs = ingredients.Select(ingredient => ingredientDTOMapper.MapToVMFromDTO(ingredient));
+            var bars = await this.barService.GetAllBarsAsync();
+            var barVMs = bars.Select(bar => barDTOMApper.MapToVMFromDTO(bar));
 
             var cocktailDTO = await this.cocktailService.GetCocktailAsync(id); ;
             
@@ -116,21 +131,32 @@ namespace CocktailMagician.Web.Controllers
                 return NotFound();
             }
 
-            var cocktailVM = this.cocktailDTOMapper.MapToVMFromDTO(cocktailDTO);
+            var editCocktailVM = new EditCocktailViewModel
+            {
+                Id = cocktailDTO.Id,
+                Name = cocktailDTO.Name,
+                ContainedBars = cocktailDTO.Bars.Select(b => b.Id).ToList(),
+                ContainedIngredients = cocktailDTO.Ingredients.Select(i => i.Id).ToList(),
+            };
 
-            return View(cocktailVM);
+            ViewData["Ingredients"] = new MultiSelectList(ingredientVMs, "Id", "Name"); 
+            ViewData["Bars"] = new MultiSelectList(barVMs, "Id", "Name");
+            
+            return View(editCocktailVM);
         }
 
         // POST: Cocktails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name")] CocktailDTO cocktailDTO)
+        public async Task<IActionResult> Edit(int id, EditCocktailViewModel newEditCocktailVM)
         {
-            if (id != cocktailDTO.Id)
+            if (id != newEditCocktailVM.Id)
             {
                 return NotFound();
             }
+
+            var cocktailDTO = cocktailDTOMapper.MapToDTOFromVM(newEditCocktailVM);
 
             if (ModelState.IsValid)
             {
@@ -138,34 +164,28 @@ namespace CocktailMagician.Web.Controllers
                 {
                     await this.cocktailService.UpdateCocktailAsync(id, cocktailDTO);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (ArgumentNullException)
                 {
-                    if (!CocktailExists(cocktailDTO.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
+                }
+                catch (ArgumentException)
+                {
+                    return BadRequest();
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
                 }
                 return RedirectToAction(nameof(Index));
             }
 
-            var cocktailVM = this.cocktailDTOMapper.MapToVMFromDTO(cocktailDTO); // To be fixed also in ingredients
-
-            return View(cocktailVM);
+            return View(newEditCocktailVM);
         }
 
         // GET: Cocktails/Delete/5
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
             var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
 
             if (cocktailDTO == null)
@@ -194,17 +214,57 @@ namespace CocktailMagician.Web.Controllers
             var start = Request.Form["start"].FirstOrDefault();
             var length = Request.Form["length"].FirstOrDefault();
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
 
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
             int totalCocktails = this.cocktailService.GetAllCocktailsCount();
-            var cocktails = await this.cocktailService.ListAllCocktailsAsync(skip, pageSize, searchValue);
+            int filteredCocktails = this.cocktailService.GetAllFilteredCocktailsCount(searchValue);
+            var cocktails = await this.cocktailService.ListAllCocktailsAsync(skip, pageSize, searchValue,
+                sortColumn, sortColumnDirection);
 
             var cocktailVMs = cocktails.Select(cocktail => this.cocktailDTOMapper.MapToVMFromDTO(cocktail)).ToList();
 
-            return Json(new { draw = draw, recordsFiltered = cocktails.Count, recordsTotal = totalCocktails, data = cocktailVMs });
+            foreach (var item in cocktailVMs)
+            {
+                item.Ingredients = (await this.ingredientService.GetAllIngredientsAsync())
+                    .Where(ingredient => ingredient.CocktailDTOs.Any(x => x.Name == item.Name))
+                    .Select(idto => ingredientDTOMapper.MapToVMFromDTO(idto)).ToList();
+                item.Bars = (await this.barService.GetAllBarsAsync())
+                    .Where(bar => bar.Cocktails.Any(x => x.Name == item.Name))
+                    .Select(bdto => barDTOMApper.MapToVMFromDTO(bdto)).ToList();
+                item.IngredientNames = string.Join(", ", item.Ingredients.Select(i => i.Name));
+                item.BarNames = string.Join(", ", item.Bars.Select(b => b.Name));
+                //item.CocktailNames = string.Join(", ", item.Cocktails.Select(c => c.Name)); ingredientNames i BarNames
+            }
+
+            //return Json(new { draw = draw, recordsFiltered = filteredCocktails, recordsTotal = totalCocktails, data = cocktailVMs }); //data = model
+
+            var json = Json(new { draw = draw, recordsFiltered = filteredCocktails, recordsTotal = totalCocktails, data = cocktailVMs });
+            return json;
         }
+        [HttpGet]
+        public async Task<IActionResult> Comments(int id)
+        {
+            var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
+
+            if (cocktailDTO == null)
+            {
+                return NotFound();
+            }
+
+            var cocktailVM = this.cocktailDTOMapper.MapToVMFromDTO(cocktailDTO);
+
+            return View(cocktailVM);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Comment(int id, CocktailViewModel cocktailVM)
+        //{
+
+        //}
         private bool CocktailExists(int id)
         {
             return this.cocktailService.GetAllCocktailssAsync().Result.Any(e => e.Id == id);

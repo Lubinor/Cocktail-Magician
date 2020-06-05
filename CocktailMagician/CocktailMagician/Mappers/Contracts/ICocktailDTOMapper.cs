@@ -5,7 +5,10 @@ namespace CocktailMagician.Web.Mappers.Contracts
 {
     public interface ICocktailDTOMapper
     {
-        public CocktailViewModel MapToVMFromDTO(CocktailDTO coctailDTO);
-        public CocktailDTO MapToDTOFromVM(CocktailViewModel coctailVM);
+        public CocktailViewModel MapToVMFromDTO(CocktailDTO cocktailDTO);
+        public CocktailDTO MapToDTOFromVM(CocktailViewModel cocktailVM);
+        public CocktailDTO MapToDTOFromVM(CreateCocktailViewModel createCocktailVM);
+        public CocktailDTO MapToDTOFromVM(EditCocktailViewModel editCocktailVM);
+
     }
 }

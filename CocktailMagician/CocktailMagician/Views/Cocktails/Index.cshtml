@@ -11,65 +11,63 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table" style="grid-template-columns : initial">
-    <thead>
+<table id="Cocktails" class="cell-border compact stripe">
+    <thead class="dt-body-center">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AverageRating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bars)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ingredients)
-            </th>
+            <th>Name</th>
+            <th>Bars</th>
+            <th>Ingredients</th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AverageRating)
-                </td>
-                <td>
-                    @foreach (var bar in item.Bars)
-                    {
-                        @Html.DisplayFor(modelItem => bar.Name)
-                    }
-                </td>
-                <td>
-                    @foreach (var ingredient in item.Ingredients)
-                        {
-                        <span>@Html.DisplayFor(modelItem => ingredient.Name)</span><span>, </span>
-                        }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
 </table>
-@*@section Styles{
-        <link rel="stylesheet" href="~Datatables/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
-    }
 
-    @section Scripts{
-        <script src="~/lib/momentjs/moment.min.js" asp-append-version="true"></script>
-        <script src="~/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js" asp-append-version="true"></script>
-        <script src="~/lib/datetime-moment/datetime-moment.js" asp-append-version="true"></script>
-        <script src="~/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js" asp-append-version="true"></script>
+<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 
-        //<script src="~/js/app.js" asp-append-version="true"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    }*@
+@section Scripts
+    {
+    <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/jquery.dataTables.min.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/dataTables.bootstrap4.js"></script>
+    <script type="text/javascript" class="init"></script>
+    <script>
+        $('#Cocktails').DataTable
+            ({
+            "serverSide": true,
+            "ordering" : true,
+            "processing" : true,
+            "paging": true,
+            "pageLength": 5,
+            "lengthMenu": [5,10,25,50,100],
+            "pagingType": "simple_numbers",
+            "ajax" : {
+            "url" : "@Url.Action("ListAllCocktails", "Cocktails")" ,
+            "type" : "POST" ,
+            "dataType" : "json" ,
+                },
+                drawCallback: function (settings) {
+                    // Here the response
+                    var response = settings.json;
+                    console.log(response);
+                    var role = response.role;
+                    //console.log(role);
+                    //return role;
+                },
+            "columns" : [
+                {
+                    "name": "Name","width":"15%", render: function (data, type, full, meta) {
+                        return '<a href="/cocktails/Details/' + full.id + '">'+full.name+'</a>';
+                    },
+                },
+                { "data": "barNames", "name": "Bars", "autoWidth": true, "orderable": false, },
+                { "data": "ingredientNames", "name": "Ingredients", "autoWidth": true, "orderable": false, },
+                {
+                    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
+                        return '<a class="btn btn-danger" href="/Cocktails/Delete/' + row.id + '">Delete</a>';
+                    }
+                },
+
+            ]});
+    </script>
+}

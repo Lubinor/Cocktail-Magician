@@ -32,10 +32,12 @@ namespace CocktailMagician.Services.Mappers
                 AverageRating = cocktail.AverageRating,
                 Bars = cocktail.CocktailBars.Select(b => new BarDTO
                 {
+                    Id= b.Bar.Id,
                     Name = b.Bar.Name
                 }).ToList(),
                 Ingredients = cocktail.IngredientsCocktails.Select(i => new IngredientDTO
                 {
+                    Id = i.Ingredient.Id,
                     Name = i.Ingredient.Name
                 }).ToList(),
                 IsDeleted = cocktail.IsDeleted

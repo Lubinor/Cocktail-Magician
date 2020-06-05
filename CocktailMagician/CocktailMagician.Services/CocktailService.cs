@@ -8,7 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using CocktailMagician.Services.Helpers;
 using System.Threading.Tasks;
+using CocktailMagician.Services.Mappers;
+using CocktailMagician.Models;
 
 namespace CocktailMagician.Services
 {
@@ -17,13 +20,16 @@ namespace CocktailMagician.Services
         private readonly IDateTimeProvider datetimeProvider;
         private readonly ICocktailMapper mapper;
         private readonly IIngredientMapper ingredientMapper;
+        private readonly IBarMapper barMapper;
         private readonly CocktailMagicianContext context;
 
-        public CocktailService(IDateTimeProvider datetimeProvider, ICocktailMapper mapper, IIngredientMapper ingredientMapper, CocktailMagicianContext context)
+        public CocktailService(IDateTimeProvider datetimeProvider, ICocktailMapper mapper,
+            IIngredientMapper ingredientMapper, IBarMapper barMapper, CocktailMagicianContext context)
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.ingredientMapper = ingredientMapper ?? throw new ArgumentNullException(nameof(ingredientMapper));
+            this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
         /// <summary>
@@ -35,7 +41,7 @@ namespace CocktailMagician.Services
             var cocktails = this.context.Cocktails
                 .Include(cocktail => cocktail.CocktailBars)
                     .ThenInclude(cb => cb.Bar)
-                    .ThenInclude(c=>c.City)
+                    .ThenInclude(c => c.City)
                 .Include(cocktail => cocktail.IngredientsCocktails)
                     .ThenInclude(ic => ic.Ingredient)
                 .Where(cocktail => cocktail.IsDeleted == false);
@@ -66,8 +72,11 @@ namespace CocktailMagician.Services
             var cocktailDTO = mapper.MapToCocktailDTO(cocktail);
 
             var cocktailIngredient = cocktail.IngredientsCocktails.Select(x => x.Ingredient);
+            var cocktailBars = cocktail.CocktailBars.Select(x => x.Bar);
             cocktailDTO.Ingredients = cocktailIngredient.Where(c => c.IsDeleted == false)
                 .Select(x => ingredientMapper.MapToIngredientDTO(x)).ToList();
+            cocktailDTO.Bars = cocktailBars.Where(b => b.IsDeleted == false)
+                .Select(bdto => barMapper.MapToBarDTO(bdto)).ToList();
 
             return cocktailDTO;
         }
@@ -76,20 +85,20 @@ namespace CocktailMagician.Services
         /// </summary>
         /// <param name="coctailDTO">Requested information for creating a new cocktail</param>
         /// <returns>New Coctail</returns>
-        public async Task<CocktailDTO> CreateCocktailAsync(CocktailDTO coctailDTO)
+        public async Task<CocktailDTO> CreateCocktailAsync(CocktailDTO cocktailDTO)
         {
-            if (coctailDTO == null)
+            if (!IsValid(cocktailDTO))
             {
                 return null;
             }
 
-            var cocktail = mapper.MapToCocktail(coctailDTO);
+            var cocktail = mapper.MapToCocktail(cocktailDTO);
             cocktail.CreatedOn = datetimeProvider.GetDateTime();
 
             this.context.Cocktails.Add(cocktail);
             await this.context.SaveChangesAsync();
 
-            return coctailDTO;
+            return cocktailDTO;
         }
         /// <summary>
         /// If id exist and the cocktail is not deleted, update the cocktail with current info from cocktailDTO
@@ -99,7 +108,13 @@ namespace CocktailMagician.Services
         /// <returns>Cocktail updated with new details</returns>
         public async Task<CocktailDTO> UpdateCocktailAsync(int id, CocktailDTO cocktailDTO)
         {
+            if (!IsValid(cocktailDTO))
+            {
+                return null;
+            }
             var cocktail = await this.context.Cocktails
+                .Include(ingredient => ingredient.IngredientsCocktails)
+                .Include(bar => bar.CocktailBars)
                 .FirstOrDefaultAsync(cocktail => cocktail.Id == id & cocktail.IsDeleted == false);
 
             if (cocktail == null)
@@ -107,7 +122,21 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            cocktail = mapper.MapToCocktail(cocktailDTO);
+
+            this.context.IngredientsCocktails.RemoveRange(cocktail.IngredientsCocktails);
+            this.context.BarsCocktails.RemoveRange(cocktail.CocktailBars);
+
+            cocktail.Name = cocktailDTO.Name;
+            cocktail.CocktailBars = new List<BarsCocktails>();
+            foreach (var item in cocktailDTO.Bars)
+            {
+                cocktail.CocktailBars.Add(new BarsCocktails { BarId = item.Id, CocktailId = cocktail.Id });
+            }
+            cocktail.IngredientsCocktails = new List<IngredientsCocktails>();
+            foreach (var item in cocktailDTO.Ingredients)
+            {
+                cocktail.IngredientsCocktails.Add(new IngredientsCocktails { IngredientId = item.Id, CocktailId = cocktail.Id });
+            }
 
             this.context.Cocktails.Update(cocktail);
             await this.context.SaveChangesAsync();
@@ -190,7 +219,7 @@ namespace CocktailMagician.Services
             }
             else
             {
-                cocktails = cocktails.Where(cocktail => cocktail.Name.ToLower().Contains(filter.ToLower()) 
+                cocktails = cocktails.Where(cocktail => cocktail.Name.ToLower().Contains(filter.ToLower())
                 || cocktail.IngredientsCocktails.Any(ing => ing.Ingredient.Name.ToLower() == filter.ToLower()));
             }
 
@@ -199,42 +228,96 @@ namespace CocktailMagician.Services
             return cocktailDTOs;
         }
 
-        public async Task<IList<CocktailDTO>> ListAllCocktailsAsync(int skip, int pageSize, string searchValue)
+        public async Task<IList<CocktailDTO>> ListAllCocktailsAsync(int skip, int pageSize, string searchValue,
+            string orderBy, string orderDirection)
         {
+            var cocktails = this.context.Cocktails
+                .Include(cocktail => cocktail.IngredientsCocktails)
+                    .ThenInclude(i => i.Ingredient)
+                .Include(cocktail => cocktail.CocktailBars)
+                    .ThenInclude(b => b.Bar)
+                .Where(cocktail => cocktail.IsDeleted == false);
+
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    cocktails = cocktails.OrderBy(orderBy);
+                }
+                else
+                {
+                    cocktails = cocktails.OrderByDescending(orderBy);
+                }
+            }
+
             if (!string.IsNullOrEmpty(searchValue))
             {
                 searchValue = searchValue.ToLower();
 
-                var cocktails = await this.context.Cocktails
-                    .Include(ingredient => ingredient.IngredientsCocktails)
-                        .ThenInclude(i => i.Ingredient)
+                cocktails = cocktails
                      .Where(cocktail => cocktail.Name.ToLower()
-                     .StartsWith(searchValue))
-                     .OrderBy(cocktail => cocktail.Name)
-                     .Skip(skip)
-                     .Take(pageSize)
-                     .ToListAsync();
-
-                var cocktailDTOs = cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToList();
-
-                return cocktailDTOs;
+                     .StartsWith(searchValue));
             }
-            else
-            {
-                var cocktails = await this.context.Cocktails
-                    .OrderBy(a => a.Id)
-                    .Skip(skip)
-                    .Take(pageSize)
-                    .ToListAsync();
 
-                var cocktailDTOs = cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToList();
+            cocktails = cocktails
+                .Skip(skip)
+                .Take(pageSize);
 
-                return cocktailDTOs;
-            }
+            var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
+
+            return cocktailDTOs;
         }
         public int GetAllCocktailsCount()
         {
             return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
+        }
+        public int GetAllFilteredCocktailsCount(string searchValue)
+        {
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                var cocktails = this.context.Cocktails
+                     .Where(cocktail => cocktail.Name.ToLower().Contains(searchValue));
+                return cocktails.Count();
+            }
+            return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
+        }
+        private bool IsValid(CocktailDTO cocktailDTO)
+        {
+            if (cocktailDTO == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (cocktailDTO.Name == string.Empty || !cocktailDTO.Name.Any(x => char.IsLetterOrDigit(x)))
+            {
+                throw new ArgumentException();
+            }
+
+            if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(cocktailDTO.Name.ToLower()))
+            {
+                throw new Exception();
+            }
+            return true;
+        }
+        private double GetCocktailRating(int cocktailId)
+        {
+            var allReviews = this.context.CocktailsUsersReviews
+                .Where(c => c.CocktailId == cocktailId && !c.IsDeleted);
+
+            int ratingSum = allReviews.Select(r => r.Rating).Sum();
+
+            double averageRating = 0.00;
+
+            if (ratingSum > 0)
+            {
+                averageRating = (ratingSum * 1.00) / allReviews.Count();
+            }
+
+            averageRating = Math.Round(averageRating, 2);
+
+            return averageRating;
         }
     }
 }

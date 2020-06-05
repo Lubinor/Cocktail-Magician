@@ -7,5 +7,6 @@ namespace CocktailMagician.Web.Mappers.Contracts
     {
         public IngredientViewModel MapToVMFromDTO(IngredientDTO ingredientDTO);
         public IngredientDTO MapToDTOFromVM(IngredientViewModel ingredientVM);
+        public IngredientDTO MapToDTOFromVM(EditIngredientViewModel editIngredientVM);
     }
 }

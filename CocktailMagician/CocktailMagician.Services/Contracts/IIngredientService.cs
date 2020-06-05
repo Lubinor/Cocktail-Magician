@@ -15,5 +15,6 @@ namespace CocktailMagician.Services.Contracts
             string orderBy, string odrderDirection);
         int GetAllIngredientsCount();
         int GetAllFilteredIngredientsCount(string searchValue);
+        public bool IsValid(IngredientDTO ingredientDTO);
     }
 }

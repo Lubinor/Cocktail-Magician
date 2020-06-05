@@ -23,6 +23,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             mockCocktailMapper.Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
                 .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name });
             var mockIngMapper = new Mock<IIngredientMapper>();
+            var mockBarMapper = new Mock<IBarMapper>();
             var options = Utils.GetOptions(nameof(ReturnCocktailsSortedByNameAscending));
             var sort = "name";
             var expected = new List<CocktailDTO>
@@ -42,7 +43,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, assertContext);
+                    mockIngMapper.Object,mockBarMapper.Object, assertContext);
                 var result = await sut.SortCocktailsAsync(sort);
 
                 Assert.AreEqual(expected.Count, result.Count);
@@ -61,6 +62,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             mockCocktailMapper.Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
                 .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name });
             var mockIngMapper = new Mock<IIngredientMapper>();
+            var mockBarMapper = new Mock<IBarMapper>();
             var options = Utils.GetOptions(nameof(ReturnCocktailsSortedByNameDescending));
             var sort = "name_desc";
             var expected = new List<CocktailDTO>
@@ -80,7 +82,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, assertContext);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext);
                 var result = await sut.SortCocktailsAsync(sort);
 
                 Assert.AreEqual(expected.Count, result.Count);

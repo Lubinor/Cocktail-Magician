@@ -1,4 +1,4 @@
-﻿@model CocktailMagician.Web.Models.IngredientViewModel
+﻿@model CocktailMagician.Web.Models.EditIngredientViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,9 +12,9 @@
     <div class="col-md-4">
         <form asp-action="Edit" asp-controller="Ingredients" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Name" value="Name"/> @*Default is ID*@
+            @*<input type="hidden" asp-for="Name" value="Name"/> Default is ID*@
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Ingredient New Name</label>
+                <label asp-for="Name" class="control-label">Change Name</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>

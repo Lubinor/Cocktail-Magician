@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CocktailMagician.Services.DTOs
 {
+    [Serializable]
     public class BarDTO
     {
         public BarDTO()

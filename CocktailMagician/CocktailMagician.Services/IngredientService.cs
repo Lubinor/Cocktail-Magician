@@ -21,7 +21,7 @@ namespace CocktailMagician.Services
         private readonly IIngredientMapper mapper;
         private readonly ICocktailMapper cocktailMapper;
         private readonly CocktailMagicianContext context;
-
+       
         public IngredientService(IDateTimeProvider datetimeProvider, IIngredientMapper mapper,
             ICocktailMapper cocktailMapper, CocktailMagicianContext context)
         {
@@ -77,8 +77,7 @@ namespace CocktailMagician.Services
         /// <returns></returns>
         public async Task<IngredientDTO> CreateIngredientAsync(IngredientDTO ingredientDTO)
         {
-            //TODO: MORE VALIDATIONS HERE
-            if (ingredientDTO.Name == string.Empty)
+            if (!IsValid(ingredientDTO))
             {
                 return null;
             }
@@ -99,6 +98,11 @@ namespace CocktailMagician.Services
         /// <returns></returns>
         public async Task<IngredientDTO> UpdateIngredientAsync(int id, IngredientDTO ingredientDTO)
         {
+            if (!IsValid(ingredientDTO))
+            {
+                return null;
+            }
+            
             var ingredient = await this.context.Ingredients
                 .FirstOrDefaultAsync(ingredient => ingredient.Id == id & ingredient.IsDeleted == false);
 
@@ -107,7 +111,7 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            ingredient = mapper.MapToIngredient(ingredientDTO);
+            ingredient.Name = ingredientDTO.Name;
 
             this.context.Ingredients.Update(ingredient);
             await this.context.SaveChangesAsync();
@@ -143,34 +147,15 @@ namespace CocktailMagician.Services
                 return true;
             }
         }
-        //public async Task<List<IngredientDTO>> SortIngredientsAsync(string sort)
-        //{
-        //    var ingredients = this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false)
-        //        .Include(ic => ic.IngredientsCocktails)
-        //            .ThenInclude(c => c.Cocktail);
-
-        //    var ingredientDTOs = await ingredients.Select(ingredient => mapper.MapToIngredientDTO(ingredient)).ToListAsync();
-
-        //    if (sort == null)
-        //    {
-        //        ingredientDTOs = ingredientDTOs.OrderBy(cocktail => cocktail.Id).ToList();
-        //    }
-
-        //    switch (sort)
-        //    {
-        //        case "asc":
-        //            ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Name).ToList();
-        //            break;
-        //        case "desc":
-        //            ingredientDTOs = ingredientDTOs.OrderByDescending(ingredient => ingredient.Name).ToList();
-        //            break;
-        //        default:
-        //            ingredientDTOs = ingredientDTOs.OrderBy(ingredient => ingredient.Id).ToList();
-        //            break;
-        //    }
-
-        //    return ingredientDTOs;
-        //}
+        /// <summary>
+        /// Shows collection of cocktails that matches certain criterias
+        /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="pageSize">Count of the item shown on page</param>
+        /// <param name="searchValue">Shows item/s that contain/s in its/their name/s the searced value</param>
+        /// <param name="orderBy">The column by which the table wil be sorted</param>
+        /// <param name="orderDirection">Ascending or descending</param>
+        /// <returns></returns>
         public async Task<IList<IngredientDTO>> ListAllIngredientsAsync(int skip, int pageSize, string searchValue,
             string orderBy, string orderDirection)
         {
@@ -234,6 +219,28 @@ namespace CocktailMagician.Services
                 return ingredients.Count();
             }
             return this.context.Ingredients.Where(ingredient => ingredient.IsDeleted == false).Count();
+        }
+        /// <summary>
+        /// Method which checks if the passed "DTO" can be transormed to database model
+        /// </summary>
+        /// <param name="ingredientDTO">the object to be transormed to database model</param>
+        /// <returns></returns>
+        public bool IsValid(IngredientDTO ingredientDTO)
+        {
+            if (ingredientDTO == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (ingredientDTO.Name == string.Empty || !ingredientDTO.Name.Any(x => char.IsLetter(x)))
+            {
+                throw new ArgumentException();
+            }
+
+            if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
+            {
+                throw new Exception();
+            }
+            return true;
         }
     }
 }
