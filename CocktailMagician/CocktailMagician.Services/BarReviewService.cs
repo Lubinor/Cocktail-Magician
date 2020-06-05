@@ -82,7 +82,7 @@ namespace CocktailMagician.Services
             this.context.BarsUsersReviews.Add(barReview);
             await this.context.SaveChangesAsync();
 
-            var newBarReviewDTO = this.barReviewMapper.MapToBarReviewDTO(barReview);
+            var newBarReviewDTO = await this.GetBarReviewAsync(barReview.BarId, barReview.UserId);
 
             return newBarReviewDTO;
         }
@@ -110,7 +110,7 @@ namespace CocktailMagician.Services
             this.context.BarsUsersReviews.Update(barReview);
             await this.context.SaveChangesAsync();
 
-            var newBarReviewDTO = this.barReviewMapper.MapToBarReviewDTO(barReview);
+            var newBarReviewDTO = await this.GetBarReviewAsync(barId, userId);
 
             return newBarReviewDTO;
         }

@@ -1,12 +1,16 @@
 ﻿using CocktailMagician.Data;
+using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
+using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
@@ -16,14 +20,16 @@ namespace CocktailMagician.Services
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly CocktailMagicianContext context;
         private readonly IBarMapper barMapper;
+        private readonly ICocktailMapper cocktailMapper;
 
-        public BarService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, IBarMapper barMapper)
+        public BarService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, IBarMapper barMapper, ICocktailMapper cocktailMapper)
         {
             this.dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             this.context = context ?? throw new ArgumentNullException(nameof(context)); ;
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
+            this.cocktailMapper = cocktailMapper ?? throw new ArgumentNullException(nameof(cocktailMapper));
         }
-        //TODO make a separate method that accepts collection - but it will not be Async. Which is better?
+
         public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = null)
         {
             var bars = this.context.Bars
@@ -43,6 +49,11 @@ namespace CocktailMagician.Services
                 .Select(b => this.barMapper.MapToBarDTO(b))
                 .ToListAsync();
 
+            foreach (var bar in barDTOs)
+            {
+                bar.AverageRating = GetBarRating(bar.Id);
+            }
+
             return barDTOs;
         }
 
@@ -60,6 +71,8 @@ namespace CocktailMagician.Services
             }
 
             var barDTO = this.barMapper.MapToBarDTO(bar);
+
+            barDTO.AverageRating = GetBarRating(barDTO.Id);
 
             return barDTO;
         }
@@ -87,6 +100,7 @@ namespace CocktailMagician.Services
         {
             var bar = await this.context.Bars
                 .Include(b => b.BarCocktails)
+                    .ThenInclude(b => b.Cocktail)
                 .Include(b => b.City)
                 .FirstOrDefaultAsync(b => !b.IsDeleted && b.Id == id);
 
@@ -158,6 +172,88 @@ namespace CocktailMagician.Services
                 .ToListAsync();
 
             return barDTOs;
+        }
+
+        public async Task<IList<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue, string orderBy, string orderDirection)
+        {
+            var bars = this.context.Bars
+                .Include(bar => bar.BarCocktails)
+                    .ThenInclude(bc => bc.Cocktail)
+                .Include(bar => bar.City)
+                .Where(bar => bar.IsDeleted == false);
+
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                if (string.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    bars = bars.OrderBy(orderBy);
+                }
+                else
+                {
+                    bars = bars.OrderByDescending(orderBy);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                bars = bars
+                     .Where(bar => bar.Name.ToLower()
+                     .Contains(searchValue.ToLower()));
+            }
+
+            bars = bars
+                .Skip(skip)
+                .Take(pageSize);
+
+            var barDTOs = await bars.Select(bar => barMapper.MapToBarDTO(bar)).ToListAsync();
+
+            foreach (var bar in barDTOs)
+            {
+                bar.AverageRating = GetBarRating(bar.Id);
+            }
+
+            return barDTOs;
+        }
+
+        public int GetAllBarsCount()
+        {
+            return this.context.Bars.Where(bar => !bar.IsDeleted).Count();
+        }
+
+        public int GetAllFilteredBarsCount(string searchValue)
+        {
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                var bars = this.context.Bars
+                     .Where(bar => bar.Name.ToLower()
+                     .Contains(searchValue.ToLower()));
+
+                return bars.Count();
+            }
+            return this.context.Bars.Where(bar => !bar.IsDeleted).Count();
+        }
+        private double GetBarRating(int barId)
+        {
+            var allReviews = this.context.BarsUsersReviews
+                .Where(b => b.BarId == barId &&
+                           !b.IsDeleted);
+
+            int ratingSum = allReviews.Select(r => r.Rating).Sum();
+
+            double averageRating = 0.00;
+
+            if (ratingSum > 0)
+            {
+                averageRating = (ratingSum * 1.00) / allReviews.Count();
+            }
+
+            averageRating = Math.Round(averageRating, 2);
+
+            return averageRating;
         }
     }
 }

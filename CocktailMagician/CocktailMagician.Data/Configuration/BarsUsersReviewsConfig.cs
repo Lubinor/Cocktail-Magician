@@ -12,6 +12,9 @@ namespace CocktailMagician.Data.Configuration
 
             builder.Property(review => review.Rating)
                 .IsRequired();
+
+            builder.Property(review => review.Comment)
+                .HasMaxLength(500);
         }
     }
 }

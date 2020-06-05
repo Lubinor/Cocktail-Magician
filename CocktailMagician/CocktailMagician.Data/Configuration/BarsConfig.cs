@@ -12,7 +12,7 @@ namespace CocktailMagician.Data.Configuration
 
             builder.Property(bar => bar.Name)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(30);
 
             builder.HasOne(bar => bar.City)
                 .WithMany(city => city.Bars)

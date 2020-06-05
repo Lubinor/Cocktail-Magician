@@ -17,15 +17,17 @@ namespace CocktailMagician.Web.Controllers
     {
         private readonly IBarService barService;
         private readonly ICityService cityService;
+        private readonly ICocktailService cocktailService;
         private readonly IBarDTOMapper barMapper;
         private readonly ICocktailDTOMapper cocktailMapper;
         private readonly ICityDTOMapper citymapper;
 
-        public BarsController(IBarService barService, ICityService cityService, IBarDTOMapper barMapper, 
-            ICocktailDTOMapper cocktailMapper, ICityDTOMapper citymapper)
+        public BarsController(IBarService barService, ICityService cityService, ICocktailService cocktailService,
+            IBarDTOMapper barMapper, ICocktailDTOMapper cocktailMapper, ICityDTOMapper citymapper)
         {
             this.barService = barService ?? throw new ArgumentNullException(nameof(barService));
             this.cityService = cityService ?? throw new ArgumentNullException(nameof(cityService));
+            this.cocktailService = cocktailService ?? throw new ArgumentNullException(nameof(cocktailService));
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
             this.cocktailMapper = cocktailMapper ?? throw new ArgumentNullException(nameof(cocktailMapper));
             this.citymapper = citymapper ?? throw new ArgumentNullException(nameof(citymapper));
@@ -146,6 +148,37 @@ namespace CocktailMagician.Web.Controllers
         {
             await this.barService.DeleteBarAsync(id);
             return RedirectToAction("Index", "Bars", new { area = "" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ListAllBars()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            int totalBars = this.barService.GetAllBarsCount();
+            int filteredBars = this.barService.GetAllFilteredBarsCount(searchValue);
+            var bars = await this.barService.ListAllBarsAsync(skip, pageSize, searchValue,
+                sortColumn, sortColumnDirection);
+
+            var barVMs = bars.Select(bar => this.barMapper.MapToVMFromDTO(bar)).ToList();
+
+            foreach (var bar in barVMs)
+            {
+                bar.Cocktails = (await this.cocktailService.GetAllCocktailssAsync())
+                    .Where(c => c.Bars.Any(x => x.Name == bar.Name))
+                    .Select(cdto => cocktailMapper.MapToVMFromDTO(cdto)).ToList();
+                bar.CocktailNames = string.Join(", ", bar.Cocktails.Select(c => c.Name));
+            }
+
+            return Json(new { draw = draw, recordsFiltered = filteredBars, recordsTotal = totalBars, data = barVMs }); //data = model
         }
     }
 }

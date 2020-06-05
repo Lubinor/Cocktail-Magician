@@ -1,13 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CocktailMagician.Web.Models
 {
-    public class BarViewModel
+    public class EditBarCocktailsViewModel
     {
-        public BarViewModel()
+        public EditBarCocktailsViewModel()
         {
 
         }
+        public IEnumerable<int> SelectedCocktails { get; set; }
+        public IEnumerable<SelectListItem> Cocktails { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public int CityId { get; set; }
@@ -15,7 +21,5 @@ namespace CocktailMagician.Web.Models
         public string Address { get; set; }
         public string Phone { get; set; }
         public double AverageRating { get; set; }
-        public ICollection<CocktailViewModel> Cocktails { get; set; } = new List<CocktailViewModel>();
-        public string CocktailNames { get; set; }
     }
 }

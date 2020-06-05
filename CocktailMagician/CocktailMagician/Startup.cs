@@ -69,6 +69,7 @@ namespace CocktailMagician.Web
             services.AddScoped<ICocktailDTOMapper, CocktailDTOMapper>();
             services.AddScoped<IIngredientDTOMapper, IngredientDTOMapper>();
             services.AddScoped<IBarDTOMapper, BarDTOMapper>();
+            services.AddScoped<IBarReviewDTOMapper, BarReviewDTOMapper>();
             services.AddScoped<ICityDTOMapper, CityDTOMapper>();
         }
 

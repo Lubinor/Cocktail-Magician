@@ -10,72 +10,90 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table table-borderless table-hover", id="city_index">
-    <thead class="thead-dark">
+<table class="table-borderless table-hover" id="Cities" style="border-bottom:0px; border-top:0px;">
+    <thead class="dt-body-center">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Bars)
+                Bars
             </th>
-            <th style="text-align: right">
-                @Html.DisplayName("Actions")
+            <th>
             </th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var city in Model)
-        {
-            <tr>
-                <td>
-                    <a class="btn btn-outline-success font-weight-bold" asp-action="Details" asp-route-id="@city.Id">@city.Name</a>
-                </td>
-                <td>
-                    @if (city.Bars.Count != 0)
-                    {
-                        foreach (var bar in city.Bars)
+    @*<tbody>
+            @foreach (var city in Model)
+            {
+                <tr>
+                    <td>
+                        <img width="150" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSl18R2hA1rhIWWzaCjqMobGik-g_TgzW4AVZWcPSOp1BzAAT50&usqp=CAU" />
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-success font-weight-bold" asp-action="Details" asp-route-id="@city.Id">@city.Name</a>
+                    </td>
+                    <td>
+                        @if (city.Bars.Count != 0)
                         {
-                            <a class="btn btn-outline-danger font-weight-bold" asp-controller="Bars" asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
+                            foreach (var bar in city.Bars)
+                            {
+                                <a class="btn btn-outline-danger font-weight-bold" asp-controller="Bars" asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
+                            }
                         }
-                        @*@string.Join(", ", city.Bars.Select(b => b.Name));*@
-                    }
-                    else
-                    {
-                        @Html.DisplayName("N/A");
-                    }
-                </td>
-                <td style="text-align: right">
-                    <a asp-action="Edit" asp-route-id="@city.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@city.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@city.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+                        else
+                        {
+                            @Html.DisplayName("N/A");
+                        }
+                    </td>
+                    <td style="text-align: right">
+                        <a asp-action="Edit" asp-route-id="@city.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@city.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@city.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>*@
 </table>
 
-<link rel="stylesheet" type="text/css" href="~/DataTables/datatables.css" />
+<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 
 @section Scripts
     {
-    <script type="text/javascript" language="javascript" src="~/DataTables/datatables.js"></script>
+    <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/jquery.dataTables.min.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/dataTables.bootstrap4.js"></script>
     <script type="text/javascript" class="init"></script>
     <script>
-        $('#city_index').DataTable
+        $('#Cities').DataTable
             ({
+            "serverSide": true,
             "ordering" : true,
             "processing" : true,
-            "serverSide": true,
-            "paging":true,
+            "paging": true,
+            //"pageLength": 5,
+            //"lengthMenu": [5,10,25,50,100],
+            "pagingType": "simple_numbers",
             "ajax" : {
-            "url" : "@Url.Action("Index", "Cities")" ,
+            "url" : "@Url.Action("ListAllCities", "Cities")" ,
             "type" : "POST" ,
             "dataType" : "json" ,
                 },
             "columns" : [
-                { "data": "name", "name": "Name", "autoWidth": true } ,
-                { "data": "oldName", "name": "oldName", "autoWidth": true },
+                //{ "data": "name", "name": "Name", "autoWidth": true,},
+                {
+                    render: function (data, type, full, meta) {
+                        return '<a class = "btn btn-outline-success font-weight-bold" href="/cities/Details/' + full.id + '">'+full.name+'</a>';
+                    },
+                    "name":"Name"
+                },
+                { "data": "barNames", "name": "BarNames", "autoWidth": true, "orderable": false, },
+                {
+                    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
+                        return '<a class="btn btn-danger" href="/Cities/Delete/' + row.id + '">Delete</a>';
+                    }
+                },
 
             ]});
     </script>
