@@ -11,5 +11,9 @@ namespace CocktailMagician.Services.Contracts
         Task<CityDTO> CreateCityAsync(CityDTO cityDTO);
         Task<CityDTO> UpdateCityAsync(int id, CityDTO cityDTO);
         Task<bool> DeleteCityAsync(int id);
+        Task<IList<CityDTO>> ListAllCitiesAsync(int skip, int pageSize, string searchValue,
+                                                 string orderBy, string odrderDirection);
+        int GetAllCitiesCount();
+        int GetAllFilteredCitiesCount(string searchValue);
     }
 }

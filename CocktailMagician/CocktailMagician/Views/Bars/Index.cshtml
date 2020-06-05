@@ -10,50 +10,76 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="cell-border compact stripe" id="Bars">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CityName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AverageRating)
-            </th>
+            <th>Name</th>
+            <th>CityName</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>AverageRating</th>
+            <th>CocktailNames</th>
+            <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CityName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AverageRating)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
 </table>
+<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+@section Scripts
+    {
+    <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/jquery.dataTables.min.js" type="text/javascript" language="javascript"></script>
+    <script src="~/DataTables/js/dataTables.bootstrap4.js"></script>
+    <script type="text/javascript" class="init"></script>
+    <script>
+        $('#Bars').DataTable
+            ({
+            "serverSide": true,
+            "ordering" : true,
+            "processing" : true,
+            "paging": true,
+            //"pageLength": 5,
+            //"lengthMenu": [5,10,25,50,100],
+            "pagingType": "simple_numbers",
+            "ajax" : {
+            "url" : "@Url.Action("ListAllBars", "Bars")" ,
+            "type" : "POST" ,
+            "dataType" : "json" ,
+                },
+                drawCallback: function (settings) {
+                    var response = settings.json;
+                    console.log(response);
+                },
+            "columns" : [
+                //{ "data": "name", "name": "Name", "autoWidth": true,},
+                {
+                    render: function (data, type, full, meta) {
+                        return '<a class = "btn btn-outline-info" href="/bars/Details/' + full.id + '">'+full.name+'</a>';
+                    },
+                    "name":"Name"
+                },
+                { "data": "cityName", "name": "CityName", "autoWidth": true, "orderable": false, },
+                { "data": "address", "name": "Address", "autoWidth": true, "orderable": false, },
+                { "data": "phone", "name": "Phone", "autoWidth": true, "orderable": false, },
+                //{ "data": "averageRating", "name": "AverageRating", "type": "numeric", "autoWidth": true, "orderable": true, },
+                { "data": 'averageRating', "name": "AverageRating",
+                    render: function (data, type, row, meta) {
+                        return type === 'display' ?
+                            '<progress value="' + data + '" max="5"></progress>' :
+                            data;
+                    }
+                },
+                {
+                    "data": "cocktails", "autoWidth": true, "orderable": true,
+                    render: function (data, type, row) {
+                        var buttons = '';
+                        for (i = 0; i < data.length; i++) {
+                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/cocktails/Details/' + data[i].id + '">' + data[i].name + ' '+ '</a>'
+                        }
+                        return buttons;
+                    },
+                },
+            ]});
+    </script>
+}

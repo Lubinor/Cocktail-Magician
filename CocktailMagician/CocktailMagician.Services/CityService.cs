@@ -1,12 +1,14 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
+using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
@@ -128,6 +130,62 @@ namespace CocktailMagician.Services
             await this.context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<IList<CityDTO>> ListAllCitiesAsync(int skip, int pageSize, string searchValue, string orderBy, string orderDirection)
+        {
+            var cities = this.context.Cities
+                .Include(city => city.Bars)
+                    .Where(city => !city.IsDeleted);
+
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                {
+                    cities = cities.OrderBy(orderBy);
+                }
+                else
+                {
+                    cities = cities.OrderByDescending(orderBy);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                cities = cities
+                     .Where(city => city.Name.ToLower()
+                     .Contains(searchValue.ToLower()));
+            }
+
+            cities = cities
+                .Skip(skip)
+                .Take(pageSize);
+
+            var cityDTOs = await cities.Select(city => cityMapper.MapToCityDTO(city)).ToListAsync();
+
+            return cityDTOs;
+        }
+
+        public int GetAllCitiesCount()
+        {
+            return this.context.Cities.Where(city => !city.IsDeleted).Count();
+        }
+
+        public int GetAllFilteredCitiesCount(string searchValue)
+        {
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                var cities = this.context.Cities
+                     .Where(city => city.Name.ToLower()
+                     .Contains(searchValue.ToLower()));
+
+                return cities.Count();
+            }
+            return this.context.Cities.Where(city => !city.IsDeleted).Count();
         }
     }
 }
