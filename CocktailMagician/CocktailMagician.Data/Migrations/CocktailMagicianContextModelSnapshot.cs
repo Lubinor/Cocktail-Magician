@@ -159,6 +159,12 @@ namespace CocktailMagician.Data.Migrations
                         new
                         {
                             BarId = 1,
+                            CocktailId = 2,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            BarId = 1,
                             CocktailId = 6,
                             IsDeleted = false
                         },
@@ -166,6 +172,12 @@ namespace CocktailMagician.Data.Migrations
                         {
                             BarId = 2,
                             CocktailId = 1,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            BarId = 2,
+                            CocktailId = 3,
                             IsDeleted = false
                         },
                         new
@@ -178,6 +190,12 @@ namespace CocktailMagician.Data.Migrations
                         {
                             BarId = 3,
                             CocktailId = 1,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            BarId = 3,
+                            CocktailId = 4,
                             IsDeleted = false
                         },
                         new
@@ -190,6 +208,12 @@ namespace CocktailMagician.Data.Migrations
                         {
                             BarId = 4,
                             CocktailId = 1,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            BarId = 4,
+                            CocktailId = 5,
                             IsDeleted = false
                         },
                         new
@@ -214,6 +238,12 @@ namespace CocktailMagician.Data.Migrations
                         {
                             BarId = 6,
                             CocktailId = 1,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            BarId = 6,
+                            CocktailId = 3,
                             IsDeleted = false
                         },
                         new
@@ -242,8 +272,8 @@ namespace CocktailMagician.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.HasKey("BarId", "UserId");
 
@@ -399,8 +429,8 @@ namespace CocktailMagician.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.HasKey("CocktailId", "UserId");
 
@@ -583,6 +613,60 @@ namespace CocktailMagician.Data.Migrations
                             IngredientId = 12,
                             CocktailId = 6,
                             IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 3,
+                            CocktailId = 2,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 5,
+                            CocktailId = 2,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 13,
+                            CocktailId = 2,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 1,
+                            CocktailId = 3,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 10,
+                            CocktailId = 3,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 3,
+                            CocktailId = 4,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 6,
+                            CocktailId = 4,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 6,
+                            CocktailId = 5,
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            IngredientId = 2,
+                            CocktailId = 5,
+                            IsDeleted = false
                         });
                 });
 
@@ -721,6 +805,23 @@ namespace CocktailMagician.Data.Migrations
                             SecurityStamp = "344806a4-9c4e-424e-9117-72d79e6f0568",
                             TwoFactorEnabled = false,
                             UserName = "admin@admin.com"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a8b9988b-4448-4815-ab5a-b41dfbe74734",
+                            CreatedOn = new DateTime(2020, 6, 6, 10, 42, 2, 240, DateTimeKind.Utc).AddTicks(5062),
+                            Email = "user@user.com",
+                            EmailConfirmed = false,
+                            IsDeleted = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER@USER.COM",
+                            NormalizedUserName = "USER@USER.COM",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4d52020f-ab35-480d-b991-f1f0bef0c7c5",
+                            TwoFactorEnabled = false,
+                            UserName = "user@user.com"
                         });
                 });
 
@@ -810,6 +911,11 @@ namespace CocktailMagician.Data.Migrations
                         {
                             UserId = 1,
                             RoleId = 2
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            RoleId = 1
                         });
                 });
 

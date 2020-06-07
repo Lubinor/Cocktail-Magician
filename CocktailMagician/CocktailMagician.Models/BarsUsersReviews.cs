@@ -11,8 +11,8 @@ namespace CocktailMagician.Models
         public Bar Bar { get; set; }
         public User User { get; set; }
 
-        [Range(1, 5)]
-        public int Rating { get; set; }
+        [Range(0, 5)]
+        public double Rating { get; set; }
         public string Comment { get; set; } = string.Empty;
         public DateTime? CreatedOn { get; set; }
         public bool IsDeleted { get; set; }

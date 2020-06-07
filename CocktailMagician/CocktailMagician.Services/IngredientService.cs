@@ -235,7 +235,10 @@ namespace CocktailMagician.Services
             {
                 throw new ArgumentException();
             }
-
+            if (ingredientDTO.Name.Length<2||ingredientDTO.Name.Length>30)
+            {
+                throw new Exception();
+            }
             if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
             {
                 throw new Exception();

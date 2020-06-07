@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CocktailMagician.Web.Models
 {
-    public class BarReviewViewModel
+    public class CreateCocktailReviewViewModel
     {
-        public BarReviewViewModel()
+        public CreateCocktailReviewViewModel()
         {
 
         }
@@ -17,9 +17,7 @@ namespace CocktailMagician.Web.Models
         public double Rating { get; set; }
         [MaxLength(500, ErrorMessage = "Use maximum 500 chars for your comment")]
         public string Comment { get; set; }
-        public int BarId { get; set; }
-        public string BarName { get; set; }
+        public int CocktailId { get; set; }
         public int AuthorId { get; set; }
-        public string Author { get; set; }
     }
 }

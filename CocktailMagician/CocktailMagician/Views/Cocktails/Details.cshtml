@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/StarRating/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+
 <h4>@Html.DisplayFor(model => model.Name) Details</h4>
 
 <div>
@@ -16,7 +18,7 @@
         <dd class="col-sm-10">
             @foreach (var bar in Model.Bars)
             {
-                @Html.ActionLink(bar.Name, "Details", "Bars", new { id = bar.Id })<span>, </span>
+                <a style="margin: 0 2px;" class="btn btn-outline-info" href="/bars/Details/@bar.Id">@bar.Name</a>
             }
         </dd>
     </dl>
@@ -27,14 +29,22 @@
         <dd class="col-sm-10">
             @foreach (var ingredient in Model.Ingredients)
             {
-                @Html.ActionLink(ingredient.Name, "Details", "Ingredients", new { id = ingredient.Id })<span>, </span>
+                <a style="margin: 0 2px;" class="btn btn-outline-info" href="/ingredients/Details/@ingredient.Id">@ingredient.Name</a>
             }
         </dd>
     </dl>
 </div>
+<div class="form-group">
+    <label asp-for="AverageRating" class="control-label" style="font-weight:bold"></label>
+    <span asp-validation-for="AverageRating" class="text-danger"></span>
+</div>
 <div>
     <hr />
-    <a asp-action="Comments" asp-route-id="@Model.Id">Rate & Comment</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/CocktailReviews/Create/@Model.Id">Rate & Comment</a>
+    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Edit/@Model.Id">Edit</a>
+    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Index/@Model.Id">Back to List</a>
 </div>
+
+@section Scripts {
+    <script>$("#AverageRating").rating({ min: 0, max: 5, step: 0.5, size: 'md', displayOnly: true});</script>
+}

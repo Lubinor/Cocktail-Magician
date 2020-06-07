@@ -6,7 +6,7 @@
         {
 
         }
-        public int Rating { get; set; }
+        public double Rating { get; set; }
         public string Comment { get; set; }
         public int CocktailId { get; set; }
         public string CocktailName { get; set; }

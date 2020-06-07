@@ -40,12 +40,34 @@ namespace CocktailMagician.Data.Seeder
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "admin");
             builder.Entity<User>().HasData(adminUser);
 
+            User userUser = new User
+            {
+                Id = 2,
+                UserName = "user@user.com",
+                NormalizedUserName = "USER@USER.COM",
+                Email = "user@user.com",
+                NormalizedEmail = "USER@USER.COM",
+                CreatedOn = DateTime.UtcNow,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            adminUser.PasswordHash = hasher.HashPassword(userUser, "user");
+            builder.Entity<User>().HasData(userUser);
+
             builder.Entity<IdentityUserRole<int>>().HasData(
                 new IdentityUserRole<int>
                 {
                     RoleId = 2,
                     UserId = adminUser.Id
                 });
+
+            builder.Entity<IdentityUserRole<int>>().HasData(
+                new IdentityUserRole<int>
+                {
+                    RoleId = 1,
+                    UserId = userUser.Id
+                });
+
 
             builder.Entity<City>().HasData(
                 new City
@@ -279,11 +301,56 @@ namespace CocktailMagician.Data.Seeder
                 {
                     CocktailId = 6,
                     IngredientId = 11,
-                },            
+                },
                 new IngredientsCocktails
                 {
                     CocktailId = 6,
                     IngredientId = 12,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 2,
+                    IngredientId = 3,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 2,
+                    IngredientId = 5,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 2,
+                    IngredientId = 13,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 3,
+                    IngredientId = 1,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 3,
+                    IngredientId = 10,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 4,
+                    IngredientId = 3,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 4,
+                    IngredientId = 6,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 5,
+                    IngredientId = 6,
+                },
+                new IngredientsCocktails
+                {
+                    CocktailId = 5,
+                    IngredientId = 2,
                 }
                 );
             
@@ -296,12 +363,22 @@ namespace CocktailMagician.Data.Seeder
                 new BarsCocktails
                 {
                     BarId = 1,
+                    CocktailId = 2,
+                },
+                new BarsCocktails
+                {
+                    BarId = 1,
                     CocktailId = 6,
                 },
                 new BarsCocktails
                 {
                     BarId = 2,
                     CocktailId = 1,
+                },
+                new BarsCocktails
+                {
+                    BarId = 2,
+                    CocktailId = 3,
                 },
                 new BarsCocktails
                 {
@@ -312,6 +389,11 @@ namespace CocktailMagician.Data.Seeder
                 {
                     BarId = 3,
                     CocktailId = 1,
+                },
+                new BarsCocktails
+                {
+                    BarId = 3,
+                    CocktailId = 4,
                 },
                 new BarsCocktails
                 {
@@ -322,7 +404,12 @@ namespace CocktailMagician.Data.Seeder
                 {
                     BarId = 4,
                     CocktailId = 1,
-                },                  
+                },
+                 new BarsCocktails
+                 {
+                     BarId = 4,
+                     CocktailId = 5,
+                 },
                 new BarsCocktails
                 {
                     BarId = 4,
@@ -342,7 +429,12 @@ namespace CocktailMagician.Data.Seeder
                 {
                     BarId = 6,
                     CocktailId = 1,
-                },                  
+                },
+                new BarsCocktails
+                {
+                    BarId = 6,
+                    CocktailId = 3,
+                },
                 new BarsCocktails
                 {
                     BarId = 6,

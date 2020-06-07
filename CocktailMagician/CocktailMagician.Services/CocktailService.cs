@@ -48,6 +48,11 @@ namespace CocktailMagician.Services
 
             var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
 
+            foreach (var bar in cocktailDTOs)
+            {
+                bar.AverageRating = GetCocktailRating(bar.Id);
+            }
+
             return cocktailDTOs;
         }
         /// <summary>
@@ -70,6 +75,8 @@ namespace CocktailMagician.Services
                 return null;
             }
             var cocktailDTO = mapper.MapToCocktailDTO(cocktail);
+
+            //cocktailDTO.AverageRating = GetCocktailRating(cocktailDTO.Id); //tova ne go li pravi mappera
 
             var cocktailIngredient = cocktail.IngredientsCocktails.Select(x => x.Ingredient);
             var cocktailBars = cocktail.CocktailBars.Select(x => x.Bar);
@@ -284,29 +291,12 @@ namespace CocktailMagician.Services
             }
             return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
         }
-        private bool IsValid(CocktailDTO cocktailDTO)
-        {
-            if (cocktailDTO == null)
-            {
-                throw new ArgumentNullException();
-            }
-            if (cocktailDTO.Name == string.Empty || !cocktailDTO.Name.Any(x => char.IsLetterOrDigit(x)))
-            {
-                throw new ArgumentException();
-            }
-
-            if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(cocktailDTO.Name.ToLower()))
-            {
-                throw new Exception();
-            }
-            return true;
-        }
         private double GetCocktailRating(int cocktailId)
         {
             var allReviews = this.context.CocktailsUsersReviews
                 .Where(c => c.CocktailId == cocktailId && !c.IsDeleted);
 
-            int ratingSum = allReviews.Select(r => r.Rating).Sum();
+            double ratingSum = allReviews.Select(r => r.Rating).Sum();
 
             double averageRating = 0.00;
 
@@ -318,6 +308,26 @@ namespace CocktailMagician.Services
             averageRating = Math.Round(averageRating, 2);
 
             return averageRating;
+        }
+        private bool IsValid(CocktailDTO cocktailDTO)
+        {
+            if (cocktailDTO == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (cocktailDTO.Name == string.Empty || !cocktailDTO.Name.Any(x => char.IsLetterOrDigit(x)))
+            {
+                throw new ArgumentException();
+            }
+            if (cocktailDTO.Name.Length<2||cocktailDTO.Name.Length>30)
+            {
+                throw new Exception();
+            }
+            if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(cocktailDTO.Name.ToLower()))
+            {
+                throw new Exception();
+            }
+            return true;
         }
     }
 }

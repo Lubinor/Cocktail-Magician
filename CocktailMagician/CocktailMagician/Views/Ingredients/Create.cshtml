@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+
 <h1>Create Ingredient</h1>
 
 <hr />
@@ -14,7 +16,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">New Ingredient Name</label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" id="Name" name="Name" maxlength="30" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -29,5 +31,33 @@
 </div>
 
 @section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <script>
+        $(document).ready(function () {
+            var typingTimer;
+
+            $('#Name').on('keyup', function () {
+                debugger;
+                var $this = $(this);
+                var inputFor = $this.attr('name');
+
+                setTimeout(() => {
+                    if ($this.val().length < 2) {
+
+                        toastr.error(`${inputFor} is too short`);
+                        console.log(`${inputFor} is too short`);
+                    }
+                    else if ($this.val().length === 30) {
+
+                        toastr.error(`${inputFor} must be no more than 30 characters`);
+                        console.log(`${inputFor} must be no more than 30 characters`);
+                    }
+                }, 500);
+
+                $('#Name').on('keydown', function () {
+                    clearTimeout(typingTimer);
+                });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
