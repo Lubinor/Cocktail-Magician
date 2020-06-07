@@ -39,7 +39,8 @@ namespace CocktailMagician.Web.Controllers
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
         [HttpGet]
-        public async Task<IActionResult> BarReviews(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> CocktailReviews(int id)
         {
             var cocktailReviewDTOs = await this.cocktailReviewService.GetAllCocktailReviewsAsync(id);
             var cocktailReviewVMs = new ListCocktailReviewsViewModel
@@ -65,6 +66,7 @@ namespace CocktailMagician.Web.Controllers
             return View(userReviewVMs);
         }
         [HttpGet]
+        [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Create(int id)
         {
             var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
@@ -85,6 +87,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Create(CreateCocktailReviewViewModel reviewVM)
         {
             if (ModelState.IsValid)
@@ -105,6 +108,7 @@ namespace CocktailMagician.Web.Controllers
             return NotFound();
         }
         [HttpGet]
+        [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Edit(int id)
         {
             var currentUserId = int.Parse(userManager.GetUserId(HttpContext.User));
@@ -122,6 +126,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Edit(int id, CocktailReviewViewModel reviewVM)
         {
             if (ModelState.IsValid)
@@ -145,6 +150,7 @@ namespace CocktailMagician.Web.Controllers
             return NotFound();
         }
         [HttpGet]
+        [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Delete(int id)
         {
             var currentUserId = int.Parse(userManager.GetUserId(HttpContext.User));
@@ -163,6 +169,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var currentUserId = int.Parse(userManager.GetUserId(HttpContext.User));

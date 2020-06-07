@@ -263,7 +263,7 @@ namespace CocktailMagician.Services
 
                 cocktails = cocktails
                      .Where(cocktail => cocktail.Name.ToLower()
-                     .StartsWith(searchValue));
+                     .Contains(searchValue.ToLower()));
             }
 
             cocktails = cocktails

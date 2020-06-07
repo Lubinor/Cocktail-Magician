@@ -34,10 +34,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Author)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.CocktailId">Edit</a> <span>|</span>
-                    <a asp-action="Delete" asp-route-id="@item.CocktailId">Delete</a>
-                </td>
+                @if (User.IsInRole("Bar Crawler"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CocktailId">Edit</a> <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@item.CocktailId">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

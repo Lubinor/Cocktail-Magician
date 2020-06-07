@@ -24,21 +24,24 @@
     <tbody>
         @foreach (var item in Model.AllBarReviews)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            @if (User.IsInRole("Bar Crawler"))
+            {
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.BarId">Edit</a> <span>|</span>
                     <a asp-action="Delete" asp-route-id="@item.BarId">Delete</a>
                 </td>
-            </tr>
+            }
+        </tr>
         }
     </tbody>
 </table>

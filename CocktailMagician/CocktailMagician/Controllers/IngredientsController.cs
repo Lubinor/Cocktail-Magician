@@ -8,6 +8,7 @@ using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Models;
 using System.Linq.Dynamic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -29,6 +30,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Ingredients
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var ingredientDTOs = await this.ingredientService.GetAllIngredientsAsync();
@@ -47,6 +49,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Ingredients/Details/5
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             //if (id == null)
@@ -68,6 +71,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Ingredients/Create
         [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public IActionResult Create()
         {
             return View();
@@ -77,6 +81,7 @@ namespace CocktailMagician.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create(IngredientDTO ingredientDTO)
         {
             //if (this.ingredientService.IsValid(ingredientDTO))
@@ -109,6 +114,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Ingredients/Edit/5
         [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id)
         {
             var ingredientDTO = await this.ingredientService.GetIngredientAsync(id);
@@ -131,6 +137,7 @@ namespace CocktailMagician.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, EditIngredientViewModel editIngredientVM)
         {
             var ingredientDTO = this.ingredientDTOMapper.MapToDTOFromVM(editIngredientVM);
@@ -158,7 +165,7 @@ namespace CocktailMagician.Web.Controllers
                 {
                     return BadRequest(); //status 400
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Ingredients", new { id });
             }
 
             return View(); //TODO: here must returns something - middleware maybe
@@ -166,6 +173,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Ingredients/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Delete(int id)
         {
             var ingredientDTO = await this.ingredientService.GetIngredientAsync(id);
@@ -183,6 +191,7 @@ namespace CocktailMagician.Web.Controllers
         // POST: Ingredients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.ingredientService.DeleteIngredientAsync(id);
@@ -190,6 +199,7 @@ namespace CocktailMagician.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ListAllIngredients()
         {
             var draw = Request.Form["draw"].FirstOrDefault();

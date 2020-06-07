@@ -40,8 +40,14 @@
 </div>
 <div>
     <hr />
-    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/CocktailReviews/Create/@Model.Id">Rate & Comment</a>
-    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Edit/@Model.Id">Edit</a>
+    @if (User.IsInRole("Bar Crawler"))
+    {
+        <a style="margin: 0 2px;" class="btn btn-outline-info" href="/CocktailReviews/Create/@Model.Id">Rate & Comment</a>
+    }
+    @if (User.IsInRole("Cocktail Magician"))
+    {
+        <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Edit/@Model.Id">Edit</a>
+    }
     <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Index/@Model.Id">Back to List</a>
 </div>
 

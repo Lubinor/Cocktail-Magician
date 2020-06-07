@@ -13,14 +13,14 @@ namespace CocktailMagician.Data.Seeder
                 new Role
                 {
                     Id = 1,
-                    Name = "member",
-                    NormalizedName = "MEMBER"
+                    Name = "Bar Crawler",
+                    NormalizedName = "BAR CRAWLER"
                 },
                 new Role
                 {
                     Id = 2,
-                    Name = "admin",
-                    NormalizedName = "ADMIN"
+                    Name = "Cocktail Magician",
+                    NormalizedName = "COCKTAIL MAGICIAN"
                 }
                 );
 

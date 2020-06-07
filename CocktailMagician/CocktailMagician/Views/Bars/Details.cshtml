@@ -52,8 +52,14 @@
     <img src="@Model.ImageSource" style="width: 150px; height: 150px;" />
 </div>
 <div>
+    @if (User.IsInRole("Bar Crawler"))
+    {
+        <a asp-action="Create" asp-controller="BarReviews" asp-route-id="@Model.Id">Drop a review</a>
+    }
+    @if (User.IsInRole("Cocktail Magician"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> 
+    }
     <a asp-action="BarReviews" asp-controller="BarReviews" asp-route-id="@Model.Id">Check all reviews</a> |
-    <a asp-action="Create" asp-controller="BarReviews" asp-route-id="@Model.Id">Drop a review</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

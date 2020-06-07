@@ -12,6 +12,7 @@ using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Web.Models;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -34,7 +35,8 @@ namespace CocktailMagician.Web.Controllers
             this.cocktailMapper = cocktailMapper ?? throw new ArgumentNullException(nameof(cocktailMapper));
             this.citymapper = citymapper ?? throw new ArgumentNullException(nameof(citymapper));
         }
-
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var barDTOs = await this.barService.GetAllBarsAsync();
@@ -45,7 +47,8 @@ namespace CocktailMagician.Web.Controllers
 
             return View(bars);
         }
-
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var barDTO = await barService.GetBarAsync(id);
@@ -59,7 +62,8 @@ namespace CocktailMagician.Web.Controllers
 
             return View(bar);
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create()
         {
             var citiesDTO = await this.cityService.GetAllCitiesAsync();
@@ -72,6 +76,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create([Bind("Name", "CityName", "CityId", "Address", "City", "Phone")] BarViewModel barVM, List<IFormFile> ImageData)
         {
             if (ModelState.IsValid)
@@ -98,7 +103,8 @@ namespace CocktailMagician.Web.Controllers
 
             return NotFound();
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id)
         {
             var barDTO = await barService.GetBarAsync(id);
@@ -120,6 +126,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, BarViewModel barVM)
         {
             if (id != barVM.Id)
@@ -143,7 +150,8 @@ namespace CocktailMagician.Web.Controllers
 
             return NotFound();
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Delete(int id)
         {
             var barDTO = await barService.GetBarAsync(id);
@@ -160,6 +168,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.barService.DeleteBarAsync(id);
@@ -167,6 +176,7 @@ namespace CocktailMagician.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ListAllBars()
         {
             var draw = Request.Form["draw"].FirstOrDefault();

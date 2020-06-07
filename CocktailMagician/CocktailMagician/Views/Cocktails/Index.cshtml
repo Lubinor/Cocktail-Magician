@@ -6,10 +6,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+
 <h1>Cocktails</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (User.IsInRole("Cocktail Magician"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
 </p>
 <table id="Cocktails" class="cell-border table-hover">
     <thead class="dt-body-center">
@@ -21,9 +27,6 @@
         </tr>
     </thead>
 </table>
-
-<link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 
 @section Scripts
     {
@@ -57,7 +60,7 @@
             "columns" : [
                 {
                     "name": "Name","width":"15%", render: function (data, type, full, meta) {
-                        return '<a class = "btn btn-outline-info" href="/cocktails/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-warning" href="/cocktails/Details/' + full.id + '">' + full.name + '</a>';
                     },
                 },
                 {
@@ -82,11 +85,11 @@
                         return buttons;
                     },
                 },
-                {
-                    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
-                        return '<a class="btn btn-danger" href="/Cocktails/Delete/' + row.id + '">Delete</a>';
-                    }
-                },
+                //{
+                //    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
+                //        return '<a class="btn btn-danger" href="/Cocktails/Delete/' + row.id + '">Delete</a>';
+                //    }
+                //},
 
             ]});
     </script>

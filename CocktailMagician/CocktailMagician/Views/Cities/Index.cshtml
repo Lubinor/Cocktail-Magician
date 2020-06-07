@@ -8,7 +8,10 @@
 <h1>Cities</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (User.IsInRole("Cocktail Magician"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
 </p>
 <table class="cell-border table-hover" id="Cities">
     <thead>
@@ -61,11 +64,11 @@
                     "name":"Name"
                 },
                 { "data": "barNames", "name": "BarNames", "autoWidth": true, "orderable": false, },
-                {
-                    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
-                        return '<a class="btn btn-danger" href="/Cities/Delete/' + row.id + '">Delete</a>';
-                    }
-                },
+                //{
+                //    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
+                //        return '<a class="btn btn-danger" href="/Cities/Delete/' + row.id + '">Delete</a>';
+                //    }
+                //},
 
             ]});
     </script>

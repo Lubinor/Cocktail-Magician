@@ -12,15 +12,17 @@
     <div class="col-md-4">
         <form asp-action="Edit" asp-controller="Ingredients" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @*<input type="hidden" asp-for="Name" value="Name"/> Default is ID*@
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Change Name</label>
                 <input asp-for="Name" class="form-control" id="Name" name="Name" maxlength="30" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            @if (User.IsInRole("Cocktail Magician"))
+            {
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            }
         </form>
     </div>
 </div>

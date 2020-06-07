@@ -11,6 +11,8 @@ using CocktailMagician.Web.Models;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using CocktailMagician.Models;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -37,6 +39,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Cocktails
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var cocktailDTOs = await this.cocktailService.GetAllCocktailssAsync();
@@ -58,6 +61,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Cocktails/Details/5
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
@@ -74,6 +78,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Cocktails/Create
         [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create()
         {
             var ingredients = await this.ingredientService.GetAllIngredientsAsync();
@@ -87,6 +92,7 @@ namespace CocktailMagician.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         //public async Task<IActionResult> Create([Bind("Name,Ingredients")] CocktailDTO cocktailDTO)
         public async Task<IActionResult> Create(CreateCocktailViewModel createCocktailViewModel )
         {
@@ -117,6 +123,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Cocktails/Edit/5
         [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id)
         {
             var ingredients = await this.ingredientService.GetAllIngredientsAsync();
@@ -149,6 +156,7 @@ namespace CocktailMagician.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, EditCocktailViewModel newEditCocktailVM)
         {
             if (id != newEditCocktailVM.Id)
@@ -176,7 +184,7 @@ namespace CocktailMagician.Web.Controllers
                 {
                     return BadRequest();
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Cocktails", new { id });
             }
 
             return View(newEditCocktailVM);
@@ -184,6 +192,7 @@ namespace CocktailMagician.Web.Controllers
 
         // GET: Cocktails/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Delete(int id)
         {
             var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
@@ -201,6 +210,7 @@ namespace CocktailMagician.Web.Controllers
         // POST: Cocktails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.cocktailService.DeleteCocktailAsync(id);
@@ -208,6 +218,7 @@ namespace CocktailMagician.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ListAllCocktails()
         {
             var draw = Request.Form["draw"].FirstOrDefault();
@@ -245,26 +256,6 @@ namespace CocktailMagician.Web.Controllers
             var json = Json(new { draw = draw, recordsFiltered = filteredCocktails, recordsTotal = totalCocktails, data = cocktailVMs });
             return json;
         }
-        [HttpGet]
-        public async Task<IActionResult> Comments(int id)
-        {
-            var cocktailDTO = await this.cocktailService.GetCocktailAsync(id);
-
-            if (cocktailDTO == null)
-            {
-                return NotFound();
-            }
-
-            var cocktailVM = this.cocktailDTOMapper.MapToVMFromDTO(cocktailDTO);
-
-            return View(cocktailVM);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Comment(int id, CocktailViewModel cocktailVM)
-        //{
-
-        //}
         private bool CocktailExists(int id)
         {
             return this.cocktailService.GetAllCocktailssAsync().Result.Any(e => e.Id == id);

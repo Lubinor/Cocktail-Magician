@@ -182,7 +182,7 @@ namespace CocktailMagician.Services
 
                 ingredients = ingredients
                      .Where(ingredient => ingredient.Name.ToLower()
-                     .StartsWith(searchValue));
+                     .Contains(searchValue.ToLower()));
             }
 
             ingredients = ingredients
@@ -237,7 +237,7 @@ namespace CocktailMagician.Services
             }
             if (ingredientDTO.Name.Length<2||ingredientDTO.Name.Length>30)
             {
-                throw new Exception();
+                throw new ArgumentException();
             }
             if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
             {

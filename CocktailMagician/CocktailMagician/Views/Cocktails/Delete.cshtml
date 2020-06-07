@@ -25,10 +25,12 @@
             @Html.DisplayFor(model => model.AverageRating)
         </dd>
     </dl>
-
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Name" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    @if (User.IsInRole("Cocktail Magician"))
+    {
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Name" />
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a asp-action="Index">Back to List</a>
+        </form>
+    }
 </div>

@@ -12,6 +12,7 @@ using CocktailMagician.Web.Mappers.Contracts;
 using System.Linq.Dynamic;
 using CocktailMagician.Web.Mappers;
 using CocktailMagician.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -29,7 +30,8 @@ namespace CocktailMagician.Web.Controllers
             this.cityMapper = cityMapper ?? throw new ArgumentNullException(nameof(cityMapper));
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
         }
-
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var cityDTOs = await this.cityService.GetAllCitiesAsync();
@@ -40,7 +42,8 @@ namespace CocktailMagician.Web.Controllers
 
             return View(cities);
         }
-
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
 
@@ -55,14 +58,15 @@ namespace CocktailMagician.Web.Controllers
 
             return View(city);
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public IActionResult Create()
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create([Bind("Name")] CityViewModel cityVM)
         {
             if (ModelState.IsValid)
@@ -74,7 +78,8 @@ namespace CocktailMagician.Web.Controllers
 
             return NotFound();
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id)
         {
             var cityDTO = await cityService.GetCityAsync(id);
@@ -91,6 +96,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, CityViewModel cityVM)
         {
             if (id != cityVM.Id)
@@ -114,7 +120,8 @@ namespace CocktailMagician.Web.Controllers
 
             return NotFound();
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Delete(int id)
         {
             var cityDTO = await cityService.GetCityAsync(id);
@@ -131,6 +138,7 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await this.cityService.DeleteCityAsync(id);
@@ -138,6 +146,7 @@ namespace CocktailMagician.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ListAllCities()
         {
             var draw = Request.Form["draw"].FirstOrDefault();
