@@ -67,8 +67,12 @@
     }
     @if (User.IsInRole("Cocktail Magician"))
     {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary font-weight-bold">Edit</a> 
+        <a class="btn btn-primary font-weight-bold" asp-controller="Bars" asp-action="Edit"
+           asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-primary font-weight-bold" asp-controller="Bars" asp-action="Delete"
+           asp-route-id="@Model.Id">Delete</a>
     }
-    <a asp-action="BarReviews" asp-controller="BarReviews" asp-route-id="@Model.Id" class="btn btn-primary font-weight-bold">Check all reviews</a>
-    <a asp-action="Index" class="btn btn-primary font-weight-bold">Back to List</a>
+    <a class="btn btn-primary font-weight-bold" asp-controller="BarReviews" asp-action="BarReviews"
+       asp-route-id="@Model.Id">Check all reviews</a>
+    <a class="btn btn-primary font-weight-bold" asp-controller="Bars" asp-action="Index">Back to List</a>
 </div>

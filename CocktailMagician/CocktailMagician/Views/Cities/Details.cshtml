@@ -23,10 +23,10 @@
     </dl>
 </div>
 <div>
-    <hr />
     @if (User.IsInRole("Cocktail Magician"))
     {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary font-weight-bold">Edit</a>
+        <a style="margin: 0 2px;" class="btn btn-primary font-weight-bold" href="/Cities/Edit/@Model.Id">Edit</a>
+        <a style="margin: 0 2px;" class="btn btn-primary font-weight-bold" href="/Cities/Delete/@Model.Id">Delete</a>
     }
-    <a asp-action="Index" class="btn btn-primary font-weight-bold">Back to List</a>
+    <a style="margin: 0 2px;" class="btn btn-primary font-weight-bold" href="/Cities/Index/">Back to List</a>
 </div>
