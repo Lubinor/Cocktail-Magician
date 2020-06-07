@@ -31,7 +31,9 @@
             <input type="hidden" asp-for="CocktailId" />
             <input type="hidden" asp-for="AuthorId" />
             <input type="submit" value="Delete" class="btn btn-danger" /> |
-            <a asp-action="Index">Back to List</a>
         </form>
     }
+</div>
+<div>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Index">Back to List</a>
 </div>

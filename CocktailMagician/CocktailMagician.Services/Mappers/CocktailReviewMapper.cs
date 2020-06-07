@@ -1,9 +1,6 @@
 ﻿using CocktailMagician.Models;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailMagician.Services.Mappers
 {

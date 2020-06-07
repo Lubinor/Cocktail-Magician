@@ -45,7 +45,12 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @if (User.IsInRole("Cocktail Magician"))
+    {
+        <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Delete"
+           asp-route-id="@Model.Id">Delete</a>
+    }
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

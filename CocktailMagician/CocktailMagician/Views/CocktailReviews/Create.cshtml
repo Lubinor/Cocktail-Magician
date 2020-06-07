@@ -40,7 +40,9 @@
 </div>
 
 <div>
-    <a asp-controller="Cocktails" asp-action="Index" asp-route-id="@Model.CocktailId">Back to List</a>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Details"
+       asp-route-id="@Model.CocktailId">Back to Cocktail</a>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

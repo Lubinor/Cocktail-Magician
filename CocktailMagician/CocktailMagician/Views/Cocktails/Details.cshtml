@@ -50,8 +50,12 @@
     @if (User.IsInRole("Cocktail Magician"))
     {
         <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Edit/@Model.Id">Edit</a>
+        <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Delete/@Model.Id">Delete</a>
     }
-    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Index/@Model.Id">Back to List</a>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="CocktailReviews" asp-action="CocktailReviews"
+       asp-route-id="@Model.Id">Check all reviews</a>
+
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

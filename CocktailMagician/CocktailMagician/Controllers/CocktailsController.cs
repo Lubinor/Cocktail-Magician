@@ -2,18 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
-using CocktailMagician.Services.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CocktailMagician.Web.Models;
-using Newtonsoft.Json.Linq;
-using System.Collections;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using CocktailMagician.Models;
-using Microsoft.AspNetCore.Http;
 using System.IO;
 
 namespace CocktailMagician.Web.Controllers

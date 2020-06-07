@@ -1,7 +1,5 @@
 ﻿using CocktailMagician.Services.DTOs;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services.Contracts

@@ -26,9 +26,10 @@
     </dl>
 </div>
 <div>
-     @if (User.IsInRole("Bar Crawler"))
-     {
+    @if (User.IsInRole("Bar Crawler"))
+    {
         @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ })
-     }
-    <a asp-action="Index">Back to List</a>
+    }
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="CocktailReviews" asp-action="CocktailReviews">Back to List</a>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Cocktails" asp-action="Index">Back to Cocktails</a>
 </div>

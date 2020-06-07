@@ -5,6 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+<link href="~/StarRating/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+
 <h1>Create</h1>
 
 <h4>Bar Review</h4>
@@ -34,9 +37,14 @@
 </div>
 
 <div>
-    <a asp-action="BarReviews" asp-route-id="@Model.BarId">Back to List</a>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Bars" asp-action="Details"
+       asp-route-id="@Model.BarId">Back to Bar</a>
+    <a class="btn btn-outline-danger font-weight-bold" asp-controller="Bars" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+    <script src="~/StarRating/js/star-rating.js" type="text/javascript"></script>
+    <script>$("#Rating").rating({ min: 0, max: 5, step: 0.5, size: 'md' });</script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -70,7 +70,7 @@ namespace CocktailMagician.Data.Migrations
                             Address = "104 Vitosha blvd.",
                             AverageRating = 0.0,
                             CityId = 1,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(4958),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 134, DateTimeKind.Utc).AddTicks(1205),
                             IsDeleted = false,
                             Name = "Memento",
                             Phone = "0889 555 682"
@@ -81,7 +81,7 @@ namespace CocktailMagician.Data.Migrations
                             Address = "22 Tsar Ivan Shishman str.",
                             AverageRating = 0.0,
                             CityId = 1,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(6369),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 134, DateTimeKind.Utc).AddTicks(2704),
                             IsDeleted = false,
                             Name = "Bilkova",
                             Phone = "0898 639 068"
@@ -92,7 +92,7 @@ namespace CocktailMagician.Data.Migrations
                             Address = "36 Yoakim Gruev str.",
                             AverageRating = 0.0,
                             CityId = 2,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(6404),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 134, DateTimeKind.Utc).AddTicks(2749),
                             IsDeleted = false,
                             Name = "Petnoto",
                             Phone = "0878 509 703"
@@ -103,7 +103,7 @@ namespace CocktailMagician.Data.Migrations
                             Address = "Central Beach",
                             AverageRating = 0.0,
                             CityId = 3,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(6404),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 134, DateTimeKind.Utc).AddTicks(2749),
                             IsDeleted = false,
                             Name = "Cubo",
                             Phone = "0898 425 232"
@@ -114,7 +114,7 @@ namespace CocktailMagician.Data.Migrations
                             Address = "1 Tsar Peter str.",
                             AverageRating = 0.0,
                             CityId = 4,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(6409),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 134, DateTimeKind.Utc).AddTicks(2753),
                             IsDeleted = false,
                             Name = "Barcode",
                             Phone = "0895 509 659"
@@ -125,7 +125,7 @@ namespace CocktailMagician.Data.Migrations
                             Address = "53 Stefan Stambolov blvd.",
                             AverageRating = 0.0,
                             CityId = 4,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(6409),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 134, DateTimeKind.Utc).AddTicks(2753),
                             IsDeleted = false,
                             Name = "Fabric Club",
                             Phone = "0887 909 019"
@@ -308,28 +308,28 @@ namespace CocktailMagician.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(995),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 132, DateTimeKind.Utc).AddTicks(5926),
                             IsDeleted = false,
                             Name = "Sofia"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(2004),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 132, DateTimeKind.Utc).AddTicks(7050),
                             IsDeleted = false,
                             Name = "Plovdiv"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(2017),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 132, DateTimeKind.Utc).AddTicks(7059),
                             IsDeleted = false,
                             Name = "Varna"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(2017),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 132, DateTimeKind.Utc).AddTicks(7064),
                             IsDeleted = false,
                             Name = "Burgas"
                         });
@@ -371,7 +371,7 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 1,
                             AverageRating = 0.0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(255),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(5529),
                             IsDeleted = false,
                             Name = "Mojito"
                         },
@@ -379,7 +379,7 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 2,
                             AverageRating = 0.0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(1067),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(6381),
                             IsDeleted = false,
                             Name = "Cuba Libre"
                         },
@@ -387,7 +387,7 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 3,
                             AverageRating = 0.0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(1081),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(6395),
                             IsDeleted = false,
                             Name = "Sex on the Beach"
                         },
@@ -395,7 +395,7 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 4,
                             AverageRating = 0.0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(1081),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(6395),
                             IsDeleted = false,
                             Name = "Mai Tai"
                         },
@@ -403,7 +403,7 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 5,
                             AverageRating = 0.0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(1085),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(6399),
                             IsDeleted = false,
                             Name = "Gin Fizz"
                         },
@@ -411,7 +411,7 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 6,
                             AverageRating = 0.0,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 149, DateTimeKind.Utc).AddTicks(1085),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(6399),
                             IsDeleted = false,
                             Name = "Bloody Mary"
                         });
@@ -476,91 +476,91 @@ namespace CocktailMagician.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(5502),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(915),
                             IsDeleted = false,
                             Name = "Vodka"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6314),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1758),
                             IsDeleted = false,
                             Name = "Gin"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6328),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1767),
                             IsDeleted = false,
                             Name = "Rum"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6328),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1767),
                             IsDeleted = false,
                             Name = "Soda"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6328),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1772),
                             IsDeleted = false,
                             Name = "Coke"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6332),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1772),
                             IsDeleted = false,
                             Name = "Lemon juice"
                         },
                         new
                         {
                             Id = 7,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6332),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1776),
                             IsDeleted = false,
                             Name = "Sugar"
                         },
                         new
                         {
                             Id = 8,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6332),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1776),
                             IsDeleted = false,
                             Name = "Milk"
                         },
                         new
                         {
                             Id = 9,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6332),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1776),
                             IsDeleted = false,
                             Name = "Coffee liqueur"
                         },
                         new
                         {
                             Id = 10,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6337),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1780),
                             IsDeleted = false,
                             Name = "Orange juice"
                         },
                         new
                         {
                             Id = 11,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6337),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1780),
                             IsDeleted = false,
                             Name = "Tomato juice"
                         },
                         new
                         {
                             Id = 12,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6337),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1780),
                             IsDeleted = false,
                             Name = "Tabasco"
                         },
                         new
                         {
                             Id = 13,
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 148, DateTimeKind.Utc).AddTicks(6341),
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 133, DateTimeKind.Utc).AddTicks(1780),
                             IsDeleted = false,
                             Name = "Lime"
                         });
@@ -714,14 +714,14 @@ namespace CocktailMagician.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "7617a180-b054-4015-82a3-1752191f56fa",
+                            ConcurrencyStamp = "b42da4da-c387-4632-af12-a225f7d68b29",
                             Name = "Bar Crawler",
                             NormalizedName = "BAR CRAWLER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "fec61a79-f22d-4c3a-93da-2c62dc01fb73",
+                            ConcurrencyStamp = "6a4c48ed-486b-4816-94c1-195ebedf48ee",
                             Name = "Cocktail Magician",
                             NormalizedName = "COCKTAIL MAGICIAN"
                         });
@@ -804,17 +804,17 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d259898b-fad2-4df7-897c-11e537ef7dc6",
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 125, DateTimeKind.Utc).AddTicks(8688),
+                            ConcurrencyStamp = "9c5ae9b6-c039-49aa-acec-14e89eeb2bea",
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 102, DateTimeKind.Utc).AddTicks(397),
                             Email = "admin@admin.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN4lEJSO6yp8BhbbCzFs3eO4tzM2lwl5Md9lio4lG51NPdE5oh4BdOEeDhZ+D/LdQw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKUFENCrheMMSj1CQF2tgAz4d4nWA8Q12CPY/q+45t4puzPmLEAsk8E7N8ejdmhzmQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "150853eb-3cf6-41d3-819d-f3fe31308c02",
+                            SecurityStamp = "d8295b4c-c7c3-4dd1-9dc7-a9d2fca29380",
                             TwoFactorEnabled = false,
                             UserName = "admin@admin.com"
                         },
@@ -822,17 +822,17 @@ namespace CocktailMagician.Data.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "38798013-7771-424b-86f6-b192dbcc82bc",
-                            CreatedOn = new DateTime(2020, 6, 7, 15, 5, 53, 138, DateTimeKind.Utc).AddTicks(6645),
+                            ConcurrencyStamp = "c7fc5e8c-3e61-4498-9f2c-c3a09b519fbb",
+                            CreatedOn = new DateTime(2020, 6, 7, 17, 15, 32, 121, DateTimeKind.Utc).AddTicks(1941),
                             Email = "user@user.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = true,
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER@USER.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFY3gQS0Usm/6rEBp6l8TFOZv8eGBPRCXLd/JcgcZvIQ8aUPV6JfqorMwhywGu+VeQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJFQr8PzJFKyAi8/Wor00rgySTwxVAy1skCmkjGbvvKlM+T6hUaYOb15yDP8PvmCsg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c8b00a55-862e-445a-b95f-d2eb0496dec1",
+                            SecurityStamp = "1b659633-52b3-473c-b579-78e2edb96185",
                             TwoFactorEnabled = false,
                             UserName = "user@user.com"
                         });
