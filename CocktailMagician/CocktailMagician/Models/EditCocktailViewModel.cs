@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,5 +19,9 @@ namespace CocktailMagician.Web.Models
         [Required]
         public ICollection<int> ContainedIngredients { get; set; }
         public ICollection<int> ContainedBars { get; set; }
+        [Required]
+        public IFormFile File { get; set; }
+        public byte[] ImageData { get; set; }
+        public string ImageSource { get; set; }
     }
 }

@@ -13,14 +13,14 @@ namespace CocktailMagician.Data.Seeder
                 new Role
                 {
                     Id = 1,
-                    Name = "member",
-                    NormalizedName = "MEMBER"
+                    Name = "Bar Crawler",
+                    NormalizedName = "BAR CRAWLER"
                 },
                 new Role
                 {
                     Id = 2,
-                    Name = "admin",
-                    NormalizedName = "ADMIN"
+                    Name = "Cocktail Magician",
+                    NormalizedName = "COCKTAIL MAGICIAN"
                 }
                 );
 
@@ -34,6 +34,7 @@ namespace CocktailMagician.Data.Seeder
                 Email = "admin@admin.com",
                 NormalizedEmail = "ADMIN@ADMIN.COM",
                 CreatedOn = DateTime.UtcNow,
+                LockoutEnabled = true,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
@@ -48,10 +49,11 @@ namespace CocktailMagician.Data.Seeder
                 Email = "user@user.com",
                 NormalizedEmail = "USER@USER.COM",
                 CreatedOn = DateTime.UtcNow,
+                LockoutEnabled = true,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
-            adminUser.PasswordHash = hasher.HashPassword(userUser, "user");
+            userUser.PasswordHash = hasher.HashPassword(userUser, "user");
             builder.Entity<User>().HasData(userUser);
 
             builder.Entity<IdentityUserRole<int>>().HasData(

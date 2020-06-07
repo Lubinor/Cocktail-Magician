@@ -35,7 +35,9 @@ namespace CocktailMagician.Web.Mappers
                 {
                     Id = i.Id,
                     Name = i.Name
-                }).ToList()
+                }).ToList(),
+                ImageData = cocktailDTO.ImageData,
+                ImageSource = cocktailDTO.ImageSource
             };
             return cocktailVM;
         }
@@ -54,7 +56,8 @@ namespace CocktailMagician.Web.Mappers
                 {
                     Id = i.Id,
                     Name = i.Name
-                }).ToList()
+                }).ToList(),
+                ImageData = cocktailVM.ImageData
             };
 
             return cocktailDTO;
@@ -71,7 +74,9 @@ namespace CocktailMagician.Web.Mappers
                 Ingredients = createCocktailVM.ContainedIngredients.Select(i => new IngredientDTO
                 {
                     Id = i
-                }).ToList()
+                }).ToList(),
+                ImageData = createCocktailVM.ImageData
+
             };
 
             return cocktailDTO;
@@ -93,7 +98,9 @@ namespace CocktailMagician.Web.Mappers
                 Bars = editCocktailVM.ContainedBars.Select(b => new BarDTO
                 {
                     Id = b
-                }).ToList()
+                }).ToList(),
+                ImageData = editCocktailVM.ImageData
+
             };
 
             return cocktailDTO;

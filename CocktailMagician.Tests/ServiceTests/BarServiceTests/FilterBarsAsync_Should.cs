@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -19,6 +20,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -37,7 +40,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.FilterBarsAsync(null);
 
@@ -50,6 +53,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -68,7 +73,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.FilterBarsAsync("Zzzz");
 
@@ -81,6 +86,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -99,7 +106,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.FilterBarsAsync("Lor");
                 var expectedBar = result.FirstOrDefault(x => x.Name == "Lorka");
@@ -114,6 +121,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -137,7 +146,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.FilterBarsAsync("3.7");
                 var expectedBar = result.FirstOrDefault(x => x.AverageRating >= 3.7);

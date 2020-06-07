@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -20,13 +21,14 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockIBarMapper = new Mock<IBarMapper>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
 
             var options = Utils.GetOptions(nameof(Return_WhenCreateBarInputIsNull));
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.CreateBarAsync(null);
 
@@ -40,6 +42,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockIBarMapper = new Mock<IBarMapper>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
 
             var options = Utils.GetOptions(nameof(ReturnBar_WhenParamsAreValid));
 
@@ -73,7 +76,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.CreateBarAsync(barDTO);
 

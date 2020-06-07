@@ -13,5 +13,7 @@ namespace CocktailMagician.Models
         public ICollection<CocktailsUsersReviews> Reviews { get; set; } = new HashSet<CocktailsUsersReviews>();
         public DateTime? CreatedOn { get; set; }
         public bool IsDeleted { get; set; }
+        public byte[] ImageData { get; set; }
+        public string ImageSource { get; set; }
     }
 }

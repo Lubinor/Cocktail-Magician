@@ -156,7 +156,7 @@ namespace CocktailMagician.Services
             return true;
         }
 
-        private double GetBarRating(int barId)
+        public double GetBarRating(int barId)
         {
             var allReviews = this.context.BarsUsersReviews
                 .Where(b => b.BarId == barId &&

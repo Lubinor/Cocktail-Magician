@@ -39,6 +39,9 @@
     <span asp-validation-for="AverageRating" class="text-danger"></span>
 </div>
 <div>
+    <img src="@Model.ImageSource" style="width: 150px; height: 150px;" />
+</div>
+<div>
     <hr />
     <a style="margin: 0 2px;" class="btn btn-outline-info" href="/CocktailReviews/Create/@Model.Id">Rate & Comment</a>
     <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Edit/@Model.Id">Edit</a>

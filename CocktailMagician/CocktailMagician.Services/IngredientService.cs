@@ -85,6 +85,9 @@ namespace CocktailMagician.Services
             var ingredient = mapper.MapToIngredient(ingredientDTO);
             ingredient.CreatedOn = datetimeProvider.GetDateTime();
 
+            string imageBase64Data = Convert.ToBase64String(ingredient.ImageData);
+            ingredient.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+
             this.context.Ingredients.Add(ingredient);
             await this.context.SaveChangesAsync();
 
@@ -112,6 +115,10 @@ namespace CocktailMagician.Services
             }
 
             ingredient.Name = ingredientDTO.Name;
+            ingredient.ImageData = ingredientDTO.ImageData;
+
+            string imageBase64Data = Convert.ToBase64String(ingredient.ImageData);
+            ingredient.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
 
             this.context.Ingredients.Update(ingredient);
             await this.context.SaveChangesAsync();
@@ -239,10 +246,10 @@ namespace CocktailMagician.Services
             {
                 throw new Exception();
             }
-            if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
-            {
-                throw new Exception();
-            }
+            //if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
+            //{
+            //    throw new Exception();
+            //}
             return true;
         }
     }

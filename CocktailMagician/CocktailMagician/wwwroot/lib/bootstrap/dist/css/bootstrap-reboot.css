@@ -28,9 +28,9 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #fff;
+  color: white;
   text-align: left;
-  background-color: #fff;
+  background-color: white;
 }
 
 [tabindex="-1"]:focus {

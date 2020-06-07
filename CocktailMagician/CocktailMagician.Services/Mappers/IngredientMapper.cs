@@ -35,6 +35,9 @@ namespace CocktailMagician.Services.Mappers
                     Name = c.Cocktail.Name,
                     Id = c.Cocktail.Id
                 }).ToList(),
+                ImageData = ingredient.ImageData,
+                ImageSource = ingredient.ImageSource
+
                 //IsDeleted = ingredient.IsDeleted
             };
             return ingredientDTO;
@@ -48,6 +51,7 @@ namespace CocktailMagician.Services.Mappers
             var ingredient = new Ingredient
             {
                 Name = ingredientDTO.Name,
+                ImageData = ingredientDTO.ImageData
                 //CreatedOn = ingredientDTO.CreatedOn.HasValue ? ingredientDTO.CreatedOn : datetimeProvider.GetDateTime()
             };
             return ingredient;
