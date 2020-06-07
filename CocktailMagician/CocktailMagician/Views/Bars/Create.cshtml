@@ -5,17 +5,30 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <title>React App</title>
+</head>
+
 <h1>Create</h1>
 
 <h4>Bar</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" id="barName" name="Name" maxlength="40">
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,13 +37,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
+                <input asp-for="Address" class="form-control" id="barAddress" name="Address" maxlength="30">
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
+                <input asp-for="Phone" class="form-control" id="barPhone">
                 <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageData" class="control-label"></label>
+                <input type="file" asp-for="ImageData" id="files">
+                <span asp-validation-for="ImageData" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -45,4 +63,53 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <script>
+        $(document).ready(function () {
+            var typingTimer;
+
+            $('#barName, #barAddress').on('keyup', function () {
+                debugger;
+                var $this = $(this);
+                var inputFor = $this.attr('name');
+
+                setTimeout(() => {
+                    if ($this.val().length < 2) {
+
+                        toastr.error(`${inputFor} is too short`);
+                        console.log(`${inputFor} is too short`);
+                    }
+                    else if ($this.val().length === 30) {
+
+                        toastr.error(`${inputFor} must be no more than 30 characters`);
+                        console.log(`${inputFor} must be no more than 30 characters`);
+                    }
+                }, 500);
+            });
+
+            $('#barPhone').on('keyup', function () {
+                var $this = $(this);
+
+                console.log($this);
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => {
+
+                    if (isNaN($this.val())) {
+
+                        toastr.error('Phone field must be number');
+                    }
+                    else if ($this.val().length != 10) {
+
+                        toastr.error('Phone number is incomplete');
+                    }
+                }, 500);
+
+            });
+
+            $('#barPhone').on('keydown', function () {
+                clearTimeout(typingTimer);
+            });
+        });
+    </script>
 }

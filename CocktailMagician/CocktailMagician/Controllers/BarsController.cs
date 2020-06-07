@@ -10,6 +10,8 @@ using CocktailMagician.Models;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Web.Models;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -70,10 +72,24 @@ namespace CocktailMagician.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name","CityName", "CityId", "Address", "City", "Phone")] BarViewModel barVM)
+        public async Task<IActionResult> Create([Bind("Name", "CityName", "CityId", "Address", "City", "Phone")] BarViewModel barVM, List<IFormFile> ImageData)
         {
             if (ModelState.IsValid)
             {
+                foreach (var file in ImageData)
+                {
+                    if (file.Length > 0)
+                    {
+                    MemoryStream ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+                    barVM.ImageData = ms.ToArray();
+
+                    ms.Close();
+                    ms.Dispose();
+                    }
+
+                }
+
                 var barDTO = barMapper.MapToDTOFromVM(barVM);
                 var result = await this.barService.CreateBarAsync(barDTO);
 

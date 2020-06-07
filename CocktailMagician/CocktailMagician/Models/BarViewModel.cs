@@ -19,5 +19,9 @@ namespace CocktailMagician.Web.Models
         public double AverageRating { get; set; }
         public ICollection<CocktailViewModel> Cocktails { get; set; } = new List<CocktailViewModel>();
         public string CocktailNames { get; set; }
+        public byte[] ImageData { get; set; }
+        public string ImageSource { get; set; }
+
+
     }
 }

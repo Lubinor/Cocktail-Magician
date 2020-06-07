@@ -10,8 +10,8 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table-borderless table-hover" id="Cities" style="border-bottom:0px; border-top:0px;">
-    <thead class="dt-body-center">
+<table class="cell-border table-hover" id="Cities">
+    <thead>
         <tr>
             <th>
                 Name
@@ -23,42 +23,14 @@
             </th>
         </tr>
     </thead>
-    @*<tbody>
-            @foreach (var city in Model)
-            {
-                <tr>
-                    <td>
-                        <img width="150" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSl18R2hA1rhIWWzaCjqMobGik-g_TgzW4AVZWcPSOp1BzAAT50&usqp=CAU" />
-                    </td>
-                    <td>
-                        <a class="btn btn-outline-success font-weight-bold" asp-action="Details" asp-route-id="@city.Id">@city.Name</a>
-                    </td>
-                    <td>
-                        @if (city.Bars.Count != 0)
-                        {
-                            foreach (var bar in city.Bars)
-                            {
-                                <a class="btn btn-outline-danger font-weight-bold" asp-controller="Bars" asp-action="Details" asp-route-id="@bar.Id">@bar.Name</a>
-                            }
-                        }
-                        else
-                        {
-                            @Html.DisplayName("N/A");
-                        }
-                    </td>
-                    <td style="text-align: right">
-                        <a asp-action="Edit" asp-route-id="@city.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@city.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@city.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>*@
 </table>
 
 <link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-
+@*<style>    table tr {
+        background-color: rgba(255,255,255,0.3);
+    }
+</style>*@
 @section Scripts
     {
     <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript"></script>
@@ -84,7 +56,7 @@
                 //{ "data": "name", "name": "Name", "autoWidth": true,},
                 {
                     render: function (data, type, full, meta) {
-                        return '<a class = "btn btn-outline-success font-weight-bold" href="/cities/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-outline-warning font-weight-bold" href="/cities/Details/' + full.id + '">'+full.name+'</a>';
                     },
                     "name":"Name"
                 },

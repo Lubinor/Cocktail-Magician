@@ -82,6 +82,12 @@ namespace CocktailMagician.Services
             this.context.BarsUsersReviews.Add(barReview);
             await this.context.SaveChangesAsync();
 
+            var bar = await this.context.Bars.FirstOrDefaultAsync(b => b.Id == barReview.BarId);
+            bar.AverageRating = GetBarRating(bar.Id);
+
+            this.context.Bars.Update(bar);
+            await this.context.SaveChangesAsync();
+
             var newBarReviewDTO = await this.GetBarReviewAsync(barReview.BarId, barReview.UserId);
 
             return newBarReviewDTO;
@@ -110,6 +116,12 @@ namespace CocktailMagician.Services
             this.context.BarsUsersReviews.Update(barReview);
             await this.context.SaveChangesAsync();
 
+            var bar = await this.context.Bars.FirstOrDefaultAsync(b => b.Id == barReview.BarId);
+            bar.AverageRating = GetBarRating(bar.Id);
+
+            this.context.Bars.Update(bar);
+            await this.context.SaveChangesAsync();
+
             var newBarReviewDTO = await this.GetBarReviewAsync(barId, userId);
 
             return newBarReviewDTO;
@@ -131,10 +143,37 @@ namespace CocktailMagician.Services
 
             barReview.IsDeleted = true;
 
+
             this.context.BarsUsersReviews.Update(barReview);
             await this.context.SaveChangesAsync();
 
+            var bar = await this.context.Bars.FirstOrDefaultAsync(b => b.Id == barReview.BarId);
+            bar.AverageRating = GetBarRating(bar.Id);
+
+            this.context.Bars.Update(bar);
+            await this.context.SaveChangesAsync();
+
             return true;
+        }
+
+        private double GetBarRating(int barId)
+        {
+            var allReviews = this.context.BarsUsersReviews
+                .Where(b => b.BarId == barId &&
+                           !b.IsDeleted);
+
+            int ratingSum = allReviews.Select(r => r.Rating).Sum();
+
+            double averageRating = 0.00;
+
+            if (ratingSum > 0)
+            {
+                averageRating = (ratingSum * 1.00) / allReviews.Count();
+            }
+
+            averageRating = Math.Round(averageRating, 2);
+
+            return averageRating;
         }
     }
 }

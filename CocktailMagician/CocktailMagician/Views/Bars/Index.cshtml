@@ -5,14 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Bars</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="cell-border compact stripe" id="Bars">
+<table class="cell-border table-hover" id="Bars">
     <thead>
         <tr>
+            <th>
             <th>Name</th>
             <th>CityName</th>
             <th>Address</th>
@@ -52,10 +53,17 @@
                     console.log(response);
                 },
             "columns" : [
+                {
+                    "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false, 
+                    render: function (url, type, full) {
+                        return '<img src="' + full.imageSource +'"' + 'style="max-width:150px; max-height:150px;"/>';
+                    }
+                },
                 //{ "data": "name", "name": "Name", "autoWidth": true,},
                 {
                     render: function (data, type, full, meta) {
-                        return '<a class = "btn btn-outline-info" href="/bars/Details/' + full.id + '">'+full.name+'</a>';
+                        //return '<a class = "btn btn-warning" href="/bars/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-warning font-weight-bold" href="/bars/Details/' + full.id + '">'+full.name+'</a>';
                     },
                     "name":"Name"
                 },
@@ -75,11 +83,17 @@
                     render: function (data, type, row) {
                         var buttons = '';
                         for (i = 0; i < data.length; i++) {
-                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/cocktails/Details/' + data[i].id + '">' + data[i].name + ' '+ '</a>'
+                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-warning" href ="/cocktails/Details/' + data[i].id + '">' + data[i].name + ' '+ '</a>'
                         }
                         return buttons;
                     },
                 },
+                {
+                    data: null, "width": "10%", "orderable": false, render: function (data, type, row, meta) {
+                        return '<a class="btn btn-danger" href="/Bars/Delete/' + row.id + '">Delete</a>';
+                    }
+                },
             ]});
     </script>
+
 }

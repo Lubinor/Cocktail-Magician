@@ -11,7 +11,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table id="Cocktails" class="cell-border compact stripe">
+<table id="Cocktails" class="cell-border table-hover">
     <thead class="dt-body-center">
         <tr>
             <th>Name</th>
@@ -57,7 +57,7 @@
             "columns" : [
                 {
                     "name": "Name","width":"15%", render: function (data, type, full, meta) {
-                        return '<a href="/cocktails/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-warning" href="/cocktails/Details/' + full.id + '">'+full.name+'</a>';
                     },
                 },
                 { "data": "barNames", "name": "Bars", "autoWidth": true, "orderable": false, },

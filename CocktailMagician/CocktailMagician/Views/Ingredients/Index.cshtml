@@ -10,7 +10,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table id="Ingredients" class="cell-border compact stripe">
+<table id="Ingredients" class="cell-border table-hover">
     <thead class="dt-body-center">
         <tr>
             <th>Name</th>
@@ -45,7 +45,7 @@
             "columns" : [
                 {
                     render: function (data, type, full, meta) {
-                        return '<a href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-warning" href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
                     },
                     "name":"Name"
                 },

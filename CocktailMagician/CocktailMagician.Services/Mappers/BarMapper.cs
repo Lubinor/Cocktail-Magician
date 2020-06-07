@@ -40,6 +40,9 @@ namespace CocktailMagician.Services.Mappers
                                     })
                                     .ToList();
 
+            barDTO.ImageData = bar.ImageData;
+            barDTO.ImageSource = bar.ImageSource;
+
             return barDTO;
         }
         public Bar MapToBar(BarDTO barDTO)
@@ -50,7 +53,8 @@ namespace CocktailMagician.Services.Mappers
                 CityId = barDTO.CityId,
                 Address = barDTO.Address,
                 Phone = barDTO.Phone,
-                AverageRating = barDTO.AverageRating
+                AverageRating = barDTO.AverageRating,
+                ImageData = barDTO.ImageData,
             };
 
             //var barCocktails = barDTO.Cocktails

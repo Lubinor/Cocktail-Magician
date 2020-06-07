@@ -20,14 +20,12 @@ namespace CocktailMagician.Services
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly CocktailMagicianContext context;
         private readonly IBarMapper barMapper;
-        private readonly ICocktailMapper cocktailMapper;
 
-        public BarService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, IBarMapper barMapper, ICocktailMapper cocktailMapper)
+        public BarService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, IBarMapper barMapper)
         {
             this.dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             this.context = context ?? throw new ArgumentNullException(nameof(context)); ;
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
-            this.cocktailMapper = cocktailMapper ?? throw new ArgumentNullException(nameof(cocktailMapper));
         }
 
         public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = null)
@@ -45,14 +43,15 @@ namespace CocktailMagician.Services
                 _ => bars.OrderBy(b => b.Id),
             };
 
+
             var barDTOs = await bars
                 .Select(b => this.barMapper.MapToBarDTO(b))
                 .ToListAsync();
 
-            foreach (var bar in barDTOs)
-            {
-                bar.AverageRating = GetBarRating(bar.Id);
-            }
+            //foreach (var bar in barDTOs)
+            //{
+            //    bar.AverageRating = GetBarRating(bar.Id);
+            //}
 
             return barDTOs;
         }
@@ -72,7 +71,7 @@ namespace CocktailMagician.Services
 
             var barDTO = this.barMapper.MapToBarDTO(bar);
 
-            barDTO.AverageRating = GetBarRating(barDTO.Id);
+            //barDTO.AverageRating = GetBarRating(barDTO.Id);
 
             return barDTO;
         }
@@ -86,6 +85,10 @@ namespace CocktailMagician.Services
 
             //TODO check with Ivo for unique 
             var bar = this.barMapper.MapToBar(barDTO);
+
+            string imageBase64Data = Convert.ToBase64String(bar.ImageData);
+            bar.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+
             bar.CreatedOn = dateTimeProvider.GetDateTime();
 
             this.context.Bars.Add(bar);
@@ -182,6 +185,8 @@ namespace CocktailMagician.Services
                 .Include(bar => bar.City)
                 .Where(bar => bar.IsDeleted == false);
 
+
+
             if (!string.IsNullOrEmpty(orderBy))
             {
                 if (string.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
@@ -209,11 +214,6 @@ namespace CocktailMagician.Services
 
             var barDTOs = await bars.Select(bar => barMapper.MapToBarDTO(bar)).ToListAsync();
 
-            foreach (var bar in barDTOs)
-            {
-                bar.AverageRating = GetBarRating(bar.Id);
-            }
-
             return barDTOs;
         }
 
@@ -236,24 +236,6 @@ namespace CocktailMagician.Services
             }
             return this.context.Bars.Where(bar => !bar.IsDeleted).Count();
         }
-        private double GetBarRating(int barId)
-        {
-            var allReviews = this.context.BarsUsersReviews
-                .Where(b => b.BarId == barId &&
-                           !b.IsDeleted);
 
-            int ratingSum = allReviews.Select(r => r.Rating).Sum();
-
-            double averageRating = 0.00;
-
-            if (ratingSum > 0)
-            {
-                averageRating = (ratingSum * 1.00) / allReviews.Count();
-            }
-
-            averageRating = Math.Round(averageRating, 2);
-
-            return averageRating;
-        }
     }
 }

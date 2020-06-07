@@ -32,6 +32,8 @@ namespace CocktailMagician.Web.Mappers
                     Name = c.Name,
                     AverageRating = c.AverageRating
                 }).ToList(),
+                ImageData = barDTO.ImageData,
+                ImageSource = barDTO.ImageSource,
             };
 
             return barVM;
@@ -48,7 +50,8 @@ namespace CocktailMagician.Web.Mappers
                 //CityName = barVM.CityName,
                 CityId = barVM.CityId,
                 Address = barVM.Address,
-                Phone = barVM.Phone
+                Phone = barVM.Phone,
+                ImageData = barVM.ImageData
             };
             
             return barDTO;
