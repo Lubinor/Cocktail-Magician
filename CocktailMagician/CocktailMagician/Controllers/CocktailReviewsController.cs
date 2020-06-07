@@ -87,7 +87,7 @@ namespace CocktailMagician.Web.Controllers
             if (ModelState.IsValid)
             {
                 var currentUserId = int.Parse(userManager.GetUserId(HttpContext.User));
-                var currentCocktailId = reviewVM.CocktailId;
+                reviewVM.AuthorId = currentUserId;
                 //var userDTO = await this.userService.GetUserAsync(currentUserId);
                 //var barDTO = await this.barService.GetBarAsync(reviewVM.BarId);
 
