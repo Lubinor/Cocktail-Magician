@@ -13,6 +13,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using CocktailMagician.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -94,12 +96,21 @@ namespace CocktailMagician.Web.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Cocktail Magician")]
         //public async Task<IActionResult> Create([Bind("Name,Ingredients")] CocktailDTO cocktailDTO)
-        public async Task<IActionResult> Create(CreateCocktailViewModel createCocktailViewModel )
+        public async Task<IActionResult> Create(CreateCocktailViewModel createCocktailViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                        if (createCocktailViewModel.File.Length > 0)
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            await createCocktailViewModel.File.CopyToAsync(ms);
+                            createCocktailViewModel.ImageData = ms.ToArray();
+
+                            ms.Close();
+                            ms.Dispose();
+                        }
                     var cocktailDTO = this.cocktailDTOMapper.MapToDTOFromVM(createCocktailViewModel);
                     await this.cocktailService.CreateCocktailAsync(cocktailDTO);
 
@@ -162,6 +173,16 @@ namespace CocktailMagician.Web.Controllers
             if (id != newEditCocktailVM.Id)
             {
                 return NotFound();
+            }
+
+            if (newEditCocktailVM.File.Length > 0)
+            {
+                MemoryStream ms = new MemoryStream();
+                await newEditCocktailVM.File.CopyToAsync(ms);
+                newEditCocktailVM.ImageData = ms.ToArray();
+
+                ms.Close();
+                ms.Dispose();
             }
 
             var cocktailDTO = cocktailDTOMapper.MapToDTOFromVM(newEditCocktailVM);

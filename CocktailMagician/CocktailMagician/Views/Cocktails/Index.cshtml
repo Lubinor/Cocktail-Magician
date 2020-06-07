@@ -20,6 +20,7 @@
 <table id="Cocktails" class="cell-border table-hover">
     <thead class="dt-body-center">
         <tr>
+            <th></th>
             <th>Name</th>
             <th>Bars</th>
             <th>Ingredients</th>
@@ -57,7 +58,13 @@
                     //console.log(role);
                     //return role;
                 },
-            "columns" : [
+            "columns": [
+                {
+                        "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false,
+                        render: function (url, type, full) {
+                            return '<img src="' + full.imageSource + '"' + 'style="max-width:150px; max-height:150px;"/>';
+                        }
+                },
                 {
                     "name": "Name","width":"15%", render: function (data, type, full, meta) {
                         return '<a class = "btn btn-warning" href="/cocktails/Details/' + full.id + '">' + full.name + '</a>';

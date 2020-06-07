@@ -20,12 +20,14 @@ namespace CocktailMagician.Services
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly CocktailMagicianContext context;
         private readonly IBarMapper barMapper;
+        private readonly IBarReviewService reviewService;
 
-        public BarService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, IBarMapper barMapper)
+        public BarService(IDateTimeProvider dateTimeProvider, CocktailMagicianContext context, IBarMapper barMapper, IBarReviewService reviewService)
         {
             this.dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             this.context = context ?? throw new ArgumentNullException(nameof(context)); ;
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
+            this.reviewService = reviewService ?? throw new ArgumentNullException(nameof(reviewService));
         }
 
         public async Task<ICollection<BarDTO>> GetAllBarsAsync(string sortMethod = null)
@@ -48,10 +50,10 @@ namespace CocktailMagician.Services
                 .Select(b => this.barMapper.MapToBarDTO(b))
                 .ToListAsync();
 
-            //foreach (var bar in barDTOs)
-            //{
-            //    bar.AverageRating = GetBarRating(bar.Id);
-            //}
+            foreach (var bar in barDTOs)
+            {
+                bar.AverageRating = this.reviewService.GetBarRating(bar.Id);
+            }
 
             return barDTOs;
         }
@@ -71,7 +73,7 @@ namespace CocktailMagician.Services
 
             var barDTO = this.barMapper.MapToBarDTO(bar);
 
-            //barDTO.AverageRating = GetBarRating(barDTO.Id);
+            bar.AverageRating = this.reviewService.GetBarRating(bar.Id);
 
             return barDTO;
         }
@@ -112,10 +114,22 @@ namespace CocktailMagician.Services
                 return null;
             }
 
+            this.context.BarsCocktails.RemoveRange(bar.BarCocktails);
+
             bar.Name = barDTO.Name;
             bar.CityId = barDTO.CityId;
             bar.Address = barDTO.Address;
             bar.Phone = barDTO.Phone;
+            bar.ImageData = barDTO.ImageData;
+
+            string imageBase64Data = Convert.ToBase64String(bar.ImageData);
+            bar.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+
+            bar.BarCocktails = new List<BarsCocktails>();
+            foreach (var item in barDTO.Cocktails)
+            {
+                bar.BarCocktails.Add(new BarsCocktails { BarId = item.Id, CocktailId = item.Id });
+            }
 
             this.context.Bars.Update(bar);
             await this.context.SaveChangesAsync();

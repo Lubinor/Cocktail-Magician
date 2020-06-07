@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             @using (Html.BeginForm())
             {
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,13 +36,10 @@
                     <input asp-for="Phone" class="form-control" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
-                <div>
-                    <select class="js-example-basic-single" name="state">
-                        @foreach (var item in Model.Cocktails)
-                        {
-                            <option value="@item.Name">@item.Name</option>
-                        }
-                    </select>
+                <div class="form-group">
+                    <label asp-for="File" class="control-label"></label>
+                    <input type="file" asp-for="File" id="files">
+                    <span asp-validation-for="File" class="text-danger"></span>
                 </div>
                 @if(User.IsInRole("Cocktail Magician"))
                 {

@@ -26,7 +26,9 @@ namespace CocktailMagician.Web.Mappers
                     Id = c.Id,
                     Name = c.Name,
                     AverageRating = c.AverageRating
-                }).ToList()
+                }).ToList(),
+                ImageData = ingredientDTO.ImageData,
+                ImageSource = ingredientDTO.ImageSource,
             };
 
             return ingredientVM;
@@ -39,7 +41,8 @@ namespace CocktailMagician.Web.Mappers
             }
             var ingredientDTO = new IngredientDTO
             {
-                Name = ingredientVM.Name
+                Name = ingredientVM.Name,
+                ImageData = ingredientVM.ImageData
             };
             
             return ingredientDTO;
@@ -53,7 +56,8 @@ namespace CocktailMagician.Web.Mappers
             var ingredientDTO = new IngredientDTO
             {
                 Id = editIngredientVM.Id,
-                Name = editIngredientVM.Name
+                Name = editIngredientVM.Name,
+                ImageData = editIngredientVM.ImageData
             };
 
             return ingredientDTO;

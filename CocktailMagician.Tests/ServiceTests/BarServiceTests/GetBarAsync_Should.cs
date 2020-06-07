@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -19,6 +20,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfNoBar));
@@ -34,7 +37,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetBarAsync(4);
 
@@ -47,6 +50,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -73,7 +78,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetBarAsync(1);
 

@@ -15,6 +15,8 @@ namespace CocktailMagician.Services.DTOs
         public ICollection<BarDTO> Bars { get; set; } = new List<BarDTO>();
         //public DateTime? CreatedOn { get; set; }
         public bool IsDeleted { get; set; }
+        public byte[] ImageData { get; set; }
+        public string ImageSource { get; set; }
 
         public override bool Equals(object obj)
         {

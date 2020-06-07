@@ -9,6 +9,9 @@ using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Models;
 using System.Linq.Dynamic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.IO;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -82,7 +85,7 @@ namespace CocktailMagician.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Cocktail Magician")]
-        public async Task<IActionResult> Create(IngredientDTO ingredientDTO)
+        public async Task<IActionResult> Create(IngredientViewModel ingredientVM)
         {
             //if (this.ingredientService.IsValid(ingredientDTO))
             //{
@@ -92,6 +95,16 @@ namespace CocktailMagician.Web.Controllers
             {
                 try
                 {
+                        if (ingredientVM.File.Length > 0)
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            await ingredientVM.File.CopyToAsync(ms);
+                            ingredientVM.ImageData = ms.ToArray();
+
+                            ms.Close();
+                            ms.Dispose();
+                        }
+                    var ingredientDTO = this.ingredientDTOMapper.MapToDTOFromVM(ingredientVM);
                     await this.ingredientService.CreateIngredientAsync(ingredientDTO);
 
                     return RedirectToAction(nameof(Index));
@@ -140,6 +153,16 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, EditIngredientViewModel editIngredientVM)
         {
+            if (editIngredientVM.File.Length > 0)
+            {
+                MemoryStream ms = new MemoryStream();
+                await editIngredientVM.File.CopyToAsync(ms);
+                editIngredientVM.ImageData = ms.ToArray();
+
+                ms.Close();
+                ms.Dispose();
+            }
+
             var ingredientDTO = this.ingredientDTOMapper.MapToDTOFromVM(editIngredientVM);
 
             if (id != ingredientDTO.Id)

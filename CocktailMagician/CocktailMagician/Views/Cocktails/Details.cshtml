@@ -39,6 +39,9 @@
     <span asp-validation-for="AverageRating" class="text-danger"></span>
 </div>
 <div>
+    <img src="@Model.ImageSource" style="width: 150px; height: 150px;" />
+</div>
+<div>
     <hr />
     @if (User.IsInRole("Bar Crawler"))
     {

@@ -77,22 +77,18 @@ namespace CocktailMagician.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Cocktail Magician")]
-        public async Task<IActionResult> Create([Bind("Name", "CityName", "CityId", "Address", "City", "Phone")] BarViewModel barVM, List<IFormFile> ImageData)
+        public async Task<IActionResult> Create([Bind("Name", "CityName", "CityId", "Address", "City", "Phone")] BarViewModel barVM)
         {
             if (ModelState.IsValid)
             {
-                foreach (var file in ImageData)
+                if (barVM.File.Length > 0)
                 {
-                    if (file.Length > 0)
-                    {
                     MemoryStream ms = new MemoryStream();
-                    await file.CopyToAsync(ms);
+                    await barVM.File.CopyToAsync(ms);
                     barVM.ImageData = ms.ToArray();
 
                     ms.Close();
                     ms.Dispose();
-                    }
-
                 }
 
                 var barDTO = barMapper.MapToDTOFromVM(barVM);
@@ -134,18 +130,28 @@ namespace CocktailMagician.Web.Controllers
                 return NotFound();
             }
 
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (barVM.File.Length > 0)
+                    {
+                        MemoryStream ms = new MemoryStream();
+                        await barVM.File.CopyToAsync(ms);
+                        barVM.ImageData = ms.ToArray();
+
+                        ms.Close();
+                        ms.Dispose();
+                    }
                     var barDTO = this.barMapper.MapToDTOFromVM(barVM);
                     await this.barService.UpdateBarAsync(id, barDTO);
+                    return RedirectToAction("Details", "Bars", new { id });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
 
                 }
-                return RedirectToAction("Details", "Bars", new { id });
             }
 
             return NotFound();

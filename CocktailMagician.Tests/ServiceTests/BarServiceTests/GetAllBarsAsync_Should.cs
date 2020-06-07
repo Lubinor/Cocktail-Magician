@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -19,6 +20,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(Return_IfNoBars));
@@ -26,7 +29,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetAllBarsAsync();
 
@@ -39,6 +42,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(Return_ProperBarCount));
@@ -53,7 +58,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetAllBarsAsync();
                 int barsCount = assertContext.Bars.Count();
@@ -67,6 +72,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -85,7 +92,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetAllBarsAsync();
                 var resultList = result.ToList();
@@ -100,6 +107,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -118,7 +127,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetAllBarsAsync("name");
                 var resultList = result.ToList();
@@ -133,6 +142,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
         {
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
+            var mockIBarReviewService = new Mock<IBarReviewService>();
+
             var mockIBarMapper = new Mock<IBarMapper>();
             mockIBarMapper
                 .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
@@ -151,7 +162,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object);
+                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.GetAllBarsAsync("name_desc");
                 var resultList = result.ToList();

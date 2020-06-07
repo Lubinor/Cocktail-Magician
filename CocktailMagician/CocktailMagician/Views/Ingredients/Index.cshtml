@@ -16,6 +16,7 @@
 <table id="Ingredients" class="cell-border table-hover">
     <thead class="dt-body-center">
         <tr>
+            <th></th>
             <th>Name</th>
             <th>Cocktails</th>
             <th></th>
@@ -45,7 +46,13 @@
             "type" : "POST" ,
             "dataType" : "json" ,
                 },
-            "columns" : [
+            "columns": [
+                {
+                    "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false,
+                    render: function (url, type, full) {
+                        return '<img src="' + full.imageSource + '"' + 'style="max-width:150px; max-height:150px;"/>';
+                    }
+                },
                 {
                     render: function (data, type, full, meta) {
                         return '<a class = "btn btn-warning" href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
