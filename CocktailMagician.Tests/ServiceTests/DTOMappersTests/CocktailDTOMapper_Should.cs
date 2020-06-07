@@ -1,11 +1,7 @@
-﻿using CocktailMagician.Models;
-using CocktailMagician.Services.DTOs;
+﻿using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Mappers;
 using CocktailMagician.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
 {

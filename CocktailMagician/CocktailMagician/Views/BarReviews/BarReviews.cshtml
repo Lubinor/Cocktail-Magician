@@ -37,8 +37,8 @@
             @if (User.IsInRole("Bar Crawler"))
             {
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.BarId">Edit</a> <span>|</span>
-                    <a asp-action="Delete" asp-route-id="@item.BarId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.BarId" class="btn btn-primary font-weight-bold">Edit</a> <span>|</span>
+                    <a asp-action="Delete" asp-route-id="@item.BarId" class="btn btn-primary font-weight-bold">Delete</a>
                 </td>
             }
         </tr>
@@ -46,5 +46,5 @@
     </tbody>
 </table>
 <div>
-    <a asp-action="Index" asp-controller="Bars">Back to Bars</a>
+    <a asp-action="Index" asp-controller="Bars" class="btn btn-primary font-weight-bold">Back to Bars</a>
 </div>

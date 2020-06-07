@@ -2,7 +2,6 @@
 using CocktailMagician.Models;
 using CocktailMagician.Services;
 using CocktailMagician.Services.DTOs;
-using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

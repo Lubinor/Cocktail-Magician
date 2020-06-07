@@ -81,6 +81,12 @@ namespace CocktailMagician.Services
             this.context.CocktailsUsersReviews.Add(cocktailReview);
             await this.context.SaveChangesAsync();
 
+            var cocktail = await this.context.Cocktails.FirstOrDefaultAsync(c => c.Id == cocktailReview.CocktailId);
+            cocktail.AverageRating = GetCocktailRating(cocktail.Id);
+
+            this.context.Cocktails.Update(cocktail);
+            await this.context.SaveChangesAsync();
+
             var newCocktailReviewDTO = this.cocktailReviewMapper.MapToCocktailReviewDTO(cocktailReview);
 
             return newCocktailReviewDTO;
@@ -109,6 +115,12 @@ namespace CocktailMagician.Services
             this.context.CocktailsUsersReviews.Update(cocktailReview);
             await this.context.SaveChangesAsync();
 
+            var cocktail = await this.context.Cocktails.FirstOrDefaultAsync(c => c.Id == cocktailReview.CocktailId);
+            cocktail.AverageRating = GetCocktailRating(cocktail.Id);
+
+            this.context.Cocktails.Update(cocktail);
+            await this.context.SaveChangesAsync();
+
             var newCocktailReviewDTO = this.cocktailReviewMapper.MapToCocktailReviewDTO(cocktailReview);
 
             return newCocktailReviewDTO;
@@ -133,7 +145,31 @@ namespace CocktailMagician.Services
             this.context.CocktailsUsersReviews.Update(cocktailReview);
             await this.context.SaveChangesAsync();
 
+            var cocktail = await this.context.Cocktails.FirstOrDefaultAsync(c => c.Id == cocktailReview.CocktailId);
+            cocktail.AverageRating = GetCocktailRating(cocktail.Id);
+
+            this.context.Cocktails.Update(cocktail);
+            await this.context.SaveChangesAsync();
+
             return true;
+        }
+        public double GetCocktailRating(int cocktailId)
+        {
+            var allReviews = this.context.CocktailsUsersReviews
+                .Where(c => c.CocktailId == cocktailId && !c.IsDeleted);
+
+            double ratingSum = allReviews.Select(r => r.Rating).Sum();
+
+            double averageRating = 0.00;
+
+            if (ratingSum > 0)
+            {
+                averageRating = (ratingSum * 1.00) / allReviews.Count();
+            }
+
+            averageRating = Math.Round(averageRating, 2);
+
+            return averageRating;
         }
     }
 }

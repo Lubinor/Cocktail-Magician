@@ -1,9 +1,6 @@
 ﻿using CocktailMagician.Models;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailMagician.Services.Mappers
 {
@@ -17,6 +14,7 @@ namespace CocktailMagician.Services.Mappers
                 Comment = review.Comment,
                 CocktailId = review.CocktailId,
                 AuthorId = review.UserId,
+                Author = review.User.UserName
             };
 
             return reviewDTO;

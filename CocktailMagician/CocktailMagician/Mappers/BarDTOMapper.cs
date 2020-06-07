@@ -1,5 +1,4 @@
-﻿using CocktailMagician.Models;
-using CocktailMagician.Services.DTOs;
+﻿using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Web.Models;
 using System.Linq;

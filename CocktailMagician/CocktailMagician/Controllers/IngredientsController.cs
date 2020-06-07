@@ -2,15 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using CocktailMagician.Services.Contracts;
 using CocktailMagician.Web.Mappers.Contracts;
-using CocktailMagician.Services.DTOs;
 using CocktailMagician.Web.Models;
 using System.Linq.Dynamic;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.IO;
 
 namespace CocktailMagician.Web.Controllers

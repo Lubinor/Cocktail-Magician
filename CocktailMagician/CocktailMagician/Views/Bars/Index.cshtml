@@ -10,7 +10,7 @@
 <p>
     @if (User.IsInRole("Cocktail Magician"))
     {
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Create" class="btn btn-primary font-weight-bold">Create New</a>
     }
 </p>
 <table class="cell-border table-hover" id="Bars">
@@ -18,12 +18,11 @@
         <tr>
             <th></th>
             <th>Name</th>
-            <th>CityName</th>
+            <th>City</th>
             <th>Address</th>
             <th>Phone</th>
-            <th>AverageRating</th>
-            <th>CocktailNames</th>
-            <th></th>
+            <th>Average Rating</th>
+            <th>Cocktails</th>
         </tr>
     </thead>
 </table>
@@ -62,7 +61,6 @@
                         return '<img src="' + full.imageSource +'"' + 'style="max-width:150px; max-height:150px;"/>';
                     }
                 },
-                //{ "data": "name", "name": "Name", "autoWidth": true,},
                 {
                     render: function (data, type, full, meta) {
                         //return '<a class = "btn btn-warning" href="/bars/Details/' + full.id + '">'+full.name+'</a>';
@@ -86,7 +84,7 @@
                     render: function (data, type, row) {
                         var buttons = '';
                         for (i = 0; i < data.length; i++) {
-                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-warning" href ="/cocktails/Details/' + data[i].id + '">' + data[i].name + ' '+ '</a>'
+                            buttons += '<a style="margin: 2px 2px 2px 2px;" class="btn btn-outline-warning" href ="/cocktails/Details/' + data[i].id + '">' + data[i].name + ' '+ '</a>'
                         }
                         return buttons;
                     },

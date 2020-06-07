@@ -4,10 +4,7 @@ using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
 {

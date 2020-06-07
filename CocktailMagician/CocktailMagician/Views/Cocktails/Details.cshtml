@@ -18,7 +18,7 @@
         <dd class="col-sm-10">
             @foreach (var bar in Model.Bars)
             {
-                <a style="margin: 0 2px;" class="btn btn-outline-info" href="/bars/Details/@bar.Id">@bar.Name</a>
+                <a style="margin: 0 2px;" class="btn btn-outline-warning font-weight-bold" href="/bars/Details/@bar.Id">@bar.Name</a>
             }
         </dd>
     </dl>
@@ -29,14 +29,18 @@
         <dd class="col-sm-10">
             @foreach (var ingredient in Model.Ingredients)
             {
-                <a style="margin: 0 2px;" class="btn btn-outline-info" href="/ingredients/Details/@ingredient.Id">@ingredient.Name</a>
+                <a style="margin: 0 2px;" class="btn btn-outline-danger font-weight-bold" href="/ingredients/Details/@ingredient.Id">@ingredient.Name</a>
             }
         </dd>
     </dl>
-</div>
-<div class="form-group">
-    <label asp-for="AverageRating" class="control-label" style="font-weight:bold"></label>
-    <span asp-validation-for="AverageRating" class="text-danger"></span>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AverageRating)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AverageRating)
+        </dd>
+    </dl>
 </div>
 <div>
     <img src="@Model.ImageSource" style="width: 150px; height: 150px;" />
@@ -45,15 +49,16 @@
     <hr />
     @if (User.IsInRole("Bar Crawler"))
     {
-        <a style="margin: 0 2px;" class="btn btn-outline-info" href="/CocktailReviews/Create/@Model.Id">Rate & Comment</a>
+        <a style="margin: 0 2px;" class="btn btn-primary font-weight-bold" href="/CocktailReviews/Create/@Model.Id">Rate & Comment</a>
     }
     @if (User.IsInRole("Cocktail Magician"))
     {
-        <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Edit/@Model.Id">Edit</a>
+        <a style="margin: 0 2px;" class="btn btn-primary font-weight-bold" href="/Cocktails/Edit/@Model.Id">Edit</a>
     }
-    <a style="margin: 0 2px;" class="btn btn-outline-info" href="/Cocktails/Index/@Model.Id">Back to List</a>
+    <a asp-action="CocktailReviews" asp-controller="CocktailReviews" asp-route-id="@Model.Id" class="btn btn-primary font-weight-bold">Check all reviews</a>
+    <a style="margin: 0 2px;" class="btn btn-primary font-weight-bold" href="/Cocktails/Index/@Model.Id">Back to List</a>
 </div>
 
-@section Scripts {
-    <script>$("#AverageRating").rating({ min: 0, max: 5, step: 0.5, size: 'md', displayOnly: true});</script>
-}
+@*@section Scripts {
+    <script>$("#AverageRating").rating({ min: 0, max: 5, step: 0.5, size: 'md', displayOnly: true });</script>
+}*@

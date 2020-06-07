@@ -2,14 +2,9 @@
 using CocktailMagician.Models;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
-using CocktailMagician.Services.Mappers.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
 {

@@ -6,10 +6,7 @@ using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Linq.Dynamic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.UserServiceTests

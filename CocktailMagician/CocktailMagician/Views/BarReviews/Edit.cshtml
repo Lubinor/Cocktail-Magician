@@ -28,7 +28,7 @@
             @if (User.IsInRole("Bar Crawler"))
             {
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary font-weight-bold" />
                 </div>
             }
         </form>
@@ -36,7 +36,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary font-weight-bold">Back to List</a>
 </div>
 
 @section Scripts {

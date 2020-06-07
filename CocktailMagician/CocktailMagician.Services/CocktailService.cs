@@ -10,7 +10,6 @@ using System.Linq;
 using System.Linq.Dynamic;
 using CocktailMagician.Services.Helpers;
 using System.Threading.Tasks;
-using CocktailMagician.Services.Mappers;
 using CocktailMagician.Models;
 
 namespace CocktailMagician.Services
@@ -22,15 +21,17 @@ namespace CocktailMagician.Services
         private readonly IIngredientMapper ingredientMapper;
         private readonly IBarMapper barMapper;
         private readonly CocktailMagicianContext context;
+        private readonly ICocktailReviewService reviewService;
 
         public CocktailService(IDateTimeProvider datetimeProvider, ICocktailMapper mapper,
-            IIngredientMapper ingredientMapper, IBarMapper barMapper, CocktailMagicianContext context)
+            IIngredientMapper ingredientMapper, IBarMapper barMapper, CocktailMagicianContext context, ICocktailReviewService reviewService)
         {
             this.datetimeProvider = datetimeProvider ?? throw new ArgumentNullException(nameof(datetimeProvider));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.ingredientMapper = ingredientMapper ?? throw new ArgumentNullException(nameof(ingredientMapper));
             this.barMapper = barMapper ?? throw new ArgumentNullException(nameof(barMapper));
             this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.reviewService = reviewService ?? throw new ArgumentNullException(nameof(reviewService));
         }
         /// <summary>
         /// Shows all available cocktails, their ingredients and bar/s where are served 
@@ -48,9 +49,9 @@ namespace CocktailMagician.Services
 
             var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
 
-            foreach (var bar in cocktailDTOs)
+            foreach (var cocktail in cocktailDTOs)
             {
-                bar.AverageRating = GetCocktailRating(bar.Id);
+                cocktail.AverageRating = this.reviewService.GetCocktailRating(cocktail.Id);
             }
 
             return cocktailDTOs;
@@ -70,13 +71,14 @@ namespace CocktailMagician.Services
                 .Include(ingredient => ingredient.IngredientsCocktails)
                     .ThenInclude(ic => ic.Ingredient)
                 .FirstOrDefaultAsync(cocktail => cocktail.Id == id & cocktail.IsDeleted == false);
+
             if (cocktail == null)
             {
                 return null;
             }
             var cocktailDTO = mapper.MapToCocktailDTO(cocktail);
 
-            //cocktailDTO.AverageRating = GetCocktailRating(cocktailDTO.Id); //tova ne go li pravi mappera
+            cocktailDTO.AverageRating = this.reviewService.GetCocktailRating(id);
 
             var cocktailIngredient = cocktail.IngredientsCocktails.Select(x => x.Ingredient);
             var cocktailBars = cocktail.CocktailBars.Select(x => x.Bar);
@@ -298,24 +300,6 @@ namespace CocktailMagician.Services
                 return cocktails.Count();
             }
             return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
-        }
-        private double GetCocktailRating(int cocktailId)
-        {
-            var allReviews = this.context.CocktailsUsersReviews
-                .Where(c => c.CocktailId == cocktailId && !c.IsDeleted);
-
-            double ratingSum = allReviews.Select(r => r.Rating).Sum();
-
-            double averageRating = 0.00;
-
-            if (ratingSum > 0)
-            {
-                averageRating = (ratingSum * 1.00) / allReviews.Count();
-            }
-
-            averageRating = Math.Round(averageRating, 2);
-
-            return averageRating;
         }
         private bool IsValid(CocktailDTO cocktailDTO)
         {

@@ -1,8 +1,5 @@
-﻿using CocktailMagician.Models;
-using CocktailMagician.Services.DTOs;
-using System;
+﻿using CocktailMagician.Services.DTOs;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services.Contracts

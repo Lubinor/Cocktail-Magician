@@ -19,7 +19,6 @@
             <th></th>
             <th>Name</th>
             <th>Cocktails</th>
-            <th></th>
         </tr>
     </thead>
 </table>
@@ -55,7 +54,7 @@
                 },
                 {
                     render: function (data, type, full, meta) {
-                        return '<a class = "btn btn-warning" href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-warning font-weight-bold" href="/ingredients/Details/' + full.id + '">'+full.name+'</a>';
                     },
                     "name":"Name"
                 },
@@ -64,7 +63,7 @@
                     render: function (data, type, row) {
                         var buttons = '';
                         for (i = 0; i < data.length; i++) {
-                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/cocktails/Details/'
+                            buttons += '<a style="margin: 2px 2px 2px 2px;" class="btn btn-outline-warning" href ="/cocktails/Details/'
                                 + data[i].id + '">' + data[i].name + ' ' + '</a>'
                         }
                         return buttons;

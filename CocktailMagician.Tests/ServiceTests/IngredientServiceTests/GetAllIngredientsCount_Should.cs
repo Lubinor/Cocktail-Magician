@@ -2,12 +2,8 @@
 using CocktailMagician.Services;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
-using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
 {

@@ -6,7 +6,6 @@ using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,9 +70,9 @@ namespace CocktailMagician.Services
                 return null;
             }
 
-            var barDTO = this.barMapper.MapToBarDTO(bar);
-
             bar.AverageRating = this.reviewService.GetBarRating(bar.Id);
+
+            var barDTO = this.barMapper.MapToBarDTO(bar);
 
             return barDTO;
         }

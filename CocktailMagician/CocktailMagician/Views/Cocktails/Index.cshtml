@@ -14,7 +14,7 @@
 <p>
     @if (User.IsInRole("Cocktail Magician"))
     {
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Create" class="btn btn-primary font-weight-bold">Create New</a>
     }
 </p>
 <table id="Cocktails" class="cell-border table-hover">
@@ -24,7 +24,7 @@
             <th>Name</th>
             <th>Bars</th>
             <th>Ingredients</th>
-            <th></th>
+            <th>Average Rating</th>
         </tr>
     </thead>
 </table>
@@ -67,7 +67,7 @@
                 },
                 {
                     "name": "Name","width":"15%", render: function (data, type, full, meta) {
-                        return '<a class = "btn btn-warning" href="/cocktails/Details/' + full.id + '">' + full.name + '</a>';
+                        return '<a class = "btn btn-warning font-weight-bold" href="/cocktails/Details/' + full.id + '">' + full.name + '</a>';
                     },
                 },
                 {
@@ -75,7 +75,7 @@
                     render: function (data, type, row) {
                         var buttons = '';
                         for (i = 0; i < data.length; i++) {
-                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/bars/Details/'
+                            buttons += '<a style="margin: 2px 2px 2px 2px;" class="btn btn-outline-warning" href ="/bars/Details/'
                                 + data[i].id + '">' + data[i].name + ' ' + '</a>'
                         }
                         return buttons;
@@ -86,11 +86,19 @@
                     render: function (data, type, row) {
                         var buttons = '';
                         for (i = 0; i < data.length; i++) {
-                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/ingredients/Details/'
+                            buttons += '<a style="margin: 2px 2px 2px 2px;" class="btn btn-outline-warning" href ="/ingredients/Details/'
                                 + data[i].id + '">' + data[i].name + ' ' + '</a>'
                         }
                         return buttons;
                     },
+                },
+                {
+                    "data": 'averageRating', "name": "AverageRating",
+                    render: function (data, type, row, meta) {
+                        return type === 'display' ?
+                            '<progress value="' + data + '" max="5"></progress>' :
+                            data;
+                    }
                 },
                 //{
                 //    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
