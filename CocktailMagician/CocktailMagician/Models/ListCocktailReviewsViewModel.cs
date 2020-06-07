@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace CocktailMagician.Web.Models
 {
-    public class ListBarReviewsViewModel
+    public class ListCocktailReviewsViewModel
     {
         [DisplayName("All Reviews")]
-        public ICollection<BarReviewViewModel> AllBarReviews { get; set; }
+        public ICollection<CocktailReviewViewModel> AllCocktailReviews { get; set; }
         [DisplayName("Comment")]
         public string ReviewComment { get; set; }
         [DisplayName("Author")]
         public string Author { get; set; }
-        [DisplayName("Bar")]
-        public string Bar { get; set; }
+        [DisplayName("Cocktail")]
+        public string Cocktail { get; set; }
         [DisplayName("Rating")]
         public double Rating { get; set; }
     }

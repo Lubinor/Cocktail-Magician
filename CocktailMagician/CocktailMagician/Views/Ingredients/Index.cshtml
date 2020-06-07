@@ -49,7 +49,17 @@
                     },
                     "name":"Name"
                 },
-                { "data": "cocktailNames", "name": "Cocktails", "autoWidth": true, "orderable": false, },
+                {
+                    "data": "cocktails", "autoWidth": true, "orderable": false,
+                    render: function (data, type, row) {
+                        var buttons = '';
+                        for (i = 0; i < data.length; i++) {
+                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/cocktails/Details/'
+                                + data[i].id + '">' + data[i].name + ' ' + '</a>'
+                        }
+                        return buttons;
+                    },
+                },
                 {
                     data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
                         return '<a class="btn btn-danger" href="/Ingredients/Delete/' + row.id + '">Delete</a>';

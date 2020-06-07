@@ -7,7 +7,7 @@
            
         }
 
-        public int Rating { get; set; }
+        public double Rating { get; set; }
         public string Comment { get; set; }
         public int BarId { get; set; }
         public string BarName { get; set; }

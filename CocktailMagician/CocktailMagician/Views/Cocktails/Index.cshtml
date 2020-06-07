@@ -57,11 +57,31 @@
             "columns" : [
                 {
                     "name": "Name","width":"15%", render: function (data, type, full, meta) {
-                        return '<a href="/cocktails/Details/' + full.id + '">'+full.name+'</a>';
+                        return '<a class = "btn btn-outline-info" href="/cocktails/Details/' + full.id + '">'+full.name+'</a>';
                     },
                 },
-                { "data": "barNames", "name": "Bars", "autoWidth": true, "orderable": false, },
-                { "data": "ingredientNames", "name": "Ingredients", "autoWidth": true, "orderable": false, },
+                {
+                    "data": "bars", "autoWidth": true, "orderable": false,
+                    render: function (data, type, row) {
+                        var buttons = '';
+                        for (i = 0; i < data.length; i++) {
+                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/bars/Details/'
+                                + data[i].id + '">' + data[i].name + ' ' + '</a>'
+                        }
+                        return buttons;
+                    },
+                },
+                {
+                    "data": "ingredients", "autoWidth": true, "orderable": false,
+                    render: function (data, type, row) {
+                        var buttons = '';
+                        for (i = 0; i < data.length; i++) {
+                            buttons += '<a style="margin: 0 2px;" class="btn btn-outline-info" href ="/ingredients/Details/'
+                                + data[i].id + '">' + data[i].name + ' ' + '</a>'
+                        }
+                        return buttons;
+                    },
+                },
                 {
                     data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
                         return '<a class="btn btn-danger" href="/Cocktails/Delete/' + row.id + '">Delete</a>';

@@ -242,7 +242,7 @@ namespace CocktailMagician.Services
                 .Where(b => b.BarId == barId &&
                            !b.IsDeleted);
 
-            int ratingSum = allReviews.Select(r => r.Rating).Sum();
+            double ratingSum = allReviews.Select(r => r.Rating).Sum();
 
             double averageRating = 0.00;
 
