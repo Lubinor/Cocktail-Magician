@@ -16,7 +16,7 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
         {
             //Arrange
             var options = Utils.GetOptions(nameof(CorretMapping_ToDTO));
-            Utils.GetInMemoryThreeIngredients(options);
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

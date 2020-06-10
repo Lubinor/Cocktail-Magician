@@ -22,29 +22,14 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfCocktailReviewMissingOrDeleted));
 
-            var cocktail = new Cocktail { Id = 1, Name = "Mojito" };
-            var user = new User { Id = 1, UserName = "George" };
-            var review = new CocktailsUsersReviews
-            {
-                CocktailId = 1,
-                UserId = 1,
-                Comment = "Top!",
-            };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                arrangeContext.Users.Add(user);
-                arrangeContext.CocktailsUsersReviews.Add(review);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailReviewService(mockIDateTimeProvider.Object, assertContext, mockICocktailReviewMapper.Object);
 
-                var result = await sut.DeleteCocktailReviewAsync(2, 2);
+                var result = await sut.DeleteCocktailReviewAsync(3,2);
 
                 Assert.IsFalse(result);
             }
@@ -59,8 +44,6 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnTrue_IfCocktailReviewDeletedSuccesfully));
 
-            var cocktail = new Cocktail { Id = 1, Name = "Mojito" };
-            var users = Utils.ReturnTwoUsers(options); //1 George, 2 Jim
             var review = new CocktailsUsersReviews
             {
                 CocktailId = 1,
@@ -69,13 +52,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
                 Rating = 5
             };
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                arrangeContext.Users.AddRange(users);
-                arrangeContext.CocktailsUsersReviews.Add(review);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

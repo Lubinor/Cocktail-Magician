@@ -25,82 +25,21 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             mockCocktailMapper.Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
                 .Returns<Cocktail>(c => new CocktailDTO { Id = c.Id, Name = c.Name, AverageRating = c.AverageRating });
             var mockIngMapper = new Mock<IIngredientMapper>();
-            //mockIngMapper.Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
-            //    .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockBarMapper = new Mock<IBarMapper>();
-            var mockIReviewService = new Mock<ICocktailReviewService>();
+            var mockCocktailReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(ReturnCorrectCocktails));
-            var expected = new List<CocktailDTO>
-            {
-                new CocktailDTO
-                {
-                    Id = 1,
-                    Name = "Bloody Mary",
-                    AverageRating = 5.5,
-                    //Ingredients = new List<IngredientDTO>
-                    //{
-                    //    new IngredientDTO
-                    //    {
-                    //        //Id = 1,
-                    //        Name = "Vodka"
-                    //    },
-                    //    new IngredientDTO
-                    //    {
-                    //        //Id = 2,
-                    //        Name = "Tomato Juice"
-                    //    }
-                    //},
-                    //Bars = new List<BarDTO>
-                    //{
-                    //    new BarDTO
-                    //    {
-                    //        //Id = 1,
-                    //        Name = "The Bar"
-                    //    }
-                    //}
-                },
-                new CocktailDTO
-                {
-                    Id = 2,
-                    Name = "Gin Fizz",
-                    AverageRating = 6.5,
-                    //Ingredients = new List<IngredientDTO>
-                    //{
-                    //    new IngredientDTO
-                    //    {
-                    //        //Id = 3,
-                    //        Name = "Dry Gin"
-                    //    },
-                    //    new IngredientDTO
-                    //    {
-                    //        //Id = 4,
-                    //        Name = "Tonic"
-                    //    }
-                    //},
-                    //Bars = new List<BarDTO>
-                    //{
-                    //    new BarDTO
-                    //    {
-                    //        //Id = 1,
-                    //        Name = "The Bar"
-                    //    }
-                    //}
-                }
-            };
-            Utils.GetInMemoryTwoCocktails(options);
+           
+            Utils.GetInMemoryDataBase(options);
+            
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, mockBarMapper.Object, assertContext, mockIReviewService.Object);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext, mockCocktailReviewService.Object);
                 var result = (await sut.GetAllCocktailssAsync()).ToList();
-                Assert.AreEqual(expected.Count, result.Count);
-                for (int i = 0; i < expected.Count; i++)
-                {
-                    Assert.AreEqual(expected[i].Id, result[i].Id);
-                    Assert.AreEqual(expected[i].Name, result[i].Name);
-                    Assert.AreEqual(expected[i].AverageRating, result[i].AverageRating);
-                }
+                var cocktailsCount = assertContext.Cocktails.Count();
+
+                Assert.AreEqual(cocktailsCount, result.Count);
             }
         }
     }

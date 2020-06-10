@@ -68,4 +68,5 @@
                 });
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Component.InvokeAsync("NToastNotify"); }
 }

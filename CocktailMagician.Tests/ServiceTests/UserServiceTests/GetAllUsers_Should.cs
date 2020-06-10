@@ -45,15 +45,7 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
 
             var options = Utils.GetOptions(nameof(Return_ProperUserCount));
 
-            var user = new User { Id = 1, UserName = "George" };
-            var user2 = new User { Id = 2, UserName = "Tom" };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                arrangeContext.Users.Add(user2);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

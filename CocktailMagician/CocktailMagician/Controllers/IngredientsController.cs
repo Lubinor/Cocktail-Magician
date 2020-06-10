@@ -157,6 +157,12 @@ namespace CocktailMagician.Web.Controllers
                     this.toaster.AddWarningToastMessage(ToastrConsts.GenericError);
                     return RedirectToAction(nameof(Index));
                 }
+                catch (ArgumentException)
+                {
+                    this.toastNotification.AddErrorToastMessage("Name already exist or invalid input");
+                     return BadRequest(); //status 404
+                }
+                
             }
             this.toaster.AddWarningToastMessage(ToastrConsts.IncorrectInput);
             return RedirectToAction(nameof(Index));
@@ -242,7 +248,7 @@ namespace CocktailMagician.Web.Controllers
                     this.toaster.AddSuccessToastMessage(ToastrConsts.Success);
                     return RedirectToAction("Details", "Ingredients", new { id });
                 }
-                catch (Exception)
+                catch (ArgumentException)
                 {
                     this.toaster.AddWarningToastMessage(ToastrConsts.GenericError);
                     return RedirectToAction(nameof(Index));

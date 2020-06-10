@@ -22,30 +22,20 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_NoUserToUpdate));
 
-            var user = new User
-            {
-                Id = 1,
-                UserName = "George",
-                Email = "George@abv.bg",
-                PhoneNumber = "0899 899 899"
-            };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                await arrangeContext.SaveChangesAsync();
-            }
-
             var userDTO = new UserDTO
             {
-                UserName = "Tom"
+                UserName = "Robert",
+                Email = "Robert@abv.bg",
+                PhoneNumber = "0833 333 333"
             };
+
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new UserService(mockDatetimeProvider.Object, assertContext, mockIUserMapper.Object);
-                var result = await sut.UpdateUserAsync(2, userDTO);
+                var result = await sut.UpdateUserAsync(3, userDTO);
 
                 Assert.IsNull(result);
             }
@@ -66,27 +56,15 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
                 .Returns<UserDTO>(x => new User { UserName = x.UserName, Email = x.Email, PhoneNumber = x.PhoneNumber });
 
             var options = Utils.GetOptions(nameof(UpdateUser_WhenParamsAreValid));
-
-            var user = new User
-            {
-                Id = 1,
-                UserName = "George",
-                Email = "George@abv.bg",
-                PhoneNumber = "0899 899 899"
-            };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                await arrangeContext.SaveChangesAsync();
-            }
-
+            
             var userDTO = new UserDTO
             {
                 UserName = "Robert",
                 Email = "Robert@abv.bg",
                 PhoneNumber = "0833 333 333"
             };
+
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

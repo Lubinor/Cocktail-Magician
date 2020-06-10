@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NToastNotify;
 
+
 namespace CocktailMagician.Web
 {
     public class Startup
@@ -61,6 +62,8 @@ namespace CocktailMagician.Web
             });
             services.AddControllersWithViews();
 
+            services.AddMvc().AddNToastNotifyNoty();
+
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBarService, BarService>();
@@ -98,7 +101,7 @@ namespace CocktailMagician.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/NotFound"); // ("Home/Error")
             }
             app.UseStaticFiles();
 
@@ -113,6 +116,8 @@ namespace CocktailMagician.Web
 
             app.UseEndpoints(endpoints =>
             {
+                app.UseNToastNotify();
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -44,15 +44,8 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(Return_ProperCityCount));
 
-            var city = Utils.ReturnOneCity(options);
-            var city2 = new City { Id = 2, Name = "Varna" };
+            Utils.GetInMemoryDataBase(options);
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cities.Add(city);
-                arrangeContext.Cities.Add(city2);
-                await arrangeContext.SaveChangesAsync();
-            }
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {

@@ -20,7 +20,7 @@ namespace CocktailMagician.Services.DTOs
         public ICollection<CocktailDTO> Cocktails { get; set; } = new HashSet<CocktailDTO>();
         public byte[] ImageData { get; set; }
         public string ImageSource { get; set; }
-
-        //public ICollection<BarReviewDTO> Reviews { get; set; } = new HashSet<BarReviewDTO>();
+        public bool IsDeleted { get; set; }
+        public ICollection<BarReviewDTO> Reviews { get; set; } = new HashSet<BarReviewDTO>();
     }
 }

@@ -31,9 +31,6 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfNoUpdatedCReviewDTO));
 
-            var cocktail = new Cocktail { Id = 1, Name = "Mojito" };
-
-            var user = new User { Id = 1, UserName = "George" };
             var review = new CocktailsUsersReviews
             {
                 CocktailId = 1,
@@ -42,13 +39,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
                 Rating = 5
             };
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                arrangeContext.Users.Add(user);
-                arrangeContext.CocktailsUsersReviews.Add(review);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -80,24 +71,6 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnUpdatedCReview_IfParamsAreValid));
 
-            var cocktail = new Cocktail { Id = 1, Name = "Mojito" };
-            var users = Utils.ReturnTwoUsers(options); //1 George, 2 Jim
-            var review = new CocktailsUsersReviews
-            {
-                CocktailId = 1,
-                UserId = 2,
-                Comment = "Top!",
-                Rating = 5
-            };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                arrangeContext.Users.AddRange(users);
-                arrangeContext.CocktailsUsersReviews.Add(review);
-                await arrangeContext.SaveChangesAsync();
-            }
-
             var updatedReview = new CocktailReviewDTO
             {
                 CocktailId = 1,
@@ -106,6 +79,8 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
                 Rating = 1
             };
 
+            Utils.GetInMemoryDataBase(options);
+            
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {

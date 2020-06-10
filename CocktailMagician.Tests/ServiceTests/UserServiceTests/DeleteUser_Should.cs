@@ -22,23 +22,13 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnFalse_IfUserMissingOrDeleted));
 
-            var user = new User
-            {
-                Id = 1,
-                UserName = "George",
-            };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new UserService(mockDatetimeProvider.Object, assertContext, mockIUserMapper.Object);
-                var result = await sut.DeleteUserAsync(2);
+                var result = await sut.DeleteUserAsync(3);
 
                 Assert.IsFalse(result);
             }
@@ -50,20 +40,10 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
             //Arrange
             var mockDatetimeProvider = new Mock<IDateTimeProvider>();
             var mockIUserMapper = new Mock<IUserMapper>();
-            
+
             var options = Utils.GetOptions(nameof(DeleteUser_WhenParamsAreValid));
 
-            var user = new User
-            {
-                Id = 1,
-                UserName = "George",
-            };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

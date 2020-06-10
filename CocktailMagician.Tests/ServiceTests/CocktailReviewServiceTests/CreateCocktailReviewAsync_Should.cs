@@ -23,14 +23,6 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfNoCocktailReviewDTO));
 
-            var cocktail = new Cocktail { Id = 1, Name = "Mojito" };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                await arrangeContext.SaveChangesAsync();
-            }
-
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
@@ -60,21 +52,14 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnCocktailReview_IfParamsAreValid));
 
-            var cocktail = new Cocktail { Id = 1, Name = "Mojito" };
-            var users = Utils.ReturnTwoUsers(options); //1 George, 2 Jim
             var reviewDTO = new CocktailReviewDTO
             {
-                CocktailId = 1,
+                CocktailId = 3,
                 AuthorId = 2,
-                Comment = "Mojito is the best!"
+                Comment = "Bozdugan is for tough man!"
             };
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                arrangeContext.Users.AddRange(users);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -83,9 +68,9 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailReviewServiceTests
 
                 var result = await sut.CreateCocktailReviewAsync(reviewDTO);
 
-                Assert.AreEqual(1, assertContext.CocktailsUsersReviews.Count());
+                Assert.AreEqual(5, assertContext.CocktailsUsersReviews.Count());
                 Assert.AreEqual(2, result.AuthorId);
-                Assert.AreEqual(1, result.CocktailId);
+                Assert.AreEqual(3, result.CocktailId);
             }
         }
     }

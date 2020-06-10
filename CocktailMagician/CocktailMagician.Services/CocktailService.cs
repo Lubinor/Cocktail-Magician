@@ -174,69 +174,6 @@ namespace CocktailMagician.Services
             return true;
         }
 
-        /// <summary>
-        /// Sort the collection of cocktails by cocktail name in ascending or descending order.
-        /// By default the collection is sorted by id in ascending order
-        /// </summary>
-        /// <param name="sort">The sort condition</param>
-        /// <returns>Sorted collection of cocktails</returns>
-        public async Task<List<CocktailDTO>> SortCocktailsAsync(string sort)
-        {
-            var cocktails = this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false)
-                .Include(ic => ic.IngredientsCocktails)
-                    .ThenInclude(i => i.Ingredient);
-
-            var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
-
-            if (sort == null)
-            {
-                cocktailDTOs = cocktailDTOs.OrderBy(cocktail => cocktail.Id).ToList();
-            }
-
-            switch (sort)
-            {
-                case "name":
-                    cocktailDTOs = cocktailDTOs.OrderBy(cocktail => cocktail.Name).ToList();
-                    break;
-                case "name_desc":
-                    cocktailDTOs = cocktailDTOs.OrderByDescending(cocktail => cocktail.Name).ToList();
-                    break;
-                default:
-                    cocktailDTOs = cocktailDTOs.OrderBy(cocktail => cocktail.Id).ToList();
-                    break;
-            }
-
-            return cocktailDTOs;
-        }
-
-        /// <summary>
-        /// Shows all cocktails which names matches "filter", or all cocktails which contains
-        /// ingredients with names that matches  "filter". Or if filter is number, shows all cocktails
-        /// with rating above and equal to that number
-        /// </summary>
-        /// <param name="filter">Searched name of cocktail or ingredient. Or searched rating</param>
-        /// <returns>Collection of cocktails or empty collection</returns>
-        public async Task<List<CocktailDTO>> FilteredCocktailsAsync(string filter)
-        {
-            var cocktails = this.context.Cocktails
-                .Include(ic => ic.IngredientsCocktails)
-                    .ThenInclude(i => i.Ingredient)
-                 .Where(cocktail => cocktail.IsDeleted == false);
-
-            if (double.TryParse(filter, out double result))
-            {
-                cocktails = cocktails.Where(cocktail => cocktail.AverageRating >= result);
-            }
-            else
-            {
-                cocktails = cocktails.Where(cocktail => cocktail.Name.ToLower().Contains(filter.ToLower())
-                || cocktail.IngredientsCocktails.Any(ing => ing.Ingredient.Name.ToLower() == filter.ToLower()));
-            }
-
-            var cocktailDTOs = await cocktails.Select(cocktail => mapper.MapToCocktailDTO(cocktail)).ToListAsync();
-
-            return cocktailDTOs;
-        }
         public async Task<IList<CocktailDTO>> ListAllCocktailsAsync(int skip, int pageSize, string searchValue,
             string orderBy, string orderDirection)
         {
@@ -304,7 +241,7 @@ namespace CocktailMagician.Services
             {
                 validationModel.HasProperInputData = false;
             }
-            if (cocktailDTO.Name == string.Empty || cocktailDTO.Name.Any(x => !char.IsLetter(x)))
+            if (cocktailDTO.Name == string.Empty || !cocktailDTO.Name.All(x => char.IsLetter(x)))
             {
                 validationModel.HasValidName = false;
             }

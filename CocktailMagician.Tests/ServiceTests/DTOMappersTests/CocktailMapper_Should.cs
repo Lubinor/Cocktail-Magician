@@ -16,7 +16,7 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
         {
             //Arrange
             var options = Utils.GetOptions(nameof(CorrectMapping_ToCocktaiDTO));
-            Utils.GetInMemoryTwoCocktails(options);
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
 

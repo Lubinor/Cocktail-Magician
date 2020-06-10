@@ -23,19 +23,13 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfCityDoesNotExist));
 
-            var city = Utils.ReturnOneCity(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cities.Add(city);
-                await arrangeContext.SaveChangesAsync();
-            }
-
             var updatedCityDTO = new CityDTO { Id = 1, Name = "Varna" };
 
             mockICityMapper
                 .Setup(x => x.MapToCityDTO(It.IsAny<City>()))
                 .Returns<City>(c => new CityDTO { Id = c.Id, Name = c.Name });
+
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -58,26 +52,20 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnUpdatedCityDTO_WhenParamsAreValid));
 
-            var city = Utils.ReturnOneCity(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cities.Add(city);
-                await arrangeContext.SaveChangesAsync();
-            }
-
-            var updatedCityDTO = new CityDTO { Id = 1, Name = "Varna" };
+            var updatedCityDTO = new CityDTO { Id = 2, Name = "Shumen" };
 
             mockICityMapper
                 .Setup(x => x.MapToCityDTO(It.IsAny<City>()))
                 .Returns<City>(c => new CityDTO { Id = c.Id, Name = c.Name });
+
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
-                var result = await sut.UpdateCityAsync(1, updatedCityDTO);
+                var result = await sut.UpdateCityAsync(2, updatedCityDTO);
 
                 Assert.AreEqual(updatedCityDTO.Id, result.Id);
                 Assert.AreEqual(updatedCityDTO.Name, result.Name);

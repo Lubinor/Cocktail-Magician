@@ -4,6 +4,7 @@ using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Linq;
 
 namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
 {
@@ -18,7 +19,8 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
             var mockIngMapper = new Mock<IIngredientMapper>();
             var mockCocktailMapper = new Mock<ICocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnCorrectCountOfIngredients));
-            Utils.GetInMemoryThreeIngredients(options);
+            
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -27,7 +29,9 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                     mockCocktailMapper.Object, assertContext);
                 var result = sut.GetAllIngredientsCount();
 
-                Assert.AreEqual(3, result);
+                var ingredientsCount = assertContext.Ingredients.Count();
+
+                Assert.AreEqual(ingredientsCount, result);
             }
         }
     }

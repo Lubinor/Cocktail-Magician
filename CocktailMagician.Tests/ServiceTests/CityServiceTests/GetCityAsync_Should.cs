@@ -6,6 +6,7 @@ using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
@@ -23,19 +24,12 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_CityDoesNotExist));
 
-            var city = Utils.ReturnOneCity(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cities.Add(city);
-                await arrangeContext.SaveChangesAsync();
-            }
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
-                var result = await sut.GetCityAsync(2);
+                var result = await sut.GetCityAsync(3);
 
                 Assert.IsNull(result);
             }
@@ -53,9 +47,10 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
                 .Returns<Bar>(b => new BarDTO
                 {
                     Id = b.Id,
-                    Phone = b.Phone,
                     Name = b.Name,
+                    CityId = b.CityId,
                     Address = b.Address,
+                    Phone = b.Phone,
                     AverageRating = b.AverageRating,
                 });
 
@@ -70,23 +65,38 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(Return_WhenParamsAreValid));
 
-            var city = Utils.ReturnOneCity(options);
+            Utils.GetInMemoryDataBase(options);
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
+            var expected = new City
             {
-                arrangeContext.Cities.Add(city);
-                await arrangeContext.SaveChangesAsync();
-            }
+                Id = 2,
+                Name = "Varna",
+                Bars = new List<Bar>
+                    {
+                        new Bar
+                        {
+                            Id = 3,
+                            Name = "The Beach",
+                            CityId = 2,
+                            Address = "Obikolna str.",
+                            Phone = "0888 777 444",
+                            AverageRating = 4.5,
+                        }
+                    },
+                IsDeleted = false
+            };
+
+
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
-                var result = await sut.GetCityAsync(1);
+                var result = await sut.GetCityAsync(2);
 
-                Assert.AreEqual(city.Id, result.Id);
-                Assert.AreEqual(city.Name, result.Name);
-                Assert.AreEqual(city.Bars.Count, result.Bars.Count);
+                Assert.AreEqual(expected.Id, result.Id);
+                Assert.AreEqual(expected.Name, result.Name);
+                Assert.AreEqual(expected.Bars.Count, result.Bars.Count);
             }
         }
     }
