@@ -32,7 +32,7 @@ namespace CocktailMagician.Tests.ServiceTests.DTOMappersTests
                 var sut = new CocktailMapper();
                 var result = sut.MapToCocktailDTO(cocktail);
 
-                Assert.IsInstanceOfType(result, typeof(CityDTO));
+                Assert.IsInstanceOfType(result, typeof(CocktailDTO));
                 Assert.AreEqual(cocktail.Id, result.Id);
                 Assert.AreEqual(cocktail.Name, result.Name);
                 Assert.AreEqual(cocktail.AverageRating, result.AverageRating);

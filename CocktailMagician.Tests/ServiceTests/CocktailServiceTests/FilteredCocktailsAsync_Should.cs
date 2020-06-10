@@ -34,7 +34,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var direction = "asc";
             var expected = new List<CocktailDTO>
             {
-                new CityDTO
+                new CocktailDTO
                 {
                     Name = "Gin Fizz"
                 }
@@ -50,112 +50,6 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
 
                 Assert.AreEqual(expected.Count, result.Count);
                 
-                for (int i = 0; i < expected.Count; i++)
-                {
-                    Assert.AreEqual(expected[i].Name, result[i].Name);
-                }
-            }
-        }
-        [TestMethod]
-        public async Task OrderCocktailsByRatingDescending()
-        {
-            //Arrange
-            var mockDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockCocktailMapper = new Mock<ICocktailMapper>();
-            mockCocktailMapper
-                .Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
-                .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name, AverageRating = c.AverageRating });
-            var mockIngMapper = new Mock<IIngredientMapper>();
-            mockIngMapper
-                .Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
-                .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
-            var mockBarMapper = new Mock<IBarMapper>();
-            var mockCocktailReviewService = new Mock<ICocktailReviewService>();
-            var options = Utils.GetOptions(nameof(OrderCocktailsByRatingDescending));
-            var orderBy = "AverageRating";
-            var direction = "desc";
-            var expected = new List<CocktailDTO>
-            {
-                new CityDTO
-                {
-                    Name = "Gin Fizz",
-                    AverageRating = 4.9
-                },
-                new CocktailDTO
-                {
-                    Name = "Mojito",
-                    AverageRating = 4.5,
-                },
-                new CocktailDTO
-                {
-                    Name = "Bozdugan",
-                    AverageRating = 3.8,
-                }
-            };
-            Utils.GetInMemoryDataBase(options);
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, mockBarMapper.Object, assertContext, mockCocktailReviewService.Object);
-                var result = await sut.ListAllCocktailsAsync(0,10,null,orderBy,direction);
-
-                Assert.AreEqual(expected.Count, result.Count);
-
-                for (int i = 0; i < expected.Count; i++)
-                {
-                    Assert.AreEqual(expected[i].Name, result[i].Name);
-                }
-            }
-        }
-        [TestMethod]
-        public async Task OrderCocktailsByRatingAscending()
-        {
-            //Arrange
-            var mockDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockCocktailMapper = new Mock<ICocktailMapper>();
-            mockCocktailMapper
-                .Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
-                .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name, AverageRating = c.AverageRating });
-            var mockIngMapper = new Mock<IIngredientMapper>();
-            mockIngMapper
-                .Setup(i => i.MapToIngredientDTO(It.IsAny<Ingredient>()))
-                .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
-            var mockBarMapper = new Mock<IBarMapper>();
-            var mockCocktailReviewService = new Mock<ICocktailReviewService>();
-            var options = Utils.GetOptions(nameof(OrderCocktailsByRatingAscending));
-            var orderBy = "AverageRating";
-            var direction = "asc";
-            var expected = new List<CocktailDTO>
-            {
-                new CocktailDTO
-                {
-                    Name = "Bozdugan",
-                    AverageRating = 3.8,
-                },
-                new CocktailDTO
-                {
-                    Name = "Mojito",
-                    AverageRating = 4.5,
-                },
-                new CocktailDTO
-                {
-                    Name = "Gin Fizz",
-                    AverageRating = 4.9
-                }
-            };
-            Utils.GetInMemoryDataBase(options);
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, mockBarMapper.Object, assertContext, mockCocktailReviewService.Object);
-                var result = await sut.ListAllCocktailsAsync(0, 10, null, orderBy, direction);
-
-                Assert.AreEqual(expected.Count, result.Count);
-
                 for (int i = 0; i < expected.Count; i++)
                 {
                     Assert.AreEqual(expected[i].Name, result[i].Name);

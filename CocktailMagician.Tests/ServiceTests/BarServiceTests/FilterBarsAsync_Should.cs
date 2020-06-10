@@ -7,6 +7,7 @@ using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +31,25 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnAllBars_IfFilterIsNull));
 
+            var expected = new List<BarDTO>
+            {
+                new BarDTO
+                {
+                    Id = 2,
+                    Name= "Bilkova"
+                },
+                new BarDTO
+                {
+                    Id = 1,
+                    Name= "Lorka"
+                },
+                new BarDTO
+                {
+                    Id = 3,
+                    Name= "The Beach"
+                },
+            };
+
             Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
@@ -38,9 +58,13 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                 var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
 
                 var result = await sut.ListAllBarsAsync(0,10,null,orderBy,direction);
-                var barscount = assertContext.Bars.Count();
 
-                Assert.AreEqual(barscount, result.Count);
+                Assert.AreEqual(expected.Count, result.Count);
+               
+                for (int i = 0; i < expected.Count; i++)
+                {
+                    Assert.AreEqual(expected[i].Name, result[i].Name);
+                }
             }
         }
 

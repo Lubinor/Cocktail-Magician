@@ -9,6 +9,7 @@ using CocktailMagician.Web.Mappers.Contracts;
 using CocktailMagician.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Ganss.XSS;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -88,6 +89,9 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Create(CreateCocktailReviewViewModel reviewVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            reviewVM.Comment = sanitizer.Sanitize(reviewVM.Comment);
+
             if (ModelState.IsValid)
             {
                 var currentUserId = int.Parse(userManager.GetUserId(HttpContext.User));
@@ -127,6 +131,9 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Bar Crawler")]
         public async Task<IActionResult> Edit(int id, CocktailReviewViewModel reviewVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            reviewVM.Comment = sanitizer.Sanitize(reviewVM.Comment);
+
             if (ModelState.IsValid)
             {
                 try

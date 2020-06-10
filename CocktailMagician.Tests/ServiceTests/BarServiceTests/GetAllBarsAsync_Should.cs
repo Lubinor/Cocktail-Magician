@@ -21,7 +21,6 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockIBarReviewService = new Mock<IBarReviewService>();
-
             var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(Return_IfNoBars));
@@ -43,8 +42,9 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             //Arrange
             var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
             var mockIBarReviewService = new Mock<IBarReviewService>();
-
             var mockIBarMapper = new Mock<IBarMapper>();
+            mockIBarMapper.Setup(b => b.MapToBarDTO(It.IsAny<Bar>()))
+                .Returns<Bar>(b => new BarDTO { Name = b.Name });
 
             var options = Utils.GetOptions(nameof(Return_ProperBarCount));
  
@@ -59,95 +59,6 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                 int barsCount = assertContext.Bars.Count();
 
                 Assert.AreEqual(barsCount, result.Count);
-            }
-        }
-
-        [TestMethod]
-        public async Task Return_DefaultSortingById()
-        {
-            //Arrange
-            var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockIBarReviewService = new Mock<IBarReviewService>();
-
-            var mockIBarMapper = new Mock<IBarMapper>();
-            mockIBarMapper
-                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
-                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
-
-            var options = Utils.GetOptions(nameof(Return_DefaultSortingById));
-
-            Utils.GetInMemoryDataBase(options);
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
-
-                var result = await sut.GetAllBarsAsync();
-                var resultList = result.ToList();
-
-                Assert.AreEqual(1, resultList[0].Id); //Id 1 -> Lorka
-                Assert.AreEqual(2, resultList[1].Id); //Id 2 -> Bilkova
-            }
-        }
-
-        [TestMethod]
-        public async Task Return_CitiesNameAsc()
-        {
-            //Arrange
-            var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockIBarReviewService = new Mock<IBarReviewService>();
-
-            var mockIBarMapper = new Mock<IBarMapper>();
-            mockIBarMapper
-                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
-                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
-
-            var options = Utils.GetOptions(nameof(Return_CitiesNameAsc));
-
-            Utils.GetInMemoryDataBase(options);
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
-
-                var result = await sut.GetAllBarsAsync("name");
-                var resultList = result.ToList();
-
-                Assert.AreEqual(2, resultList[0].Id); //Id 2 -> Bilkova
-                Assert.AreEqual(1, resultList[1].Id); //Id 1 -> Lorka
-                Assert.AreEqual(3, resultList[1].Id); //Id 2 -> The Beach
-            }
-        }
-
-        [TestMethod]
-        public async Task Return_CitiesNameDesc()
-        {
-            //Arrange
-            var mockIDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockIBarReviewService = new Mock<IBarReviewService>();
-
-            var mockIBarMapper = new Mock<IBarMapper>();
-            mockIBarMapper
-                .Setup(x => x.MapToBarDTO(It.IsAny<Bar>()))
-                .Returns<Bar>(b => new BarDTO { Id = b.Id, Name = b.Name });
-
-            var options = Utils.GetOptions(nameof(Return_CitiesNameDesc));
-
-            Utils.GetInMemoryDataBase(options);
-
-            //Act & Assert
-            using (var assertContext = new CocktailMagicianContext(options))
-            {
-                var sut = new BarService(mockIDateTimeProvider.Object, assertContext, mockIBarMapper.Object, mockIBarReviewService.Object);
-
-                var result = await sut.GetAllBarsAsync("name_desc");
-                var resultList = result.ToList();
-
-                Assert.AreEqual(3, resultList[1].Id); //Id 2 -> The Beach
-                Assert.AreEqual(1, resultList[0].Id); //Id 1 -> Lorka
-                Assert.AreEqual(2, resultList[1].Id); //Id 2 -> Bilkova
             }
         }
     }

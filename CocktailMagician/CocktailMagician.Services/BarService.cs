@@ -122,8 +122,12 @@ namespace CocktailMagician.Services
             bar.Phone = barDTO.Phone;
             bar.ImageData = barDTO.ImageData;
 
-            string imageBase64Data = Convert.ToBase64String(bar.ImageData);
-            bar.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            if (barDTO.ImageData != null)
+            {
+                bar.ImageData = barDTO.ImageData;
+                string imageBase64Data = Convert.ToBase64String(bar.ImageData);
+                bar.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            }
 
             bar.BarCocktails = new List<BarsCocktails>();
             foreach (var item in barDTO.Cocktails)
@@ -238,15 +242,15 @@ namespace CocktailMagician.Services
             {
                 validationModel.HasProperNameLength = false;
             }
-            if (barDTO.Address.Length < 5 || 
+            if (barDTO.Address.Length < 5 ||
                 barDTO.Address.Length > 100 ||
                 barDTO.Address == string.Empty)
             {
                 validationModel.HasProperAddress = false;
             }
             if (barDTO.Phone.Length < 7 ||
-                barDTO.Phone.Length > 20 || 
-                barDTO.Phone == string.Empty || 
+                barDTO.Phone.Length > 20 ||
+                barDTO.Phone == string.Empty ||
                 !barDTO.Phone.Any(x => char.IsDigit(x)))
             {
                 validationModel.HasProperPhone = false;

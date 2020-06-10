@@ -10,6 +10,7 @@ using CocktailMagician.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using NToastNotify;
 using CocktailMagician.Web.Utilities;
+using Ganss.XSS;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -93,6 +94,9 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create([Bind("Name")] CityViewModel cityVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            cityVM.Name = sanitizer.Sanitize(cityVM.Name);
+
             if (ModelState.IsValid)
             {
                 try
@@ -170,6 +174,9 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, CityViewModel cityVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            cityVM.Name = sanitizer.Sanitize(cityVM.Name);
+
             if (id != cityVM.Id)
             {
                 this.toaster.AddWarningToastMessage(ToastrConsts.NotFound);

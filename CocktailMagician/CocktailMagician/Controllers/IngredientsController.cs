@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using NToastNotify;
 using CocktailMagician.Web.Utilities;
+using Ganss.XSS;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -99,6 +100,12 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create(IngredientViewModel ingredientVM)
         {
+            //string ingredientName = HttpUtility.HtmlEncode(ingredientVM.Name);
+            //ingredientVM.Name = ingredientName;
+
+            var sanitizer = new HtmlSanitizer();
+            ingredientVM.Name = sanitizer.Sanitize(ingredientVM.Name);
+
             if (ingredientVM.File == null)
             {
                 this.toaster.AddWarningToastMessage(ToastrConsts.NoPicture);
@@ -157,11 +164,6 @@ namespace CocktailMagician.Web.Controllers
                     this.toaster.AddWarningToastMessage(ToastrConsts.GenericError);
                     return RedirectToAction(nameof(Index));
                 }
-                catch (ArgumentException)
-                {
-                    this.toastNotification.AddErrorToastMessage("Name already exist or invalid input");
-                     return BadRequest(); //status 404
-                }
                 
             }
             this.toaster.AddWarningToastMessage(ToastrConsts.IncorrectInput);
@@ -202,6 +204,8 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, EditIngredientViewModel editIngredientVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            editIngredientVM.Name = sanitizer.Sanitize(editIngredientVM.Name);
 
             if (id != editIngredientVM.Id)
             {

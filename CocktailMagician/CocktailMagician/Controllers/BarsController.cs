@@ -11,6 +11,7 @@ using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using NToastNotify;
 using CocktailMagician.Web.Utilities;
+using Ganss.XSS;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -113,6 +114,9 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Create([Bind("Name", "CityName", "CityId", "Address", "City", "Phone", "File")] BarViewModel barVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            barVM.Name = sanitizer.Sanitize(barVM.Name);
+
             if (barVM.File == null)
             {
                 this.toaster.AddWarningToastMessage(ToastrConsts.NoPicture);
@@ -222,6 +226,9 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> Edit(int id, BarViewModel barVM)
         {
+            var sanitizer = new HtmlSanitizer();
+            barVM.Name = sanitizer.Sanitize(barVM.Name);
+
             if (id != barVM.Id)
             {
                 this.toaster.AddWarningToastMessage(ToastrConsts.NotFound);
