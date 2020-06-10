@@ -126,7 +126,7 @@ namespace CocktailMagician.Web.Controllers
             var sanitizer = new HtmlSanitizer();
             reviewVM.Comment = sanitizer.Sanitize(reviewVM.Comment);
 
-            if (ModelState.IsValid)
+            try
             {
                 if (ModelState.IsValid)
                 {
