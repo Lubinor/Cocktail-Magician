@@ -8,6 +8,7 @@ using CocktailMagician.Services.Providers;
 using CocktailMagician.Services.Providers.Contracts;
 using CocktailMagician.Web.Mappers;
 using CocktailMagician.Web.Mappers.Contracts;
+using CocktailMagician.Web.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NToastNotify;
 
 namespace CocktailMagician.Web
 {
@@ -81,6 +83,11 @@ namespace CocktailMagician.Web
             services.AddScoped<IBarReviewDTOMapper, BarReviewDTOMapper>();
             services.AddScoped<ICocktailReviewDTOMapper, CocktailReviewDTOMapper>();
             services.AddScoped<ICityDTOMapper, CityDTOMapper>();
+
+            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+            {
+                PositionClass = ToastPositions.TopCenter
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -99,6 +106,10 @@ namespace CocktailMagician.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseNToastNotify();
+
+            app.UseMiddleware<MissingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

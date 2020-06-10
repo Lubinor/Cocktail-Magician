@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -27,6 +28,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             mockIngMapper.Setup(i => i.MapToIngredient(It.IsAny<IngredientDTO>()))
                 .Returns<IngredientDTO>(i => new Ingredient { Id = i.Id, Name = i.Name });
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockIReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(UpdateCocktail_WhenParamsAreValid));
             Utils.GetInMemoryTwoCocktails(options);
             
@@ -52,7 +54,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeprovider.Object, mockCocktailMapper.Object,
-                   mockIngMapper.Object, mockBarMapper.Object, assertContext);
+                   mockIngMapper.Object, mockBarMapper.Object, assertContext, mockIReviewService.Object);
                 var result = await sut.UpdateCocktailAsync(2, newDTO);
 
                 Assert.AreEqual(newDTO.Id, result.Id);

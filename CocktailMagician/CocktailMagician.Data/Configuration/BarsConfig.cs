@@ -22,9 +22,11 @@ namespace CocktailMagician.Data.Configuration
                 .IsRequired();
 
             builder.Property(bar => bar.Address)
+                .HasMaxLength(100)
                 .IsRequired();
 
             builder.Property(bar => bar.Phone)
+                .HasMaxLength(20)
                 .IsRequired();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
@@ -23,6 +24,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var mockMapper = new Mock<CocktailMapper>();
             var mockIngredientMapper = new Mock<IngredientMapper>();
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockIReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(ReturnCocktail_WhenFound));
             var expected = new CocktailDTO
             {
@@ -53,7 +55,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockMapper.Object,
-                    mockIngredientMapper.Object, mockBarMapper.Object, assertContext);
+                    mockIngredientMapper.Object, mockBarMapper.Object, assertContext, mockIReviewService.Object);
                 var result = await sut.GetCocktailAsync(2);
 
                 Assert.AreEqual(expected.Id, result.Id);

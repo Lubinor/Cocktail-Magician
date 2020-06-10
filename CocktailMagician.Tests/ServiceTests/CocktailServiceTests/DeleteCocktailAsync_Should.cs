@@ -1,5 +1,6 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -20,6 +21,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var mockMapper = new Mock<CocktailMapper>();
             var mockIngMapper = new Mock<IngredientMapper>();
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(DeleteCocktail_Should));
             Utils.GetInMemoryTwoCocktails(options);
 
@@ -27,7 +29,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContex = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeprovider.Object, mockMapper.Object,
-                    mockIngMapper.Object, mockBarMapper.Object, assertContex);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContex, mockReviewService.Object);
                 var result = await sut.DeleteCocktailAsync(2);
 
                 Assert.IsTrue(result);

@@ -1,5 +1,6 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
@@ -22,6 +23,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var mockMapper = new Mock<CocktailMapper>();
             var mockIngMapper = new Mock<IngredientMapper>();
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(CreateCocktail_WhenParamsAreValid));
             var expected = new CocktailDTO
             {
@@ -43,10 +45,10 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockMapper.Object,
-                    mockIngMapper.Object, mockBarMapper.Object, assertContext);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext, mockReviewService.Object);
                 var result = await sut.CreateCocktailAsync(expected);
 
-                Assert.IsInstanceOfType(result, typeof(CocktailDTO));
+                Assert.IsInstanceOfType(result, typeof(CityDTO));
             }
         }
     }

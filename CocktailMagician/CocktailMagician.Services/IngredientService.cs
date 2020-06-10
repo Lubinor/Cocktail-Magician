@@ -4,6 +4,7 @@ using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using CocktailMagician.Services.ValidationModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace CocktailMagician.Services
         private readonly IIngredientMapper mapper;
         private readonly ICocktailMapper cocktailMapper;
         private readonly CocktailMagicianContext context;
-       
+
         public IngredientService(IDateTimeProvider datetimeProvider, IIngredientMapper mapper,
             ICocktailMapper cocktailMapper, CocktailMagicianContext context)
         {
@@ -75,10 +76,6 @@ namespace CocktailMagician.Services
         /// <returns></returns>
         public async Task<IngredientDTO> CreateIngredientAsync(IngredientDTO ingredientDTO)
         {
-            if (!IsValid(ingredientDTO))
-            {
-                return null;
-            }
 
             var ingredient = mapper.MapToIngredient(ingredientDTO);
             ingredient.CreatedOn = datetimeProvider.GetDateTime();
@@ -99,11 +96,6 @@ namespace CocktailMagician.Services
         /// <returns></returns>
         public async Task<IngredientDTO> UpdateIngredientAsync(int id, IngredientDTO ingredientDTO)
         {
-            if (!IsValid(ingredientDTO))
-            {
-                return null;
-            }
-            
             var ingredient = await this.context.Ingredients
                 .FirstOrDefaultAsync(ingredient => ingredient.Id == id & ingredient.IsDeleted == false);
 
@@ -113,10 +105,13 @@ namespace CocktailMagician.Services
             }
 
             ingredient.Name = ingredientDTO.Name;
-            ingredient.ImageData = ingredientDTO.ImageData;
 
+            if (ingredientDTO.ImageData != null)
+            {
+            ingredient.ImageData = ingredientDTO.ImageData;
             string imageBase64Data = Convert.ToBase64String(ingredient.ImageData);
             ingredient.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            }
 
             this.context.Ingredients.Update(ingredient);
             await this.context.SaveChangesAsync();
@@ -143,7 +138,7 @@ namespace CocktailMagician.Services
 
             if (ingredient.IngredientsCocktails.Any(c => c.IngredientId == id)) // no test for this if
             {
-                throw new Exception($"Ingredient still in use");
+                throw new ArgumentException("Ingredient still in use");
             }
             else
             {
@@ -230,24 +225,31 @@ namespace CocktailMagician.Services
         /// </summary>
         /// <param name="ingredientDTO">the object to be transormed to database model</param>
         /// <returns></returns>
-        public bool IsValid(IngredientDTO ingredientDTO)
+        public ValidationModel ValidateIngredient(IngredientDTO ingredientDTO)
         {
+            var validationModel = new ValidationModel();
+
             if (ingredientDTO == null)
             {
-                throw new ArgumentNullException();
+                validationModel.HasProperInputData = false;
             }
-            if (ingredientDTO.Name == string.Empty || !ingredientDTO.Name.Any(x => char.IsLetter(x)))
+            if (ingredientDTO.Name == string.Empty || ingredientDTO.Name.Any(x => !char.IsLetter(x)))
             {
-                throw new ArgumentException();
+                validationModel.HasValidName = false;
             }
-            if (ingredientDTO.Name.Length<2||ingredientDTO.Name.Length>30)
+            if (ingredientDTO.Name.Length < 2 || ingredientDTO.Name.Length > 30)
             {
-                throw new ArgumentException();
+                validationModel.HasProperNameLength = false;
             }
-            //if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
-            //{
-            //    throw new Exception();
-            //}
+            return validationModel;
+        }
+
+        public bool IngredientIsUnique(IngredientDTO ingredientDTO)
+        {
+            if (this.context.Ingredients.Any(x => x.Name.ToLower().Equals(ingredientDTO.Name.ToLower())))
+            {
+                return false;
+            }
             return true;
         }
     }

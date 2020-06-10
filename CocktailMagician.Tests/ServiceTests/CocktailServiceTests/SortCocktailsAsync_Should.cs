@@ -1,6 +1,7 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Models;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
@@ -24,15 +25,16 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
                 .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name });
             var mockIngMapper = new Mock<IIngredientMapper>();
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockIReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(ReturnCocktailsSortedByNameAscending));
             var sort = "name";
-            var expected = new List<CocktailDTO>
+            var expected = new List<CityDTO>
             {
-                new CocktailDTO
+                new CityDTO
                 {
                     Name = "Bloody Mary"
                 },
-                new CocktailDTO
+                new CityDTO
                 {
                     Name = "Gin Fizz"
                 }
@@ -43,7 +45,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object,mockBarMapper.Object, assertContext);
+                    mockIngMapper.Object,mockBarMapper.Object, assertContext, mockIReviewService.Object);
                 var result = await sut.SortCocktailsAsync(sort);
 
                 Assert.AreEqual(expected.Count, result.Count);
@@ -63,15 +65,16 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
                 .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name });
             var mockIngMapper = new Mock<IIngredientMapper>();
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockIReviewService = new Mock<ICocktailReviewService>();
             var options = Utils.GetOptions(nameof(ReturnCocktailsSortedByNameDescending));
             var sort = "name_desc";
-            var expected = new List<CocktailDTO>
+            var expected = new List<CityDTO>
             {
-                new CocktailDTO
+                new CityDTO
                 {
                     Name = "Gin Fizz"
                 },
-                new CocktailDTO
+                new CityDTO
                 {
                     Name = "Bloody Mary"
                 }
@@ -82,7 +85,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockCocktailMapper.Object,
-                    mockIngMapper.Object, mockBarMapper.Object, assertContext);
+                    mockIngMapper.Object, mockBarMapper.Object, assertContext, mockIReviewService.Object);
                 var result = await sut.SortCocktailsAsync(sort);
 
                 Assert.AreEqual(expected.Count, result.Count);

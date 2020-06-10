@@ -50,9 +50,12 @@ namespace CocktailMagician.Web.Mappers
                 CityId = barVM.CityId,
                 Address = barVM.Address,
                 Phone = barVM.Phone,
-                ImageData = barVM.ImageData
             };
-            
+            if (barVM.File != null)
+            {
+                barDTO.ImageData = barVM.ImageData;
+            }
+
             return barDTO;
         }
     }

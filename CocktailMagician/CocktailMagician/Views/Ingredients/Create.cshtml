@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
 <h1>Create Ingredient</h1>
 
@@ -27,7 +27,8 @@
             @if (User.IsInRole("Cocktail Magician"))
             {
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="Create" class="btn btn-primary font-weight-bold" />
+                    <a asp-action="Index" class="btn btn-primary font-weight-bold">Back to List</a>
                 </div>
             }
         </form>
@@ -35,7 +36,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

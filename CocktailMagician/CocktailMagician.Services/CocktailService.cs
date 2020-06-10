@@ -11,6 +11,7 @@ using System.Linq.Dynamic;
 using CocktailMagician.Services.Helpers;
 using System.Threading.Tasks;
 using CocktailMagician.Models;
+using CocktailMagician.Services.ValidationModels;
 
 namespace CocktailMagician.Services
 {
@@ -92,15 +93,10 @@ namespace CocktailMagician.Services
         /// <summary>
         /// Create new cocktail entity in the database
         /// </summary>
-        /// <param name="coctailDTO">Requested information for creating a new cocktail</param>
+        /// <param name="cocktailDTO">Requested information for creating a new cocktail</param>
         /// <returns>New Coctail</returns>
         public async Task<CocktailDTO> CreateCocktailAsync(CocktailDTO cocktailDTO)
         {
-            if (!IsValid(cocktailDTO))
-            {
-                return null;
-            }
-
             var cocktail = mapper.MapToCocktail(cocktailDTO);
             cocktail.CreatedOn = datetimeProvider.GetDateTime();
 
@@ -120,10 +116,6 @@ namespace CocktailMagician.Services
         /// <returns>Cocktail updated with new details</returns>
         public async Task<CocktailDTO> UpdateCocktailAsync(int id, CocktailDTO cocktailDTO)
         {
-            if (!IsValid(cocktailDTO))
-            {
-                return null;
-            }
             var cocktail = await this.context.Cocktails
                 .Include(ingredient => ingredient.IngredientsCocktails)
                 .Include(bar => bar.CocktailBars)
@@ -133,7 +125,6 @@ namespace CocktailMagician.Services
             {
                 return null;
             }
-
 
             this.context.IngredientsCocktails.RemoveRange(cocktail.IngredientsCocktails);
             this.context.BarsCocktails.RemoveRange(cocktail.CocktailBars);
@@ -182,6 +173,7 @@ namespace CocktailMagician.Services
 
             return true;
         }
+
         /// <summary>
         /// Sort the collection of cocktails by cocktail name in ascending or descending order.
         /// By default the collection is sorted by id in ascending order
@@ -216,6 +208,7 @@ namespace CocktailMagician.Services
 
             return cocktailDTOs;
         }
+
         /// <summary>
         /// Shows all cocktails which names matches "filter", or all cocktails which contains
         /// ingredients with names that matches  "filter". Or if filter is number, shows all cocktails
@@ -244,7 +237,6 @@ namespace CocktailMagician.Services
 
             return cocktailDTOs;
         }
-
         public async Task<IList<CocktailDTO>> ListAllCocktailsAsync(int skip, int pageSize, string searchValue,
             string orderBy, string orderDirection)
         {
@@ -255,9 +247,9 @@ namespace CocktailMagician.Services
                     .ThenInclude(b => b.Bar)
                 .Where(cocktail => cocktail.IsDeleted == false);
 
-            if (!String.IsNullOrEmpty(orderBy))
+            if (!string.IsNullOrEmpty(orderBy))
             {
-                if (String.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
+                if (string.IsNullOrEmpty(orderDirection) || orderDirection == "asc")
                 {
                     cocktails = cocktails.OrderBy(orderBy);
                 }
@@ -284,10 +276,12 @@ namespace CocktailMagician.Services
 
             return cocktailDTOs;
         }
+
         public int GetAllCocktailsCount()
         {
             return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
         }
+
         public int GetAllFilteredCocktailsCount(string searchValue)
         {
 
@@ -301,24 +295,32 @@ namespace CocktailMagician.Services
             }
             return this.context.Cocktails.Where(cocktail => cocktail.IsDeleted == false).Count();
         }
-        private bool IsValid(CocktailDTO cocktailDTO)
+
+        public ValidationModel ValidateCocktail(CocktailDTO cocktailDTO)
         {
+            var validationModel = new ValidationModel();
+
             if (cocktailDTO == null)
             {
-                throw new ArgumentNullException();
+                validationModel.HasProperInputData = false;
             }
-            if (cocktailDTO.Name == string.Empty || !cocktailDTO.Name.Any(x => char.IsLetterOrDigit(x)))
+            if (cocktailDTO.Name == string.Empty || cocktailDTO.Name.Any(x => !char.IsLetter(x)))
             {
-                throw new ArgumentException();
+                validationModel.HasValidName = false;
             }
-            if (cocktailDTO.Name.Length<2||cocktailDTO.Name.Length>30)
+            if (cocktailDTO.Name.Length < 2 || cocktailDTO.Name.Length > 30)
             {
-                throw new Exception();
+                validationModel.HasProperNameLength = false;
             }
-            //if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(cocktailDTO.Name.ToLower()))
-            //{
-            //    throw new Exception();
-            //}
+            return validationModel;
+        }
+
+        public bool CocktailIsUnique(CocktailDTO cocktailDTO)
+        {
+            if (this.context.Cocktails.Any(x => x.Name.ToLower().Equals(cocktailDTO.Name.ToLower())))
+            {
+                return false;
+            }
             return true;
         }
     }

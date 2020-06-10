@@ -18,10 +18,11 @@ namespace CocktailMagician.Services.DTOs
         public byte[] ImageData { get; set; }
         public string ImageSource { get; set; }
 
-        public override bool Equals(object obj)
-        {
-            var other = (CocktailDTO)obj;
-            return this.Name == other.Name; // more props with &&
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    var other = (CityDTO)obj;
+        //    return this.Name == other.Name; // more props with &&
+        //}
+
     }
 }

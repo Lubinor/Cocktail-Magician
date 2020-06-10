@@ -57,7 +57,6 @@ namespace CocktailMagician.Web.Mappers
                     Id = i.Id,
                     Name = i.Name
                 }).ToList(),
-                ImageData = cocktailVM.ImageData
             };
 
             return cocktailDTO;
@@ -75,9 +74,12 @@ namespace CocktailMagician.Web.Mappers
                 {
                     Id = i
                 }).ToList(),
-                ImageData = createCocktailVM.ImageData
-
             };
+
+            if (createCocktailVM.File != null)
+            {
+                cocktailDTO.ImageData = createCocktailVM.ImageData;
+            }
 
             return cocktailDTO;
         }
@@ -99,9 +101,12 @@ namespace CocktailMagician.Web.Mappers
                 {
                     Id = b
                 }).ToList(),
-                ImageData = editCocktailVM.ImageData
-
             };
+
+            if (editCocktailVM.File != null)
+            {
+                cocktailDTO.ImageData = editCocktailVM.ImageData;
+            }
 
             return cocktailDTO;
         }

@@ -4,6 +4,7 @@ using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using CocktailMagician.Services.ValidationModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -186,6 +187,33 @@ namespace CocktailMagician.Services
                 return cities.Count();
             }
             return this.context.Cities.Where(city => !city.IsDeleted).Count();
+        }
+
+        public ValidationModel ValidateCity(CityDTO cityDTO)
+        {
+            var validationModel = new ValidationModel();
+
+            if (cityDTO == null)
+            {
+                validationModel.HasProperInputData = false;
+            }
+            if (cityDTO.Name == string.Empty || cityDTO.Name.Any(x => !char.IsLetter(x)))
+            {
+                validationModel.HasValidName = false;
+            }
+            if (cityDTO.Name.Length < 2 || cityDTO.Name.Length > 30)
+            {
+                validationModel.HasProperNameLength = false;
+            }
+            return validationModel;
+        }
+        public bool CityIsUnique(CityDTO cityDTO)
+        {
+            if (this.context.Cities.Any(x => x.Name.ToLower().Equals(cityDTO.Name.ToLower())))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

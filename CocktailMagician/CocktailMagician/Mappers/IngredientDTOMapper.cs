@@ -42,9 +42,11 @@ namespace CocktailMagician.Web.Mappers
             var ingredientDTO = new IngredientDTO
             {
                 Name = ingredientVM.Name,
-                ImageData = ingredientVM.ImageData
             };
-            
+            if (ingredientVM.File != null)
+            {
+                ingredientDTO.ImageData = ingredientVM.ImageData;
+            }
             return ingredientDTO;
         }
         public IngredientDTO MapToDTOFromVM(EditIngredientViewModel editIngredientVM)
@@ -57,8 +59,12 @@ namespace CocktailMagician.Web.Mappers
             {
                 Id = editIngredientVM.Id,
                 Name = editIngredientVM.Name,
-                ImageData = editIngredientVM.ImageData
             };
+
+            if (editIngredientVM.File != null)
+            {
+                ingredientDTO.ImageData = editIngredientVM.ImageData;
+            }
 
             return ingredientDTO;
         }

@@ -21,8 +21,12 @@ namespace CocktailMagician.Web.Controllers
         private readonly ICocktailReviewDTOMapper cocktailReviewMapper;
         private readonly UserManager<User> userManager;
 
-        public CocktailReviewsController(ICocktailReviewService cocktailReviewService, ICocktailService cocktailService,
-            IUserService userService, ICocktailDTOMapper cocktailMapper, ICocktailReviewDTOMapper cocktailReviewMapper,
+        public CocktailReviewsController(
+            ICocktailReviewService cocktailReviewService, 
+            ICocktailService cocktailService,
+            IUserService userService, 
+            ICocktailDTOMapper cocktailMapper, 
+            ICocktailReviewDTOMapper cocktailReviewMapper,
             UserManager<User> userManager)
         {
             this.cocktailReviewService = cocktailReviewService ?? throw new ArgumentNullException(nameof(cocktailReviewService));

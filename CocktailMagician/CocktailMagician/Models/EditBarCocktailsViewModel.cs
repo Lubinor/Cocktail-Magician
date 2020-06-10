@@ -15,6 +15,7 @@ namespace CocktailMagician.Web.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int CityId { get; set; }
+
         [DisplayName("City")]
         public string CityName { get; set; }
         public string Address { get; set; }

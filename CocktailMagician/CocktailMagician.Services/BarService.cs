@@ -5,6 +5,7 @@ using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Helpers;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using CocktailMagician.Services.ValidationModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -249,6 +250,44 @@ namespace CocktailMagician.Services
             }
             return this.context.Bars.Where(bar => !bar.IsDeleted).Count();
         }
+        public ValidationModel ValidateBar(BarDTO barDTO)
+        {
+            var validationModel = new ValidationModel();
 
+            if (barDTO == null)
+            {
+                validationModel.HasProperInputData = false;
+            }
+            if (barDTO.Name == string.Empty || barDTO.Name.Any(x => !char.IsLetter(x)))
+            {
+                validationModel.HasValidName = false;
+            }
+            if (barDTO.Name.Length < 2 || barDTO.Name.Length > 30)
+            {
+                validationModel.HasProperNameLength = false;
+            }
+            if (barDTO.Address.Length < 5 || 
+                barDTO.Address.Length > 100 ||
+                barDTO.Address == string.Empty)
+            {
+                validationModel.HasProperAddress = false;
+            }
+            if (barDTO.Phone.Length < 7 ||
+                barDTO.Phone.Length > 20 || 
+                barDTO.Phone == string.Empty || 
+                !barDTO.Phone.Any(x => char.IsDigit(x)))
+            {
+                validationModel.HasProperPhone = false;
+            }
+            return validationModel;
+        }
+        public bool BarIsUnique(BarDTO barDTO)
+        {
+            if (this.context.Bars.Any(x => x.Name.ToLower().Equals(barDTO.Name.ToLower())))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
