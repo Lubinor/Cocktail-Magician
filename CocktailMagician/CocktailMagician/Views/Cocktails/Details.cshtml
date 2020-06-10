@@ -62,6 +62,8 @@
     <a class="btn btn-primary font-weight-bold" asp-controller="Cocktails" asp-action="Index">Back to List</a>
 </div>
 
-@*@section Scripts {
-    <script>$("#AverageRating").rating({ min: 0, max: 5, step: 0.5, size: 'md', displayOnly: true });</script>
-}*@
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*<script>$("#AverageRating").rating({ min: 0, max: 5, step: 0.5, size: 'md', displayOnly: true });</script>*@
+}

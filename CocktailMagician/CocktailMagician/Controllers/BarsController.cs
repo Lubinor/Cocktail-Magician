@@ -249,27 +249,27 @@ namespace CocktailMagician.Web.Controllers
                     if (!validationResult.HasProperInputData)
                     {
                         this.toaster.AddWarningToastMessage(ToastrConsts.NullModel);
-                        return RedirectToAction(nameof(Create));
+                        return RedirectToAction(nameof(Edit), new { id });
                     }
                     if (!validationResult.HasProperNameLength)
                     {
                         this.toaster.AddWarningToastMessage(ToastrConsts.WrongNameLength);
-                        return RedirectToAction(nameof(Create));
+                        return RedirectToAction(nameof(Edit), new { id });
                     }
                     if (!validationResult.HasValidName)
                     {
                         this.toaster.AddWarningToastMessage(ToastrConsts.NameNotValid);
-                        return RedirectToAction(nameof(Create));
+                        return RedirectToAction(nameof(Edit), new { id });
                     }
                     if (!validationResult.HasProperAddress)
                     {
                         this.toaster.AddWarningToastMessage(ToastrConsts.IncorrectAddress);
-                        return RedirectToAction(nameof(Create));
+                        return RedirectToAction(nameof(Edit), new { id });
                     }
                     if (!validationResult.HasProperPhone)
                     {
                         this.toaster.AddWarningToastMessage(ToastrConsts.IncorrectPhone);
-                        return RedirectToAction(nameof(Create));
+                        return RedirectToAction(nameof(Edit), new { id });
                     }
 
                     await this.barService.UpdateBarAsync(id, barDTO);

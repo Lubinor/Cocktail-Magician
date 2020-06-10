@@ -21,8 +21,6 @@ namespace CocktailMagician.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            _toastNotification.AddErrorToastMessage();
-
             return View();
         }
         [AllowAnonymous]
@@ -31,7 +29,7 @@ namespace CocktailMagician.Controllers
             return View();
         }
         [AllowAnonymous]
-        public IActionResult Missing()
+        public IActionResult NotFound()
         {
             return View();
         }

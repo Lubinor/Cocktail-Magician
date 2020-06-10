@@ -253,7 +253,7 @@ namespace CocktailMagician.Services
             {
                 validationModel.HasProperInputData = false;
             }
-            if (ingredientDTO.Name == string.Empty || !ingredientDTO.Name.All(char.IsLetter))
+            if (ingredientDTO.Name == string.Empty || ingredientDTO.Name.Any(x => !char.IsLetter(x)))
             {
                 validationModel.HasValidName = false;
             }

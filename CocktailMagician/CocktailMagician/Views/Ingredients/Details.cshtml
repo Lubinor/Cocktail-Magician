@@ -34,5 +34,9 @@
         <a class="btn btn-primary font-weight-bold" asp-controller="Ingredients" asp-action="Delete"
            asp-route-id="@Model.Id">Delete</a>
     }
-        <a class="btn btn-primary font-weight-bold" asp-controller="Ingredients" asp-action="Index">Back to List</a>
+    <a class="btn btn-primary font-weight-bold" asp-controller="Ingredients" asp-action="Index">Back to List</a>
 </div>
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -141,10 +141,12 @@ namespace CocktailMagician.Services
                 cocktail.IngredientsCocktails.Add(new IngredientsCocktails { IngredientId = item.Id, CocktailId = cocktail.Id });
             }
 
+            if (cocktailDTO.ImageData != null)
+            {
             cocktail.ImageData = cocktailDTO.ImageData;
-
             string imageBase64Data = Convert.ToBase64String(cocktail.ImageData);
             cocktail.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            }
 
             this.context.Cocktails.Update(cocktail);
             await this.context.SaveChangesAsync();
@@ -241,7 +243,7 @@ namespace CocktailMagician.Services
             {
                 validationModel.HasProperInputData = false;
             }
-            if (cocktailDTO.Name == string.Empty || !cocktailDTO.Name.All(x => char.IsLetter(x)))
+            if (cocktailDTO.Name == string.Empty || cocktailDTO.Name.Any(x => !char.IsLetter(x)))
             {
                 validationModel.HasValidName = false;
             }

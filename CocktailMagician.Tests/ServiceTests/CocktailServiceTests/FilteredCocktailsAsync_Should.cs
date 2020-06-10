@@ -34,7 +34,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var direction = "asc";
             var expected = new List<CocktailDTO>
             {
-                new CityDTO
+                new CocktailDTO
                 {
                     Name = "Gin Fizz"
                 }
@@ -76,7 +76,7 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
             var direction = "desc";
             var expected = new List<CocktailDTO>
             {
-                new CityDTO
+                new CocktailDTO
                 {
                     Name = "Gin Fizz",
                     AverageRating = 4.9

@@ -23,8 +23,13 @@
     {
         <form asp-action="Delete">
             <input type="hidden" asp-for="Name" />
-            <input type="submit" value="Delete" class="btn btn-danger" />
+            <input type="submit" value="Delete" class="btn btn-danger font-weight-bold" />
             <a asp-action="Index" class="btn btn-primary font-weight-bold">Back to List</a>
         </form>
     }
 </div>
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

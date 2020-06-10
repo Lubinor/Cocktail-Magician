@@ -157,12 +157,6 @@ namespace CocktailMagician.Web.Controllers
                     this.toaster.AddWarningToastMessage(ToastrConsts.GenericError);
                     return RedirectToAction(nameof(Index));
                 }
-                catch (ArgumentException)
-                {
-                    this.toastNotification.AddErrorToastMessage("Name already exist or invalid input");
-                     return BadRequest(); //status 404
-                }
-                
             }
             this.toaster.AddWarningToastMessage(ToastrConsts.IncorrectInput);
             return RedirectToAction(nameof(Index));
@@ -294,6 +288,11 @@ namespace CocktailMagician.Web.Controllers
                 await this.ingredientService.DeleteIngredientAsync(id);
 
                 this.toaster.AddSuccessToastMessage(ToastrConsts.Success);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException e)
+            {
+                this.toaster.AddWarningToastMessage(e.Message);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)

@@ -37,36 +37,8 @@
 
 <div>
 </div>
-
 @section Scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-    <script>
-        $(document).ready(function () {
-            var typingTimer;
 
-            $('#Name').on('keyup', function () {
-                debugger;
-                var $this = $(this);
-                var inputFor = $this.attr('name');
-
-                setTimeout(() => {
-                    if ($this.val().length < 2) {
-
-                        toastr.error(`${inputFor} is too short`);
-                        console.log(`${inputFor} is too short`);
-                    }
-                    else if ($this.val().length === 30) {
-
-                        toastr.error(`${inputFor} must be no more than 30 characters`);
-                        console.log(`${inputFor} must be no more than 30 characters`);
-                    }
-                }, 500);
-
-                $('#Name').on('keydown', function () {
-                    clearTimeout(typingTimer);
-                });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    @{await Component.InvokeAsync("NToastNotify"); }
 }

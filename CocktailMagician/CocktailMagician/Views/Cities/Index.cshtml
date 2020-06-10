@@ -29,9 +29,9 @@
 <link href="~/DataTables/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <link href="~/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 @*<style>    table tr {
-        background-color: rgba(255,255,255,0.3);
-    }
-</style>*@
+            background-color: rgba(255,255,255,0.3);
+        }
+    </style>*@
 @section Scripts
     {
     <script src="~/DataTables/js/jquery.dataTables.js" type="text/javascript" language="javascript"></script>
@@ -80,4 +80,5 @@
 
             ]});
     </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

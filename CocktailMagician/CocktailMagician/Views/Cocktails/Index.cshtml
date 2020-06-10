@@ -100,12 +100,8 @@
                             data;
                     }
                 },
-                //{
-                //    data: null, "width": "10%","orderable":false , render: function (data, type, row, meta) {
-                //        return '<a class="btn btn-danger" href="/Cocktails/Delete/' + row.id + '">Delete</a>';
-                //    }
-                //},
-
             ]});
     </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }

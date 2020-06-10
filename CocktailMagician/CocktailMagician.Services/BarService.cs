@@ -120,10 +120,13 @@ namespace CocktailMagician.Services
             bar.CityId = barDTO.CityId;
             bar.Address = barDTO.Address;
             bar.Phone = barDTO.Phone;
-            bar.ImageData = barDTO.ImageData;
 
+            if (barDTO.ImageData != null)
+            {
+            bar.ImageData = barDTO.ImageData;
             string imageBase64Data = Convert.ToBase64String(bar.ImageData);
             bar.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            }
 
             bar.BarCocktails = new List<BarsCocktails>();
             foreach (var item in barDTO.Cocktails)
@@ -170,8 +173,6 @@ namespace CocktailMagician.Services
                     .ThenInclude(bc => bc.Cocktail)
                 .Include(bar => bar.City)
                 .Where(bar => bar.IsDeleted == false);
-
-
 
             if (!string.IsNullOrEmpty(orderBy))
             {

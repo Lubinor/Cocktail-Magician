@@ -34,17 +34,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Author)
                 </td>
-                @if (User.IsInRole("Bar Crawler"))
-                {
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.CocktailId" class="btn btn-primary font-weight-bold">Edit</a> <span>|</span>
-                        <a asp-action="Delete" asp-route-id="@item.CocktailId" class="btn btn-primary font-weight-bold">Delete</a>
-                    </td>
-                }
             </tr>
         }
     </tbody>
 </table>
 <div>
+    @if (User.IsInRole("Bar Crawler"))
+    {
+    <a asp-action="Edit" asp-route-id="@Model.CocktailId" class="btn btn-primary font-weight-bold">Edit your review</a>
+        <a asp-action="Delete" asp-route-id="@Model.CocktailId" class="btn btn-primary font-weight-bold">Delete your review</a>
+    }
     <a asp-action="Index" asp-controller="Cocktails" class="btn btn-primary font-weight-bold">Back to Cocktails</a>
 </div>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -3,6 +3,7 @@ using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using CocktailMagician.Services.ValidationModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -172,6 +173,33 @@ namespace CocktailMagician.Services
             averageRating = Math.Round(averageRating, 2);
 
             return averageRating;
+        }
+
+        public ValidationModel ValidateBarReview(BarReviewDTO barReviewDTO)
+        {
+            var validationModel = new ValidationModel();
+
+            if (barReviewDTO == null)
+            {
+                validationModel.HasProperInputData = false;
+            }
+            if (barReviewDTO.Rating < 1 || barReviewDTO.Rating > 5)
+            {
+                validationModel.HasCorrectRating = false;
+            }
+            if (barReviewDTO.Comment.Length > 500)
+            {
+                validationModel.HasCorrectCommentLength = false;
+            }
+            return validationModel;
+        }
+        public bool BarReviewIsUnique(BarReviewDTO barReviewDTO)
+        {
+            if (this.context.BarsUsersReviews.Any(x => x.UserId.Equals(barReviewDTO.AuthorId) && x.BarId.Equals(barReviewDTO.BarId)))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
