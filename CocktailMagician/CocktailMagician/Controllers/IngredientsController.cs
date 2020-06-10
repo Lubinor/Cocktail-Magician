@@ -8,6 +8,7 @@ using CocktailMagician.Web.Models;
 using System.Linq.Dynamic;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using NToastNotify;
 
 namespace CocktailMagician.Web.Controllers
 {
@@ -17,14 +18,16 @@ namespace CocktailMagician.Web.Controllers
         private readonly ICocktailService cocktailService;
         private readonly IIngredientDTOMapper ingredientDTOMapper;
         private readonly ICocktailDTOMapper cocktailDTOMapper;
+        private readonly IToastNotification toastNotification;
 
         public IngredientsController(IIngredientService ingredientService, ICocktailService cocktailService,
-            IIngredientDTOMapper ingredientDTOMapper, ICocktailDTOMapper cocktailDTOMapper)
+            IIngredientDTOMapper ingredientDTOMapper, ICocktailDTOMapper cocktailDTOMapper, IToastNotification toastNotification)
         {
             this.ingredientService = ingredientService ?? throw new ArgumentNullException(nameof(ingredientService));
             this.cocktailService = cocktailService ?? throw new ArgumentNullException(nameof(cocktailService));
             this.ingredientDTOMapper = ingredientDTOMapper ?? throw new ArgumentNullException(nameof(ingredientDTOMapper));
             this.cocktailDTOMapper = cocktailDTOMapper ?? throw new ArgumentNullException(nameof(cocktailDTOMapper));
+            this.toastNotification = toastNotification ?? throw new ArgumentNullException(nameof(toastNotification));
         }
 
         // GET: Ingredients
@@ -105,18 +108,21 @@ namespace CocktailMagician.Web.Controllers
 
                     return RedirectToAction(nameof(Index));
                 }
-                //catch (ArgumentNullException)
-                //{
-                //    return NotFound(); //status 404
-                //}
-                //catch (ArgumentException)
-                //{
-                //    return NotFound(); //status 404
-                //}
-                catch (Exception)
+                catch (ArgumentNullException)
                 {
-                    return BadRequest(); //status 400
+                    return NotFound();
                 }
+                catch (ArgumentOutOfRangeException)
+                {
+                    this.toastNotification.AddErrorToastMessage("Name should be 2-30 chars");
+                    return BadRequest();
+                }
+                catch (ArgumentException)
+                {
+                    this.toastNotification.AddErrorToastMessage("Name already exist or invalid input");
+                     return BadRequest(); //status 404
+                }
+                
             }
             return View(); //TODO: here must returns something - middleware maybe
         }
@@ -174,15 +180,17 @@ namespace CocktailMagician.Web.Controllers
                 }
                 catch (ArgumentNullException)
                 {
-                    return NotFound(); //status 404
+                    return NotFound();
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    this.toastNotification.AddErrorToastMessage("Name should be 2-30 chars");
+                    return BadRequest();
                 }
                 catch (ArgumentException)
                 {
-                    return NotFound(); //status 404
-                }
-                catch (Exception)
-                {
-                    return BadRequest(); //status 400
+                    this.toastNotification.AddErrorToastMessage("Name already exist or invalid input");
+                    return BadRequest();
                 }
                 return RedirectToAction("Details", "Ingredients", new { id });
             }
@@ -213,7 +221,15 @@ namespace CocktailMagician.Web.Controllers
         [Authorize(Roles = "Cocktail Magician")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await this.ingredientService.DeleteIngredientAsync(id);
+            try
+            {
+                await this.ingredientService.DeleteIngredientAsync(id);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
 
             return RedirectToAction(nameof(Index));
         }

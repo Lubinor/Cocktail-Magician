@@ -14,6 +14,10 @@ namespace CocktailMagician.Services.Mappers
             this.cocktailMapper = cocktailMapper;
         }
 
+        public BarMapper()
+        {
+        }
+
         public BarDTO MapToBarDTO(Bar bar)
         {
             BarDTO barDTO = new BarDTO();

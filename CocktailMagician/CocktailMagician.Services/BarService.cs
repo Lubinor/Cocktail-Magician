@@ -162,34 +162,6 @@ namespace CocktailMagician.Services
 
             return true;
         }
-
-        public async Task<ICollection<BarDTO>> FilterBarsAsync(string filter)
-        {
-            if (filter == null)
-            {
-                return null;
-            }
-
-            var bars = this.context.Bars
-                .Include(b => b.BarCocktails)
-                .Where(b => !b.IsDeleted);
-
-            if (double.TryParse(filter, out double result))
-            {
-                bars = bars.Where(b => b.AverageRating >= result);
-            }
-            else
-            {
-                bars = bars.Where(b => b.Name.ToLower().Contains(filter.ToLower()));
-            }
-
-            var barDTOs = await bars
-                .Select(b => this.barMapper.MapToBarDTO(b))
-                .ToListAsync();
-
-            return barDTOs;
-        }
-
         public async Task<IList<BarDTO>> ListAllBarsAsync(int skip, int pageSize, string searchValue, string orderBy, string orderDirection)
         {
             var bars = this.context.Bars

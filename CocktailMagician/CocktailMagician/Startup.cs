@@ -8,6 +8,7 @@ using CocktailMagician.Services.Providers;
 using CocktailMagician.Services.Providers.Contracts;
 using CocktailMagician.Web.Mappers;
 using CocktailMagician.Web.Mappers.Contracts;
+using CocktailMagician.Web.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 
 namespace CocktailMagician.Web
 {
@@ -59,6 +61,8 @@ namespace CocktailMagician.Web
             });
             services.AddControllersWithViews();
 
+            services.AddMvc().AddNToastNotifyNoty();
+
             services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IBarService, BarService>();
@@ -81,6 +85,7 @@ namespace CocktailMagician.Web
             services.AddScoped<IBarReviewDTOMapper, BarReviewDTOMapper>();
             services.AddScoped<ICocktailReviewDTOMapper, CocktailReviewDTOMapper>();
             services.AddScoped<ICityDTOMapper, CityDTOMapper>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -91,7 +96,7 @@ namespace CocktailMagician.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/NotFound"); // ("Home/Error")
             }
             app.UseStaticFiles();
 
@@ -100,8 +105,12 @@ namespace CocktailMagician.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<NotFoundMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
+                app.UseNToastNotify();
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

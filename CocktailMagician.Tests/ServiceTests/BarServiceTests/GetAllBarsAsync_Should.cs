@@ -47,13 +47,8 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
             var mockIBarMapper = new Mock<IBarMapper>();
 
             var options = Utils.GetOptions(nameof(Return_ProperBarCount));
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
+ 
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -81,13 +76,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
             var options = Utils.GetOptions(nameof(Return_DefaultSortingById));
 
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -116,13 +105,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
             var options = Utils.GetOptions(nameof(Return_CitiesNameAsc));
 
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -134,6 +117,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
                 Assert.AreEqual(2, resultList[0].Id); //Id 2 -> Bilkova
                 Assert.AreEqual(1, resultList[1].Id); //Id 1 -> Lorka
+                Assert.AreEqual(3, resultList[1].Id); //Id 2 -> The Beach
             }
         }
 
@@ -151,13 +135,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
             var options = Utils.GetOptions(nameof(Return_CitiesNameDesc));
 
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -167,6 +145,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                 var result = await sut.GetAllBarsAsync("name_desc");
                 var resultList = result.ToList();
 
+                Assert.AreEqual(3, resultList[1].Id); //Id 2 -> The Beach
                 Assert.AreEqual(1, resultList[0].Id); //Id 1 -> Lorka
                 Assert.AreEqual(2, resultList[1].Id); //Id 2 -> Bilkova
             }

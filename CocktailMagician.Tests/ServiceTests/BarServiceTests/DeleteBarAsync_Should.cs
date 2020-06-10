@@ -25,13 +25,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnFalse_IfBarDoesNotExistOrIsDeleted));
 
-            var bars = Utils.ReturnTwoBars(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -66,13 +60,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
             var options = Utils.GetOptions(nameof(DeleteBar_IfParamsAreValid));
 
-            var bar = Utils.ReturnOneBar(options);
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.Add(bar);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

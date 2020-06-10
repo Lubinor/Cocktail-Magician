@@ -7,6 +7,7 @@ using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
@@ -24,14 +25,15 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(DeleteIngredient_WhenConditionsAreMet));
-            Utils.GetInMemoryThreeIngredients(options);
+            
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
-                var result = await sut.DeleteIngredientAsync(3);
+                var result = await sut.DeleteIngredientAsync(5);
 
                 Assert.IsTrue(result);
             }
@@ -46,14 +48,15 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockCocktailMapper = new Mock<ICocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnFalse_WhenIdNotFound));
-            Utils.GetInMemoryThreeIngredients(options);
+            
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
-                var result = await sut.DeleteIngredientAsync(4);
+                var result = await sut.DeleteIngredientAsync(9);
 
                 Assert.IsFalse(result);
             }
@@ -69,7 +72,7 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         //    mockCocktailMapper.Setup(c => c.MapToCocktailDTO(It.IsAny<Cocktail>()))
         //        .Returns<Cocktail>(c => new CocktailDTO { Name = c.Name });
         //    var options = Utils.GetOptions(nameof(Throw_WhenIngredientStillInUse));
-        //    Utils.GetInMemoryTwoCocktails(options);
+        //    Utils.GetInMemoryDataBase(options);
 
         //    //Act & Assert
         //    using (var assertContext = new CocktailMagicianContext(options))
@@ -78,7 +81,8 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
         //            mockCocktailMapper.Object, assertContext);
         //        var result = await sut.DeleteIngredientAsync(2);
 
-        //        Assert.ThrowsException<Exception>(() => throw new Exception("Ingredient still in use"));
+        //        Assert.ThrowsException<ArgumentException>(() => throw new ArgumentException());
+        //        //() => throw new ArgumentException($"Ingredient still in use")
         //    }
         //}
     }

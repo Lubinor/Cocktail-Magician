@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
 <h1>Create Ingredient</h1>
 
@@ -68,4 +68,5 @@
                 });
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Component.InvokeAsync("NToastNotify"); }
 }

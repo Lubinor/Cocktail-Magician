@@ -55,23 +55,19 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                     CityId = b.CityId,
                     Address = b.Address,
                     Phone = b.Phone,
-                    AverageRating = b.AverageRating
                 });
 
 
-            var barDTO = Utils.ReturnOneBarDTO(options);
-
-            mockIBarMapper
-                .Setup(x => x.MapToBar(It.IsAny<BarDTO>()))
-                .Returns<BarDTO>(b => new Bar
+            var barDTO = new BarDTO
                 {
-                    Id = b.Id,
-                    Name = b.Name,
-                    CityId = b.CityId,
-                    Address = b.Address,
-                    Phone = b.Phone,
-                    AverageRating = b.AverageRating
-                });
+                    Id = 4,
+                    Name = "The Bar",
+                    CityId = 2,
+                    Address = "New Address str",
+                    Phone = "0888 999 555"
+                };
+
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -80,14 +76,13 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
 
                 var result = await sut.CreateBarAsync(barDTO);
 
-                var expected = await assertContext.Bars.FirstOrDefaultAsync(b => b.Id == 1);
+                var expected = await assertContext.Bars.FirstOrDefaultAsync(b => b.Id == 4);
 
                 Assert.AreEqual(expected.Id, result.Id);
                 Assert.AreEqual(expected.Name, result.Name);
                 Assert.AreEqual(expected.CityId, result.CityId);
                 Assert.AreEqual(expected.Address, result.Address);
                 Assert.AreEqual(expected.Phone, result.Phone);
-                Assert.AreEqual(expected.AverageRating, result.AverageRating);
             }
         }
     }

@@ -22,14 +22,15 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockCocktailMapper = new Mock<ICocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnCorrectCountOfFilteredIngredients));
-            Utils.GetInMemoryThreeIngredients(options);
+            
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new IngredientService(mockDateTimeProvider.Object, mockIngMapper.Object,
                     mockCocktailMapper.Object, assertContext);
-                var result = sut.GetAllFilteredIngredientsCount("t");
+                var result = sut.GetAllFilteredIngredientsCount("o");
 
                 Assert.AreEqual(2, result);
             }

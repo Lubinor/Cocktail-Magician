@@ -3,6 +3,7 @@ using CocktailMagician.Models;
 using CocktailMagician.Services.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace CocktailMagician.Tests
 {
@@ -15,117 +16,7 @@ namespace CocktailMagician.Tests
                 .Options;
         }
 
-        public static City ReturnOneCity(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var bar = new Bar { Id = 1, Name = "Lorka", CityId = 1 };
-            var city = new City
-            {
-                Id = 1,
-                Name = "Sofia",
-            };
-
-            city.Bars.Add(bar);
-
-            return city;
-        }
-
-        public static CityDTO ReturnOneCityDTO(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var cityDTO = new CityDTO { Id = 1, Name = "Sofia" };
-
-            return cityDTO;
-        }
-
-        public static Bar ReturnOneBar(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var city = new City { Id = 1, Name = "Sofia" };
-
-            var cocktail = new Cocktail { Id = 1, Name = "Bloody Mary" };
-            //var ingredient1 = new Ingredient { Id = 1, Name = "Vodka" };
-            //var ingredient2 = new Ingredient { Id = 2, Name = "Tomato juice" };
-            //var ingredient3 = new Ingredient { Id = 3, Name = "Tabasco" };
-
-            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 1, CocktailId = 1 });
-            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 2, CocktailId = 1 });
-            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 3, CocktailId = 1 });
-
-            var bar = new Bar
-            {
-                Id = 1,
-                Name = "Lorka",
-                CityId = 1,
-                City = city,
-                Address = "Shishman str.",
-                Phone = "0888 888 888",
-                AverageRating = 3.5,
-            };
-
-            bar.BarCocktails.Add(new BarsCocktails { BarId = bar.Id, CocktailId = cocktail.Id, Cocktail = cocktail });
-
-            return bar;
-        }
-
-        public static List<Bar> ReturnTwoBars(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var city = new City { Id = 1, Name = "Sofia" };
-
-            var cocktail = new Cocktail { Id = 1, Name = "Bloody Mary" };
-            //var ingredient1 = new Ingredient { Id = 1, Name = "Vodka" };
-            //var ingredient2 = new Ingredient { Id = 2, Name = "Tomato juice" };
-            //var ingredient3 = new Ingredient { Id = 3, Name = "Tabasco" };
-
-            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 1, CocktailId = 1 });
-            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 2, CocktailId = 1 });
-            //cocktail.Ingredients.Add(new IngredientsCocktails { IngredientId = 3, CocktailId = 1 });
-
-            var bars = new List<Bar>
-            {
-                new Bar
-                {
-                    Id = 1,
-                    Name = "Lorka",
-                    CityId = 1,
-                    City = city,
-                    Address = "Shishman str.",
-                    Phone = "0888 888 888",
-                    AverageRating = 3.5,
-                },
-                new Bar
-                {
-                    Id = 2,
-                    Name = "Bilkova",
-                    CityId = 1,
-                    City = city,
-                    Address = "Shishman str.",
-                    Phone = "0888 888 444",
-                    AverageRating = 4,
-                }
-            };
-
-            bars[0].BarCocktails.Add(new BarsCocktails { BarId = 1, CocktailId = cocktail.Id, Cocktail = cocktail });
-            bars[1].BarCocktails.Add(new BarsCocktails { BarId = 2, CocktailId = cocktail.Id, Cocktail = cocktail });
-
-            return bars;
-        }
-
-
-        public static BarDTO ReturnOneBarDTO(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var barDTO = new BarDTO
-            {
-                Id = 1,
-                Name = "Lorka",
-                CityId = 1,
-                CityName = "Sofia",
-                Address = "Shishman str.",
-                Phone = "0888 888 888",
-                AverageRating = 3.5,
-            };
-
-            return barDTO;
-        }
-
-        public static List<User> ReturnTwoUsers(DbContextOptions<CocktailMagicianContext> options)
+        public static void GetInMemoryDataBase(DbContextOptions<CocktailMagicianContext> options)
         {
             var users = new List<User>
             {
@@ -140,13 +31,96 @@ namespace CocktailMagician.Tests
                     UserName = "Jim"
                 }
             };
-
-            return users;
-        }
-
-        public static List<BarsUsersReviews> ReturnFourBarReviews(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var reviews = new List<BarsUsersReviews>
+            var barCocktails = new List<BarsCocktails>
+            {
+                new BarsCocktails
+                {
+                    BarId = 1,
+                    CocktailId = 1
+                },
+                new BarsCocktails
+                {
+                    BarId = 1,
+                    CocktailId = 2
+                },
+                new BarsCocktails
+                {
+                    BarId = 2,
+                    CocktailId = 2
+                },
+                new BarsCocktails
+                {
+                    BarId = 3,
+                    CocktailId = 1
+                },
+            };
+            var bars = new List<Bar>
+            {
+                new Bar
+                {
+                    Id = 1,
+                    Name = "Lorka",
+                    CityId = 1,
+                    Address = "Vitosha bul.",
+                    Phone = "0888 888 888",
+                    AverageRating = 3.5,
+                    BarCocktails = new List<BarsCocktails>
+                    {
+                        barCocktails[0], barCocktails[1]
+                    }
+                },
+                new Bar
+                {
+                    Id = 2,
+                    Name = "Bilkova",
+                    CityId = 1,
+                    Address = "Shishman str.",
+                    Phone = "0888 888 444",
+                    AverageRating = 4,
+                    BarCocktails = new List<BarsCocktails>
+                    {
+                        barCocktails[2]
+                    }
+                },
+                new Bar
+                {
+                    Id = 3,
+                    Name = "The Beach",
+                    CityId = 2,
+                    Address = "Obikolna str.",
+                    Phone = "0888 777 444",
+                    AverageRating = 4.5,
+                    BarCocktails = new List<BarsCocktails>
+                    {
+                        barCocktails[3]
+                    }
+                },
+            };
+            var cities = new List<City>
+            {
+                new City
+                {
+                    Id = 1,
+                    Name = "Sofia",
+                    Bars = new List<Bar>
+                    {
+                        bars[0], bars[1]
+                    },
+                    IsDeleted = false
+                },
+                new City
+                {
+                    Id = 2,
+                    Name = "Varna",
+                    Bars = new List<Bar>
+                    {
+                        bars[2]
+                    },
+                    IsDeleted = false
+                },
+            };
+            
+            var barReviews = new List<BarsUsersReviews>
             {
                 new BarsUsersReviews
                 {
@@ -164,26 +138,27 @@ namespace CocktailMagician.Tests
                 },
                 new BarsUsersReviews
                 {
-                    BarId = 2,
-                    UserId = 1,
-                    Comment = "Jim is a fan of Bilkova",
+                    BarId = 3,
+                    UserId = 2,
+                    Comment = "Jim is a fan of The Beach",
                     Rating = 5
                 },
                 new BarsUsersReviews
                 {
                     BarId = 2,
-                    UserId = 2,
+                    UserId = 1,
                     Comment = "George finds Bilkova just average",
                     Rating = 3
+                },
+                new BarsUsersReviews
+                {
+                    BarId = 2,
+                    UserId = 2,
+                    Comment = "Jim Likes Bilkova just above average",
+                    Rating = 3.5
                 }
             };
-
-            return reviews;
-        }
-
-        public static List<CocktailsUsersReviews> ReturnTwoCocktailReviews(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var reviews = new List<CocktailsUsersReviews>
+            var cocktailReviews = new List<CocktailsUsersReviews>
             {
                 new CocktailsUsersReviews
                 {
@@ -197,69 +172,23 @@ namespace CocktailMagician.Tests
                     CocktailId = 1,
                     UserId = 2,
                     Comment = "Jim doesn't like Mojito",
+                    Rating = 2
+                },
+                new CocktailsUsersReviews
+                {
+                    CocktailId = 2,
+                    UserId = 1,
+                    Comment = "George likes Gin Fizz !",
+                    Rating = 4
+                },
+                new CocktailsUsersReviews
+                {
+                    CocktailId = 2,
+                    UserId = 2,
+                    Comment = "Jim doesn't like Gin Fizz",
                     Rating = 1
                 }
             };
-
-            return reviews;
-        }
-
-        public static void GetInMemoryThreeIngredients(DbContextOptions<CocktailMagicianContext> options)
-        {
-            var cocktail = new Cocktail { Id = 1, Name = "Bloody Mary" };
-            var ingredientcocktails = new List<IngredientsCocktails>
-            {
-                new IngredientsCocktails
-                {
-                    CocktailId = 1,
-                    IngredientId = 1,
-                },
-                new IngredientsCocktails
-                {
-                    CocktailId = 1,
-                    IngredientId = 2
-                }
-            };
-            var ingredients = new List<Ingredient>
-            {
-                new Ingredient
-                {
-                    Id = 1,
-                    Name = "Vodka",
-                    IsDeleted = false,
-                    IngredientsCocktails = new List<IngredientsCocktails>
-                    {
-                        ingredientcocktails[0]
-                    }
-                },
-                new Ingredient
-                {
-                    Id = 2,
-                    Name = "Tomato Juice",
-                    IsDeleted = false,
-                    IngredientsCocktails = new List<IngredientsCocktails>
-                    {
-                        ingredientcocktails[1]
-                    }
-                },
-                new Ingredient
-                {
-                    Id = 3,
-                    Name = "Tabasco",
-                    IsDeleted = false
-                }
-            };
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cocktails.Add(cocktail);
-                arrangeContext.Ingredients.AddRange(ingredients);
-                arrangeContext.IngredientsCocktails.AddRange(ingredientcocktails);
-                arrangeContext.SaveChanges();
-            }
-        }
-        public static void GetInMemoryTwoCocktails(DbContextOptions<CocktailMagicianContext> options)
-        {
-
             var ingredientCocktails = new List<IngredientsCocktails>
             {
                 new IngredientsCocktails
@@ -288,7 +217,7 @@ namespace CocktailMagician.Tests
                 new Ingredient
                 {
                     Id = 1,
-                    Name = "Vodka",
+                    Name = "Rum",
                     IsDeleted = false,
                     IngredientsCocktails = new List<IngredientsCocktails>
                     {
@@ -298,7 +227,7 @@ namespace CocktailMagician.Tests
                 new Ingredient
                 {
                     Id = 2,
-                    Name = "Tomato Juice",
+                    Name = "Soda",
                     IsDeleted = false,
                     IngredientsCocktails = new List<IngredientsCocktails>
                     {
@@ -324,15 +253,22 @@ namespace CocktailMagician.Tests
                     {
                         ingredientCocktails[3]
                     }
-                }
+                },
+                new Ingredient
+                {
+                    Id = 5,
+                    Name = "Mineral Water",
+                    IsDeleted = false,
+                    IngredientsCocktails = new List<IngredientsCocktails>()
+                },
             };
             var cocktails = new List<Cocktail>
             {
                 new Cocktail
                 {
                     Id = 1,
-                    Name = "Bloody Mary",
-                    AverageRating = 5.5,
+                    Name = "Mojito",
+                    AverageRating = 4.5,
                     IsDeleted = false,
                     IngredientsCocktails = new List<IngredientsCocktails>
                     {
@@ -343,36 +279,24 @@ namespace CocktailMagician.Tests
                 {
                     Id = 2,
                     Name = "Gin Fizz",
-                    AverageRating = 6.5,
+                    AverageRating = 4.9,
                     IsDeleted = false,
                     IngredientsCocktails = new List<IngredientsCocktails>
                     {
                         ingredientCocktails[2],ingredientCocktails[3]
                     }
-                }
-            };
-            var barCocktails = new List<BarsCocktails>
-            {
-                new BarsCocktails
-                {
-                    BarId = 1,
-                    CocktailId = 1
                 },
-                new BarsCocktails
+                new Cocktail
                 {
-                    BarId = 1,
-                    CocktailId = 2
+                    Id = 3,
+                    Name = "Bozdugan",
+                    AverageRating = 3.8,
+                    IsDeleted = false,
+                    IngredientsCocktails = new List<IngredientsCocktails>
+                    {
+                        ingredientCocktails[0],ingredientCocktails[2]
+                    }
                 }
-            };
-            var bar = new Bar
-            {
-                Id = 1,
-                Name = "The Bar",
-                BarCocktails = new List<BarsCocktails>
-                {
-                    barCocktails[0], barCocktails[1]
-                }
-
             };
             using (var arrangeContext = new CocktailMagicianContext(options))
             {
@@ -380,7 +304,11 @@ namespace CocktailMagician.Tests
                 arrangeContext.Ingredients.AddRange(ingredients);
                 arrangeContext.IngredientsCocktails.AddRange(ingredientCocktails);
                 arrangeContext.BarsCocktails.AddRange(barCocktails);
-                arrangeContext.Bars.Add(bar);
+                arrangeContext.Bars.AddRange(bars);
+                arrangeContext.BarsUsersReviews.AddRange(barReviews);
+                arrangeContext.Cities.AddRange(cities);
+                arrangeContext.CocktailsUsersReviews.AddRange(cocktailReviews);
+                arrangeContext.Users.AddRange(users);
                 arrangeContext.SaveChanges();
             }
         }

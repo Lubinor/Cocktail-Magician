@@ -27,9 +27,9 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
             var expected = new IngredientDTO
             {
                 Id = 1,
-                Name = "Vodka"
+                Name = "Rum"
             };
-            Utils.GetInMemoryThreeIngredients(options);
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -52,14 +52,15 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 .Returns<Ingredient>(i => new IngredientDTO { Name = i.Name });
             var mockCocktailMapper = new Mock<CocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnNull_WhenNotFound));
-            Utils.GetInMemoryThreeIngredients(options);
+            
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new IngredientService(mockDatetimeProvider.Object, mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
-                var result = await sut.GetIngredientAsync(4);
+                var result = await sut.GetIngredientAsync(6);
                 Assert.IsNull(result);
             }
         }

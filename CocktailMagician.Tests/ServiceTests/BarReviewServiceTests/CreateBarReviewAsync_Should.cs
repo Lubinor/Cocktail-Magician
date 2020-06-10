@@ -23,13 +23,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarReviewServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfNoBarReviewDTO));
 
-            var bar = new Bar { Id = 1, Name = "Lorka" };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.Add(bar);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -57,22 +51,15 @@ namespace CocktailMagician.Tests.ServiceTests.BarReviewServiceTests
                 .Returns<BarsUsersReviews>(r => new BarReviewDTO { BarId = r.BarId, AuthorId = r.UserId, Comment = r.Comment });
 
             var options = Utils.GetOptions(nameof(ReturnReview_IfParamsAreValid));
-
-            var bars = Utils.ReturnTwoBars(options);  //1 Lorka, 2 Bilkova
-            var users = Utils.ReturnTwoUsers(options); //1 George, 2 Jim
+           
             var reviewDTO = new BarReviewDTO
             {
-                BarId = 2,
-                AuthorId = 2,
-                Comment = "Lorka is the best!"
+                BarId = 3,
+                AuthorId = 1,
+                Comment = "The Beach is the best!"
             };
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.AddRange(bars);
-                arrangeContext.Users.AddRange(users);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -81,9 +68,9 @@ namespace CocktailMagician.Tests.ServiceTests.BarReviewServiceTests
 
                 var result = await sut.CreateBarReviewAsync(reviewDTO);
 
-                Assert.AreEqual(1, assertContext.BarsUsersReviews.Count());
-                Assert.AreEqual(2, result.AuthorId);
-                Assert.AreEqual(2, result.BarId);
+                Assert.AreEqual(6, assertContext.BarsUsersReviews.Count());
+                Assert.AreEqual(1, result.AuthorId);
+                Assert.AreEqual(3, result.BarId);
             }
         }
     }

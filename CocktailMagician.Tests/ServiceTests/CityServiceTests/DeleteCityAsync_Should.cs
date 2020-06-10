@@ -22,19 +22,14 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnFalse_CityDoesNotExistOrDeleted));
 
-            var city = Utils.ReturnOneCity(options);
+            Utils.GetInMemoryDataBase(options);
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cities.Add(city);
-                await arrangeContext.SaveChangesAsync();
-            }
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CityService(mockIDateTimeProvider.Object, assertContext, mockICityMapper.Object, mockIBarMapper.Object);
 
-                var result = await sut.DeleteCityAsync(2);
+                var result = await sut.DeleteCityAsync(4);
 
                 Assert.IsFalse(result);
             }
@@ -50,13 +45,8 @@ namespace CocktailMagician.Tests.ServiceTests.CityServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnTrue_WhenDeletedSuccessfully));
 
-            var city = Utils.ReturnOneCity(options);
+            Utils.GetInMemoryDataBase(options);
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Cities.Add(city);
-                await arrangeContext.SaveChangesAsync();
-            }
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {

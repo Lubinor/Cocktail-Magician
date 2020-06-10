@@ -22,19 +22,13 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
 
             var options = Utils.GetOptions(nameof(ReturnNull_IfNoUser));
 
-            var user = new User { Id = 1, UserName = "George" };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new UserService(mockDatetimeProvider.Object, assertContext, mockIUserMapper.Object);
-                var result = await sut.GetUserAsync(2);
+                var result = await sut.GetUserAsync(3);
 
                 Assert.IsNull(result);
             }
@@ -56,15 +50,7 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
 
             var options = Utils.GetOptions(nameof(Return_CorrectUserParams));
 
-            var user = new User { Id = 1, UserName = "George" };
-            var user2 = new User { Id = 2, UserName = "Tom" };
-
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Users.Add(user);
-                arrangeContext.Users.Add(user2);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -73,7 +59,7 @@ namespace CocktailMagician.Tests.ServiceTests.UserServiceTests
                 var result = await sut.GetUserAsync(2);
 
                 Assert.AreEqual(2, result.Id);
-                Assert.AreEqual("Tom", result.UserName);
+                Assert.AreEqual("Jim", result.UserName);
             }
         }
     }

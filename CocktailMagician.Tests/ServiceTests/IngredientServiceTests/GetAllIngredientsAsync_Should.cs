@@ -25,26 +25,8 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 .Returns<Ingredient>(i => new IngredientDTO { Id = i.Id, Name = i.Name });
             var mockCocktailMapper = new Mock<ICocktailMapper>();
             var options = Utils.GetOptions(nameof(ReturnCorrectIngredientsAsync));
-            var expected = new List<IngredientDTO>
-            {
-                new IngredientDTO
-                {
-                    Id = 1,
-                    Name = "Vodka"
-                    
-                },
-                new IngredientDTO
-                {
-                    Id = 2,
-                    Name = "Tomato Juice"
-                },
-                new IngredientDTO
-                {
-                    Id = 3,
-                    Name = "Tabasco"
-                }
-            };
-            Utils.GetInMemoryThreeIngredients(options);
+            
+            Utils.GetInMemoryDataBase(options);
 
             // Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -52,12 +34,9 @@ namespace CocktailMagician.Tests.ServiceTests.IngredientServiceTests
                 var sut = new IngredientService(mockDatetimeProvider.Object,mockMapper.Object,
                     mockCocktailMapper.Object, assertContext);
                 var result = (await sut.GetAllIngredientsAsync()).ToList();
-                Assert.AreEqual(expected.Count, result.Count);
-                for (int i = 0; i < expected.Count; i++)
-                {
-                    Assert.AreEqual(expected[i].Id, result[i].Id);
-                    Assert.AreEqual(expected[i].Name, result[i].Name);
-                }
+                var ingredientsCount = assertContext.Ingredients.Count();
+
+                Assert.AreEqual(ingredientsCount, result.Count);
             }
         }
     }

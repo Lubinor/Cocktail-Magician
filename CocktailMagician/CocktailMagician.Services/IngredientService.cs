@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace CocktailMagician.Services
@@ -60,7 +61,7 @@ namespace CocktailMagician.Services
             {
                 return null;
             }
-
+            
             var ingredientDTO = mapper.MapToIngredientDTO(ingredient);
             var ingredientCocktails = ingredient.IngredientsCocktails.Select(x => x.Cocktail);
             ingredientDTO.CocktailDTOs = ingredientCocktails.Where(c => c.IsDeleted == false)
@@ -79,16 +80,39 @@ namespace CocktailMagician.Services
             {
                 return null;
             }
+            if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
+            {
+                throw new ArgumentException();
+            }
 
-            var ingredient = mapper.MapToIngredient(ingredientDTO);
-            ingredient.CreatedOn = datetimeProvider.GetDateTime();
+            var ingredient = await this.context.Ingredients.FirstOrDefaultAsync(i => i.Name == ingredientDTO.Name);
+           
+            if (ingredient == null)
+            {
+                ingredient = mapper.MapToIngredient(ingredientDTO);
+                ingredient.CreatedOn = datetimeProvider.GetDateTime();
 
-            string imageBase64Data = Convert.ToBase64String(ingredient.ImageData);
-            ingredient.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+                string imageBase64Data = Convert.ToBase64String(ingredient.ImageData);
+                ingredient.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
 
-            this.context.Ingredients.Add(ingredient);
+                this.context.Ingredients.Add(ingredient);
+            }
+            else if (ingredient.IsDeleted == true)
+            {
+                ingredient.Name = ingredientDTO.Name;
+                ingredient.IsDeleted = false;
+                //string imageBase64Data = Convert.ToBase64String(ingredient.ImageData);
+                //ingredient.ImageSource = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+
+                //this.context.Ingredients.Update(ingredient);
+            }
+            else
+            {
+                return null;
+            }
+
             await this.context.SaveChangesAsync();
-
+            
             return ingredientDTO;
         }
         /// <summary>
@@ -141,9 +165,9 @@ namespace CocktailMagician.Services
                 return false;
             }
 
-            if (ingredient.IngredientsCocktails.Any(c => c.IngredientId == id)) // no test for this if
+            if (ingredient.IngredientsCocktails.Any(c => c.IngredientId == id))
             {
-                throw new Exception($"Ingredient still in use");
+                throw new ArgumentException($"Ingredient still in use");
             }
             else
             {
@@ -236,18 +260,15 @@ namespace CocktailMagician.Services
             {
                 throw new ArgumentNullException();
             }
-            if (ingredientDTO.Name == string.Empty || !ingredientDTO.Name.Any(x => char.IsLetter(x)))
+            if (ingredientDTO.Name == string.Empty || !ingredientDTO.Name.All(char.IsLetter))
             {
                 throw new ArgumentException();
             }
-            if (ingredientDTO.Name.Length<2||ingredientDTO.Name.Length>30)
+            if (ingredientDTO.Name.Length <= 2 || ingredientDTO.Name.Length > 30)
             {
-                throw new ArgumentException();
+                throw new ArgumentOutOfRangeException();
             }
-            //if (context.Ingredients.Select(i => i.Name.ToLower()).Contains(ingredientDTO.Name.ToLower()))
-            //{
-            //    throw new Exception();
-            //}
+            
             return true;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using CocktailMagician.Data;
 using CocktailMagician.Services;
+using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers;
 using CocktailMagician.Services.Mappers.Contracts;
@@ -20,48 +21,47 @@ namespace CocktailMagician.Tests.ServiceTests.CocktailServiceTests
         {
             //Arrange
             var mockDateTimeProvider = new Mock<IDateTimeProvider>();
-            var mockMapper = new Mock<CocktailMapper>();
+            var mockMapper = new Mock<ICocktailMapper>();
             var mockIngredientMapper = new Mock<IngredientMapper>();
             var mockBarMapper = new Mock<IBarMapper>();
+            var mockCocktailReviewService = new Mock<ICocktailReviewService>();
+            //mockCocktailReviewService.Setup(r => r.GetCocktailRating(2))
+            //    .Returns<CocktailReviewDTO>(r => new CocktailReviewDTO { Rating = 3.4, });
             var options = Utils.GetOptions(nameof(ReturnCocktail_WhenFound));
             var expected = new CocktailDTO
             {
                 Id = 2,
                 Name = "Gin Fizz",
-                AverageRating = 6.5,
+                AverageRating = 3.4,
+                IsDeleted = false,
                 Ingredients = new List<IngredientDTO>
+                {
+                    new IngredientDTO
                     {
-                        new IngredientDTO
-                        {
-                            Name = "Dry Gin"
-                        },
-                        new IngredientDTO
-                        {
-                            Name = "Tonic"
-                        }
+                        Id = 3,
+                        Name = "Dry Gin"
                     },
-                Bars = new List<BarDTO>
+                    new IngredientDTO
                     {
-                        new BarDTO
-                        {
-                            Name = "The Bar"
-                        }
-                    }
+                        Id = 4,
+                        Name = "Tonic",
+                    },
+                }
             };
-            Utils.GetInMemoryTwoCocktails(options);
+
+            Utils.GetInMemoryDataBase(options);
+
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
             {
                 var sut = new CocktailService(mockDateTimeProvider.Object, mockMapper.Object,
-                    mockIngredientMapper.Object, mockBarMapper.Object, assertContext);
+                    mockIngredientMapper.Object, mockBarMapper.Object, assertContext, mockCocktailReviewService.Object);
                 var result = await sut.GetCocktailAsync(2);
 
                 Assert.AreEqual(expected.Id, result.Id);
                 Assert.AreEqual(expected.Name, result.Name);
                 Assert.AreEqual(expected.AverageRating, result.AverageRating);
                 Assert.AreEqual(expected.Ingredients.ToList().Count, result.Ingredients.ToList().Count);
-                //CollectionAssert.AreEqual(expected.Ingredients.ToList(), result.Ingredients.ToList());
-                //CollectionAssert.AreEqual(expected.Bars.ToList(), result.Bars.ToList());
             }
         }
     }

@@ -38,21 +38,16 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                     AverageRating = b.AverageRating
                 });
 
-            var bar = Utils.ReturnOneBar(options);
-
             var barDTO = new BarDTO
             {
+                Id = 2,
                 Name = "Summer Bar",
                 CityId = 2,
                 Address = "Sunny Beach 53",
                 Phone = "0888 111 111",
             };
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.Add(bar);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))
@@ -88,8 +83,6 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                     AverageRating = b.AverageRating
                 });
 
-            var bar = Utils.ReturnOneBar(options);
-
             var barDTO = new BarDTO
             {
                 Name = "Summer Bar",
@@ -98,11 +91,7 @@ namespace CocktailMagician.Tests.ServiceTests.BarServiceTests
                 Phone = "0888 111 111",
             };
 
-            using (var arrangeContext = new CocktailMagicianContext(options))
-            {
-                arrangeContext.Bars.Add(bar);
-                await arrangeContext.SaveChangesAsync();
-            }
+            Utils.GetInMemoryDataBase(options);
 
             //Act & Assert
             using (var assertContext = new CocktailMagicianContext(options))

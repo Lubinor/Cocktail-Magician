@@ -101,7 +101,7 @@ namespace CocktailMagician.Services
             var barReview = await this.context.BarsUsersReviews
                 .FirstOrDefaultAsync(r => r.BarId == barId &&
                                           r.UserId == userId &&
-                                         !r.IsDeleted);
+                                         r.IsDeleted==false);
 
             if (barReview == null)
             {
