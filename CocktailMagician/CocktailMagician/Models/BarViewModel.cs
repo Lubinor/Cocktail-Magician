@@ -17,7 +17,7 @@ namespace CocktailMagician.Web.Models
         public int Id { get; set; }
 
         [Required]
-        [Range(2, 30, ErrorMessage = ToastrConsts.WrongNameLength)]
+        //[Range(2, 30, ErrorMessage = ToastrConsts.WrongNameLength)]
 
         public string Name { get; set; }
         public int CityId { get; set; }
@@ -26,11 +26,11 @@ namespace CocktailMagician.Web.Models
         public string CityName { get; set; }
 
         [Required]
-        [Range(5, 100, ErrorMessage = ToastrConsts.IncorrectAddress)]
+        //[Range(5, 100, ErrorMessage = ToastrConsts.IncorrectAddress)]
         public string Address { get; set; }
 
         [Required]
-        [Range(7, 20, ErrorMessage = ToastrConsts.IncorrectPhone)]
+        //[Range(7, 20, ErrorMessage = ToastrConsts.IncorrectPhone)]
         public string Phone { get; set; }
 
         [DisplayName("Average Rating")]

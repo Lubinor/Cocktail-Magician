@@ -56,7 +56,7 @@
                 },
             "columns" : [
                 {
-                    "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false, 
+                    "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false,
                     render: function (url, type, full) {
                         return '<img src="' + full.imageSource +'"' + 'style="max-width:150px; max-height:150px;"/>';
                     }
@@ -96,5 +96,6 @@
                 //},
             ]});
     </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 }

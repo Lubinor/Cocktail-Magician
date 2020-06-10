@@ -28,6 +28,7 @@ namespace CocktailMagician.Web.Mappers
                 CityName = barDTO.CityName,
                 Cocktails = barDTO.Cocktails.Select(c => new CocktailViewModel
                 {
+                    Id = c.Id,
                     Name = c.Name,
                     AverageRating = c.AverageRating
                 }).ToList(),

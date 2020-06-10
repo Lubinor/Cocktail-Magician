@@ -16,5 +16,7 @@ namespace CocktailMagician.Web.Models
         public string Cocktail { get; set; }
         [DisplayName("Rating")]
         public double Rating { get; set; }
+        public int CocktailId { get; set; }
+
     }
 }

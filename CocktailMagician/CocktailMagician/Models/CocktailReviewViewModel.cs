@@ -10,10 +10,10 @@ namespace CocktailMagician.Web.Models
 
         }
         [Required]
-        [Range(0, 5, ErrorMessage = "Raitig is between 0-5")]
+        //[Range(1, 5, ErrorMessage = "Rating is between 1-5")]
         public double Rating { get; set; }
 
-        [MaxLength(500, ErrorMessage = "Use maximum 500 chars for your comment")]
+        //[MaxLength(500, ErrorMessage = "Use maximum 500 chars for your comment")]
         public string Comment { get; set; }
         public int CocktailId { get; set; }
         public string CocktailName { get; set; }

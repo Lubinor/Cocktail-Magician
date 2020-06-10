@@ -1,4 +1,5 @@
 ﻿using CocktailMagician.Services.DTOs;
+using CocktailMagician.Services.ValidationModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace CocktailMagician.Services.Contracts
         Task<CocktailReviewDTO> UpdateCocktailReviewAsync(int cocktailId, int userId, CocktailReviewDTO cocktailReviewDTO);
         Task<bool> DeleteCocktailReviewAsync(int cocktailId, int userId);
         double GetCocktailRating(int cocktailId);
+        ValidationModel ValidateCocktailReview(CocktailReviewDTO cocktailReviewDTO);
+        bool CocktailReviewIsUnique(CocktailReviewDTO cocktailReviewDTO);
     }
 }

@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using NToastNotify;
 
 
@@ -89,7 +90,7 @@ namespace CocktailMagician.Web
 
             services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
             {
-                PositionClass = ToastPositions.TopCenter
+                PositionClass = ToastPositions.TopFullWidth,
             });
         }
 
@@ -103,21 +104,27 @@ namespace CocktailMagician.Web
             {
                 app.UseExceptionHandler("/Home/NotFound"); // ("Home/Error")
             }
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    const int durationInSeconds = 60 * 60 * 24;
+                    ctx.Context.Response.Headers[HeaderNames.CacheControl] =
+                        "public,max-age=" + durationInSeconds;
+                }
+            });
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseNToastNotify();
+            app.UseMiddleware<NotFoundMiddleware>();
 
-            app.UseMiddleware<MissingMiddleware>();
+            app.UseNToastNotify();
 
             app.UseEndpoints(endpoints =>
             {
-                app.UseNToastNotify();
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

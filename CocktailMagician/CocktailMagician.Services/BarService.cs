@@ -120,7 +120,6 @@ namespace CocktailMagician.Services
             bar.CityId = barDTO.CityId;
             bar.Address = barDTO.Address;
             bar.Phone = barDTO.Phone;
-            bar.ImageData = barDTO.ImageData;
 
             if (barDTO.ImageData != null)
             {
@@ -174,8 +173,6 @@ namespace CocktailMagician.Services
                     .ThenInclude(bc => bc.Cocktail)
                 .Include(bar => bar.City)
                 .Where(bar => bar.IsDeleted == false);
-
-
 
             if (!string.IsNullOrEmpty(orderBy))
             {

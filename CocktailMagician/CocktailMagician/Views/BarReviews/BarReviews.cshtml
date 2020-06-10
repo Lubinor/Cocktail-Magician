@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+
 <h1>Reviews</h1>
 
 <table class="table">
@@ -24,27 +26,26 @@
     <tbody>
         @foreach (var item in Model.AllBarReviews)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            @if (User.IsInRole("Bar Crawler"))
-            {
+            <tr>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.BarId" class="btn btn-primary font-weight-bold">Edit</a> <span>|</span>
-                    <a asp-action="Delete" asp-route-id="@item.BarId" class="btn btn-primary font-weight-bold">Delete</a>
+                    @Html.DisplayFor(modelItem => item.Comment)
                 </td>
-            }
-        </tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+            </tr>
         }
     </tbody>
 </table>
 <div>
+    @if (User.IsInRole("Bar Crawler"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.BarId" class="btn btn-primary font-weight-bold">Edit your review</a>
+        <a asp-action="Delete" asp-route-id="@Model.BarId" class="btn btn-primary font-weight-bold">Delete your review</a>
+    }
     <a asp-action="Index" asp-controller="Bars" class="btn btn-primary font-weight-bold">Back to Bars</a>
 </div>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

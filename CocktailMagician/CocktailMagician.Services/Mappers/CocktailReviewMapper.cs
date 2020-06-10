@@ -13,7 +13,9 @@ namespace CocktailMagician.Services.Mappers
                 Rating = review.Rating,
                 Comment = review.Comment,
                 CocktailId = review.CocktailId,
+                CocktailName = review.Cocktail.Name,
                 AuthorId = review.UserId,
+                Author = review.User.UserName
             };
 
             return reviewDTO;

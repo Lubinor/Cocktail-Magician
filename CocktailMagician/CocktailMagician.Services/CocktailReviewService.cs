@@ -3,6 +3,7 @@ using CocktailMagician.Services.Contracts;
 using CocktailMagician.Services.DTOs;
 using CocktailMagician.Services.Mappers.Contracts;
 using CocktailMagician.Services.Providers.Contracts;
+using CocktailMagician.Services.ValidationModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace CocktailMagician.Services
             this.context.Cocktails.Update(cocktail);
             await this.context.SaveChangesAsync();
 
-            var newCocktailReviewDTO = this.cocktailReviewMapper.MapToCocktailReviewDTO(cocktailReview);
+            var newCocktailReviewDTO = await this.GetCocktailReviewAsync(cocktailReview.CocktailId, cocktailReview.UserId);
 
             return newCocktailReviewDTO;
         }
@@ -121,7 +122,7 @@ namespace CocktailMagician.Services
             this.context.Cocktails.Update(cocktail);
             await this.context.SaveChangesAsync();
 
-            var newCocktailReviewDTO = this.cocktailReviewMapper.MapToCocktailReviewDTO(cocktailReview);
+            var newCocktailReviewDTO = await this.GetCocktailReviewAsync(cocktailId, userId);
 
             return newCocktailReviewDTO;
         }
@@ -170,6 +171,37 @@ namespace CocktailMagician.Services
             averageRating = Math.Round(averageRating, 2);
 
             return averageRating;
+        }
+
+        public ValidationModel ValidateCocktailReview(CocktailReviewDTO cocktailReviewDTO)
+        {
+            var validationModel = new ValidationModel();
+
+            if (cocktailReviewDTO == null)
+            {
+                validationModel.HasProperInputData = false;
+            }
+            if (cocktailReviewDTO.Rating < 1 || cocktailReviewDTO.Rating > 5)
+            {
+                validationModel.HasCorrectRating = false;
+            }
+            if (cocktailReviewDTO.Comment.Length > 500)
+            {
+                validationModel.HasCorrectCommentLength = false;
+            }
+            return validationModel;
+        }
+
+        public bool CocktailReviewIsUnique(CocktailReviewDTO cocktailReviewDTO)
+        {
+            if (this.context.CocktailsUsersReviews
+                .Any(x => x.UserId.Equals(cocktailReviewDTO.AuthorId) && 
+                          x.CocktailId.Equals(cocktailReviewDTO.CocktailId)))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

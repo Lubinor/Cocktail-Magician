@@ -11,5 +11,7 @@ namespace CocktailMagician.Services.ValidationModels
         public bool HasProperInputData { get; set; } = true;
         public bool HasProperPhone { get; set; } = true;
         public bool HasProperAddress { get; set; } = true;
+        public bool HasCorrectRating { get; set; } = true;
+        public bool HasCorrectCommentLength { get; set; } = true;
     }
 }

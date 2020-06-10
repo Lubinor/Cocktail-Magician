@@ -14,7 +14,7 @@
     }
 </p>
 <table id="Ingredients" class="cell-border table-hover">
-    <thead class="dt-body-center">
+    <thead>
         <tr>
             <th></th>
             <th>Name</th>
@@ -47,7 +47,7 @@
                 },
             "columns": [
                 {
-                    "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false,
+                    "data": "imageSource", "name": "ImageSource", "autoWidth": true, "orderable": false, "width": "150px",
                     render: function (url, type, full) {
                         return '<img src="' + full.imageSource + '"' + 'style="max-width:150px; max-height:150px;"/>';
                     }
@@ -77,4 +77,6 @@
 
             ]});
     </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }
