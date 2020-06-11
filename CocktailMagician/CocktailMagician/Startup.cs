@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using NToastNotify;
-
+using System;
 
 namespace CocktailMagician.Web
 {
@@ -39,13 +40,27 @@ namespace CocktailMagician.Web
             services.AddDbContext<CocktailMagicianContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //services.AddHsts(options =>
+            //{
+            //    options.Preload = true;
+            //    options.IncludeSubDomains = true;
+            //    options.MaxAge = TimeSpan.FromDays(60);
+            //});
+
+            //services.AddHttpsRedirection(options =>
+            //{
+            //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+            //    options.HttpsPort = 5000;
+            //});
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<CocktailMagicianContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
             services
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -54,6 +69,7 @@ namespace CocktailMagician.Web
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             });
+
             services.AddControllers(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -61,6 +77,7 @@ namespace CocktailMagician.Web
                                  .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
+
             services.AddControllersWithViews();
 
             services.AddMvc().AddNToastNotifyNoty();
@@ -103,7 +120,10 @@ namespace CocktailMagician.Web
             else
             {
                 app.UseExceptionHandler("/Home/NotFound"); // ("Home/Error")
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
